@@ -1,0 +1,3217 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DPS 模擬器 v63 全自動測試角色版</title>
+<style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --panel: rgba(15, 23, 42, 0.92);
+      --panel-2: #1e293b;
+      --panel-3: rgba(2, 6, 23, 0.72);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #a78bfa;
+      --good: #22c55e;
+      --danger: #f87171;
+      --border: rgba(148, 163, 184, 0.18);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+      background: radial-gradient(circle at top, rgba(167, 139, 250, 0.18), transparent 35%), linear-gradient(180deg, #020617 0%, #0f172a 100%);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    .hero,
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .hero p,
+    .muted,
+    .empty,
+    .note {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .tag,
+    .summary-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .tag {
+      background: rgba(167, 139, 250, 0.14);
+      color: #ddd6fe;
+    }
+
+    .summary-pill {
+      background: rgba(34, 197, 94, 0.14);
+      color: #bbf7d0;
+    }
+
+    .toolbar,
+    .grid,
+    .results,
+    .compact-grid,
+    .skill-grid,
+    .affix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .toolbar,
+    .grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 18px;
+    }
+
+    .results {
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      margin-top: 18px;
+    }
+
+    .compact-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .skill-grid,
+    .affix-grid {
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      margin-top: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.16);
+    }
+
+    .stat {
+      background: var(--panel-3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      min-height: 136px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat strong {
+      font-size: 30px;
+      line-height: 1.2;
+      color: white;
+      word-break: break-word;
+      min-height: 40px;
+    }
+
+    .highlight {
+      border-color: rgba(34, 197, 94, 0.35);
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.1), rgba(2, 6, 23, 0.84));
+    }
+
+    .roster-wrap {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .team-block {
+      background: rgba(2, 6, 23, 0.44);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .team-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .character-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: rgba(15, 23, 42, 0.82);
+    }
+
+    .character-row.active {
+      border-color: rgba(167, 139, 250, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.2);
+    }
+
+    .char-name {
+      font-weight: 600;
+      color: white;
+    }
+
+    .char-sub,
+    .char-dps,
+    .team-dps {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .char-dps strong,
+    .team-dps strong {
+      color: #f8fafc;
+      font-size: 16px;
+    }
+
+    .btn,
+    .icon-btn {
+      border: 0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn {
+      padding: 12px 14px;
+      background: linear-gradient(180deg, rgba(167, 139, 250, 0.24), rgba(167, 139, 250, 0.12));
+      color: #f5f3ff;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+    }
+
+    .btn:hover,
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .btn.secondary {
+      background: rgba(148, 163, 184, 0.12);
+      border-color: rgba(148, 163, 184, 0.18);
+      color: var(--text);
+    }
+
+    .btn.danger,
+    .icon-btn.danger {
+      background: rgba(248, 113, 113, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.25);
+      color: #fecaca;
+    }
+
+    .icon-btn {
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 12px;
+      background: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: var(--text);
+    }
+
+    .empty {
+      padding: 12px 0 4px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(1080px, 100%);
+      max-height: min(90vh, 100%);
+      overflow: auto;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sub-card {
+      background: rgba(2, 6, 23, 0.44);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .section-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .skill-item {
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .character-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 16px; }
+      .card,
+      .modal-card { padding: 18px; }
+      .stat strong { font-size: 24px; }
+      .modal { padding: 16px; }
+    }
+  
+    .fox-advisor-wrap {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(167, 139, 250, 0.26);
+      background: linear-gradient(180deg, rgba(76, 29, 149, 0.10), rgba(2, 6, 23, 0.44));
+    }
+
+    .fox-advisor-image {
+      width: 108px;
+      height: 108px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.35));
+    }
+
+    .fox-advisor-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #d8b4fe;
+      margin-bottom: 10px;
+    }
+
+    .fox-advisor-text {
+      color: #e2e8f0;
+      line-height: 1.75;
+      white-space: pre-line;
+      font-size: 16px;
+    }
+
+    .fox-affix-text {
+      margin-top: 10px;
+      color: #c4b5fd;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 640px) {
+      .fox-advisor-wrap {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .fox-advisor-image {
+        margin: 0 auto;
+      }
+    }
+
+    .advisor-compare-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .advisor-compare-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      font-size: 14px;
+    }
+    .advisor-compare-item.best {
+      border-color: rgba(34, 197, 94, 0.38);
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.13), rgba(15, 23, 42, 0.86));
+      box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.14);
+    }
+    .advisor-compare-label {
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+    .advisor-compare-value {
+      color: #f8fafc;
+      font-weight: 800;
+    }
+    .advisor-compare-item.best .advisor-compare-label,
+    .advisor-compare-item.best .advisor-compare-value {
+      color: #dcfce7;
+    }
+    .live-preview-panel {
+      display: none;
+      position: sticky;
+      bottom: 72px;
+      z-index: 4;
+      margin-top: 12px;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(167, 139, 250, 0.26);
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.97), rgba(2, 6, 23, 0.97));
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    }
+    .live-preview-panel.open {
+      display: block;
+    }
+    .live-preview-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .live-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .live-preview-stat {
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 96px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+    .live-preview-stat span {
+      display: block;
+      color: #94a3b8;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .live-preview-stat strong {
+      display: block;
+      color: #f8fafc;
+      font-size: 20px;
+      line-height: 1.25;
+      min-height: 50px;
+      word-break: break-word;
+    }
+    .sticky-action-bar {
+      position: sticky;
+      bottom: 0;
+      background: rgba(15,23,42,0.9);
+      backdrop-filter: blur(10px);
+      padding: 14px;
+      border-top: 1px solid rgba(148,163,184,0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .sticky-action-left,
+    .sticky-action-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .fox-advisor-wrap{
+      display:grid !important;
+      grid-template-columns:120px minmax(0,1fr) !important;
+      align-items:center !important;
+      gap:18px !important;
+      text-align:left !important;
+      max-width:none !important;
+      margin:16px 0 0 0 !important;
+    }
+    .fox-advisor-image{
+      width:108px !important;
+      height:108px !important;
+      order:0 !important;
+      margin:0 !important;
+    }
+    .fox-advisor-content{
+      order:1 !important;
+      width:100%;
+    }
+    .fox-advisor-title{display:none !important;}
+    .advisor-compare-list{
+      display:grid;
+      gap:8px !important;
+      margin-top:0 !important;
+      justify-items:center;
+    }
+    .advisor-compare-item{
+      display:flex;
+      justify-content:center !important;
+      align-items:center;
+      gap:12px;
+      width:100%;
+      min-height:32px !important;
+      padding:4px 8px !important;
+      font-size:14px !important;
+      line-height:1.55 !important;
+      border-radius:10px;
+    }
+    .fox-advisor-text{
+      line-height:1.5 !important;
+      width:100%;
+      min-height:72px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+.results{grid-template-columns:repeat(3,minmax(220px,1fr)) !important;}
+.live-preview-grid{grid-template-columns:repeat(3,minmax(170px,1fr)) !important;}
+.stat strong,.live-preview-stat strong{min-height:38px;display:block;}
+@media (max-width: 900px){.results,.live-preview-grid{grid-template-columns:1fr !important;}}
+
+    .team-head-right {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .captain-chip {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      background:rgba(250, 204, 21, 0.14);
+      color:#fde68a;
+      border:1px solid rgba(250, 204, 21, 0.24);
+    }
+    .character-row[draggable="true"] {
+      cursor: grab;
+    }
+    .character-row.dragging {
+      opacity: 0.55;
+      border-color: rgba(167, 139, 250, 0.45);
+    }
+    .character-row.drag-over {
+      border-color: rgba(34, 197, 94, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.18);
+    }
+    .team-block.drag-over-team {
+      border-color: rgba(167, 139, 250, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.18);
+    }
+
+
+
+    .mode-note-badge {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      background:rgba(148, 163, 184, 0.12);
+      color:#cbd5e1;
+      border:1px solid rgba(148, 163, 184, 0.18);
+    }
+
+
+    .debug-panel {
+      margin-top: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.44);
+      padding: 16px;
+      display: none;
+    }
+    .debug-panel.open { display:block; }
+    .debug-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:12px;
+      margin-top: 12px;
+    }
+    .debug-box {
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .debug-box span {
+      display:block;
+      color:#94a3b8;
+      font-size:12px;
+      margin-bottom:6px;
+    }
+    .debug-box strong {
+      display:block;
+      color:#f8fafc;
+      font-size:20px;
+      line-height:1.25;
+      word-break: break-word;
+    }
+    .debug-list {
+      margin-top: 12px;
+      color: #cbd5e1;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+
+
+    .page-with-debug { display:block; }
+    .page-with-debug.debug-layout-on {
+      display:grid;
+      grid-template-columns:minmax(0,1.7fr) 430px;
+      gap:20px;
+      align-items:start;
+    }
+    .debug-side-panel { display:none; }
+    .page-with-debug.debug-layout-on .debug-side-panel {
+      display:block;
+      position:sticky;
+      top:16px;
+      align-self:start;
+    }
+    .debug-side-panel .debug-panel {
+      display:block;
+      position:static;
+      max-height:calc(100vh - 32px);
+      overflow:auto;
+      margin-top:0;
+      box-shadow:0 18px 50px rgba(0,0,0,0.35);
+    }
+    .debug-mode-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      background:rgba(167,139,250,0.14);
+      color:#ddd6fe;
+      border:1px solid rgba(167,139,250,0.24);
+      margin-bottom:10px;
+    }
+    .char-meta-list {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:6px;
+    }
+    .char-meta-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      padding:4px 8px;
+      font-size:12px;
+      background:rgba(148,163,184,0.12);
+      color:#cbd5e1;
+      border:1px solid rgba(148,163,184,0.18);
+    }
+    .char-meta-pill.passive-on {
+      background:rgba(34,197,94,0.14);
+      color:#bbf7d0;
+      border-color:rgba(34,197,94,0.24);
+    }
+    .char-meta-pill.passive-off {
+      background:rgba(248,113,113,0.12);
+      color:#fecaca;
+      border-color:rgba(248,113,113,0.22);
+    }
+    @media (max-width:1200px){
+      .page-with-debug.debug-layout-on { grid-template-columns:1fr; }
+      .page-with-debug.debug-layout-on .debug-side-panel { position:static; }
+      .debug-side-panel .debug-panel { max-height:none; }
+    }
+
+
+    .fox-easter-egg {
+      position: fixed;
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 99999;
+      left: -120px;
+      top: 20vh;
+      opacity: 0;
+      transition: opacity 0.2s ease, filter 0.2s ease;
+      filter: drop-shadow(0 0 10px rgba(216, 180, 254, 0.55))
+              drop-shadow(0 0 22px rgba(167, 139, 250, 0.32));
+    }
+
+    .fox-easter-egg.active {
+      opacity: 1;
+    }
+
+    
+
+    @keyframes foxSparkFade {
+      0% { transform: scale(1); opacity: 0.95; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .fox-glow-on .team-block,
+    .fox-glow-on .debug-panel,
+    .fox-glow-on .character-row.active {
+      box-shadow: 0 0 0 1px rgba(216, 180, 254, 0.14), 0 0 24px rgba(167, 139, 250, 0.16);
+    }
+
+    .fox-glow-on .char-meta-pill.passive-on,
+    .fox-glow-on .captain-chip,
+    .fox-glow-on .debug-mode-pill {
+      box-shadow: 0 0 14px rgba(167, 139, 250, 0.22);
+    }
+
+
+    
+
+    
+
+    
+
+
+    
+    
+    
+    
+    
+    
+    
+
+
+    .fox-btn {
+      opacity: 0.92;
+      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+    .fox-btn:hover {
+      opacity: 1;
+      filter: drop-shadow(0 0 6px rgba(167,139,250,0.45));
+    }
+    
+    
+
+
+    .config-toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 100002;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.96);
+      color: #f8fafc;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      pointer-events: none;
+    }
+    .config-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+    
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="card hero">
+<h1>DPS 模擬器 v60</h1>
+<p>依照你給的公式重做，主畫面只保留核心結果，角色改成用彈窗設定。</p>
+<div class="tag">最多 12 角色，4 隊</div>
+<div class="tag">支援模板也會顯示自身 DPS</div>
+<div class="tag">一般模式直接填遊戲內目前面板</div>
+<button class="btn secondary" onclick="window.open('收益模擬器.html','_blank')">收益模擬器</button>
+<div class="fox-advisor-wrap"><div class="fox-advisor-content"><div class="fox-advisor-title">阿狐建議</div><div class="fox-advisor-text" id="advisorBox">尚未建立角色</div></div><img alt="阿狐" class="fox-advisor-image" src="data:image/png;base64,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"/></div>
+<div class="note" id="effectiveBuffInfo">目前 Buff：-</div>
+<div class="note" id="effectiveStatInfo">實際暴擊率：-</div>
+</section>
+<div class="page-with-debug" id="pageWithDebug"><div class="main-content">
+<section class="card">
+<div class="section-head">
+<h2>戰鬥設定</h2>
+<div class="summary-pill" id="partySummary">隊伍總 DPS：0</div>
+</div>
+<div class="toolbar">
+<div>
+<label for="monsterSelect">怪物</label>
+<select id="monsterSelect"></select>
+</div>
+<div>
+<label for="fightSeconds">戰鬥秒數</label>
+<input id="fightSeconds" min="1" step="0.01" type="number" value="60"/>
+</div>
+<div>
+<label> </label>
+<div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn" id="openCharacterModal" type="button">新增角色</button><button class="btn secondary" id="generateTestCharactersBtn" type="button">一鍵生成攻速/生命測試角色</button><button class="btn secondary" id="generateCritTestCharactersBtn" type="button">一鍵生成暴擊測試角色</button>
+<button class="btn danger" onclick="clearTestChars()">一鍵清除測試角色</button>
+<button class="btn" onclick="toggleDebug()">Debug模式</button>
+</div>
+</div>
+</div>
+<div class="roster-wrap" id="roster"></div>
+</section>
+<section class="card">
+<div class="section-head">
+<h2>核心結果</h2>
+<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+<p class="muted" id="selectedCharacterName">尚未選取角色</p>
+</div>
+</div>
+<div class="results">
+<div class="stat highlight">
+<span>每秒輸出 (DPS)</span>
+<strong id="dps">-</strong>
+</div>
+<div class="stat">
+<span>有效攻速</span>
+<strong id="effectiveAps">-</strong>
+</div>
+<div class="stat">
+<span>總傷害 (DMG)</span>
+<strong id="fightDamage">-</strong>
+</div>
+<div id="debugPanelInlineMount"><div class="debug-panel" id="calcDebugPanel">
+<div class="section-head">
+<h3>Debug 計算過程</h3>
+<p class="muted">直接看目前所選角色每一段怎麼算</p>
+</div>
+<div class="debug-grid">
+<div class="debug-box"><span>基礎攻擊</span><strong id="dbgBaseAtk">-</strong></div>
+<div class="debug-box"><span>攻擊加成後</span><strong id="dbgAtkAfterBuff">-</strong></div>
+<div class="debug-box"><span>技能總倍率</span><strong id="dbgSkillMultiplier">-</strong></div>
+<div class="debug-box"><span>非暴擊單次</span><strong id="dbgNonCrit">-</strong></div>
+<div class="debug-box"><span>暴擊單次</span><strong id="dbgCrit">-</strong></div>
+<div class="debug-box"><span>平均單次</span><strong id="dbgAvg">-</strong></div>
+<div class="debug-box"><span>實際暴擊率</span><strong id="dbgCritRate">-</strong></div>
+<div class="debug-box"><span>暴擊倍率</span><strong id="dbgCritMultiplier">-</strong></div>
+<div class="debug-box"><span>原始週期</span><strong id="dbgRawCycle">-</strong></div>
+<div class="debug-box"><span>套用後週期</span><strong id="dbgEffectiveCycle">-</strong></div>
+<div class="debug-box"><span>防禦減傷倍率</span><strong id="dbgDefenseMultiplier">-</strong></div>
+<div class="debug-box"><span>最終 DPS</span><strong id="dbgFinalDps">-</strong></div>
+<div class="debug-box"><span>職業被動 DPS</span><strong id="dbgPassiveDps">-</strong></div>
+</div>
+<div class="debug-list" id="dbgBuffSummary">Buff：-</div>
+<div class="debug-list" id="dbgSkillSummary">技能：-</div>
+<div class="debug-list" id="dbgPassiveSummary">職業被動：-</div>
+</div></div>
+</div>
+</section>
+</div><aside class="debug-side-panel" id="debugSidePanel"><div class="debug-mode-pill" id="debugModePill">Debug：關閉</div><div id="debugPanelSideMount"></div></aside></div>
+<section class="card" id="debugCard">
+<div class="section-head">
+<h2>儲存 Debug</h2>
+<p class="muted">確認自動儲存與讀取是否正常</p>
+</div>
+<div class="results">
+<div class="stat">
+<span>儲存狀態</span>
+<strong id="saveStatus">未啟動</strong>
+</div>
+<div class="stat">
+<span>最後儲存時間</span>
+<strong id="saveTime">-</strong>
+</div>
+<div class="stat">
+<span>角色數量</span>
+<strong id="saveCharacterCount">0</strong>
+</div>
+</div>
+<p class="note" id="saveDebugText" style="margin-top:12px;">尚未開始。</p>
+<div class="modal-actions" style="margin-top:12px; justify-content:flex-start;">
+<button class="btn secondary" id="forceSaveBtn" type="button">手動測試儲存</button>
+</div>
+</section>
+<div aria-hidden="true" class="modal" id="characterModal">
+<div class="modal-card">
+<div class="section-head">
+<h2 id="modalTitle"></h2>
+<button class="icon-btn" id="closeModal" type="button">✕</button>
+</div>
+<div class="sub-card section-stack">
+<div class="compact-grid">
+<div>
+<label for="charName">角色名稱</label>
+<input id="charName" placeholder="例如：主力輸出 / 攻速1 / 生命測試1" type="text"/>
+</div>
+<div>
+<label for="charTeam">隊伍</label>
+<select id="charTeam">
+<option value="1">第 1 隊</option>
+<option value="2">第 2 隊</option>
+<option value="3">第 3 隊</option>
+<option value="4">第 4 隊</option>
+</select>
+</div>
+<div>
+<label for="charTemplate">角色模板</label>
+<select id="charTemplate">
+<option value="">未選擇</option>
+<option value="蘭德克莉特">蘭德克莉特</option>
+<option value="九尾狐">九尾狐</option>
+<option value="Nurspy">Nurspy</option>
+<option value="Randgrid">Randgrid</option>
+</select>
+</div>
+<div>
+<label for="grade6Key">六星資料庫</label>
+<select id="grade6Key">
+<option value="">未選擇</option>
+</select>
+</div>
+<div>
+<label> </label>
+<button class="btn secondary" id="applyGrade6Btn" type="button">套用六星資料</button>
+</div>
+<input id="charLeader" type="hidden" value="0"/>
+</div>
+<div class="mode-note-badge" id="grade6Info">六星資料庫：未套用</div>
+</div>
+<div class="sub-card section-stack">
+<h3>屬性</h3>
+<div class="compact-grid">
+<div>
+<label for="calcMode">輸入模式</label>
+<select id="calcMode">
+<option value="simple">一般模式｜直接填目前面板</option>
+<option value="advanced">進階模式｜等級 / 成長公式</option>
+</select>
+</div>
+</div>
+<div class="grid" id="simpleStatsGrid">
+<div><label for="finalAtkInput">目前面板攻擊</label><input id="finalAtkInput" step="0.01" type="number" value="0"/></div>
+<div><label for="finalHpInput">目前面板生命</label><input id="finalHpInput" step="0.01" type="number" value="0"/></div>
+<div><label for="攻擊週期">攻擊週期（秒）</label><input id="攻擊週期" step="0.01" type="number" value="2"/></div>
+<div><label for="pdef">物理防禦</label><input id="pdef" step="0.01" type="number" value="0"/></div>
+<div><label for="mdef">魔法防禦</label><input id="mdef" step="0.01" type="number" value="0"/></div>
+<div><label for="pPen">物理穿透</label><input id="pPen" step="0.01" type="number" value="0"/></div>
+<div><label for="mPen">魔法穿透</label><input id="mPen" step="0.01" type="number" value="0"/></div>
+<div><label for="crit">暴擊率 (%)</label><input id="crit" step="0.01" type="number" value="0"/></div>
+<div><label for="critDmg">暴擊傷害 (%)</label><input id="critDmg" step="0.01" type="number" value="100"/></div>
+</div>
+<div class="grid" id="advancedStatsGrid" style="display:none;">
+<div><label for="level">等級</label><input id="level" step="1" type="number" value="60"/></div>
+<div><label for="initialAttDmg">初始攻擊</label><input id="initialAttDmg" step="0.01" type="number" value="0"/></div>
+<div><label for="growthAttDmg">每級攻擊成長</label><input id="growthAttDmg" step="0.01" type="number" value="0"/></div>
+<div><label for="initialHp">初始生命</label><input id="initialHp" step="0.01" type="number" value="0"/></div>
+<div><label for="growthHp">每級生命成長</label><input id="growthHp" step="0.01" type="number" value="0"/></div>
+<div><label for="weaponAtk">武器ATK</label><input id="weaponAtk" step="0.01" type="number" value="0"/></div>
+<div><label for="flatAttack">固定攻擊加成</label><input id="flatAttack" step="0.01" type="number" value="0"/></div>
+<div><label for="atk">角色ATK（自動）</label><input id="atk" readonly="" step="0.01" type="number" value="0"/></div>
+<div><label for="hp">角色HP（自動）</label><input id="hp" readonly="" step="0.01" type="number" value="0"/></div>
+</div>
+<p class="note">一般模式：直接填遊戲內目前看到的攻擊力 / 生命值。進階模式：角色ATK = 初始攻擊 + (等級 - 1) × 每級攻擊成長；角色HP = 初始生命 + (等級 - 1) × 每級生命成長；最終ATK = 角色ATK + 武器ATK + 固定攻擊加成；DPS = 各技能平均單次傷害 ÷ 各自週期後加總；未設定技能時才用攻擊週期計算基礎 DPS。</p>
+</div>
+<div class="sub-card section-stack">
+<div class="section-head">
+<h3>自身 Buff（可自訂）</h3>
+<button class="btn secondary" id="addSelfBuff" type="button">新增自身 Buff</button>
+</div>
+<div id="buffRows"></div>
+<p class="note">這裡只加在角色自己身上，適合自身被動、自身增益、自身穿透。可自由新增、停用、命名。</p>
+</div>
+<div class="sub-card section-stack">
+<div class="section-head">
+<h3>團隊 Buff（POB 自訂）</h3>
+<button class="btn secondary" id="addTeamBuff" type="button">新增團隊 Buff</button>
+</div>
+<div id="teamBuffRows"></div>
+<p class="note">可自訂是否啟用、名稱、效果，並可選擇是否也影響自己。九尾這種「給隊友、不給自己」可直接在這裡定義。</p>
+</div>
+<div class="sub-card section-stack">
+<div class="section-head">
+<h3>職業被動系統 v1</h3>
+</div>
+<div class="compact-grid">
+<div>
+<label for="jobPassiveKey">職業被動類型</label>
+<select id="jobPassiveKey">
+<option value="">未啟用</option>
+<option value="warrior">戰士｜懲罰之魂</option>
+<option value="paladin">聖騎士｜守護之魂</option>
+<option value="archer">弓箭手｜速射之魂</option>
+<option value="hunter">獵人｜必殺之魂</option>
+<option value="wizard">魔法師｜魔力之魂</option>
+<option value="priest">祭師｜慈愛之魂</option>
+</select>
+</div>
+<div>
+<label for="jobPassiveEnabled">被動是否啟用</label>
+<select id="jobPassiveEnabled">
+<option value="1">啟用</option>
+<option value="0">停用</option>
+</select>
+</div>
+</div>
+<div class="mode-note-badge" id="jobPassiveInfo">職業被動：未啟用</div>
+<p class="note">v1 先把四個傷害型被動接進總 DPS：戰士 / 聖騎 / 弓箭手 / 獵人。法師與祭師先顯示功能說明，不先算進 DPS。</p>
+</div>
+<div class="sub-card section-stack">
+<div class="section-head">
+<h3>技能</h3>
+<button class="btn secondary" id="addSkill" type="button">新增技能</button>
+</div>
+<div id="skillList"></div>
+<p class="note">週期公式固定：1C = 2 秒、2C = 4 秒、3C = 6 秒；六星資料庫匯入時會優先套用這個週期。</p>
+</div>
+<div class="modal-actions">
+<button class="btn secondary" id="cancelModal" type="button">取消</button>
+<button class="btn" id="saveCharacter" type="button">儲存角色</button>
+</div>
+<div class="live-preview-panel" id="livePreviewPanel">
+<div class="live-preview-head">
+<h3>即時 DPS 預覽</h3>
+<p class="muted" id="livePreviewHint">編輯屬性時會同步更新，不用先儲存。</p>
+</div>
+<div class="live-preview-grid">
+<div class="live-preview-stat"><span>每秒輸出 (DPS)</span><strong id="previewDps">-</strong></div>
+<div class="live-preview-stat"><span>有效攻速</span><strong id="previewAps">-</strong></div>
+<div class="live-preview-stat"><span>總傷害 (DMG)</span><strong id="previewFightDamage">-</strong></div>
+</div>
+</div>
+<div class="sticky-action-bar">
+<div class="sticky-action-left">
+<button class="btn secondary" id="togglePreviewBtn" type="button">觀看DPS</button>
+</div>
+<div class="sticky-action-right">
+<button class="btn" id="saveCharacterSticky" style="padding:10px 18px;border-radius:10px;background:linear-gradient(180deg,#7c3aed,#5b21b6);color:#fff;border:none;" type="button">儲存角色</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    const MAX_CHARACTERS = 12;
+    const TEAM_COUNT = 4;
+
+
+    const GRADE6_DATABASE_RAW = [{"character": "ACHON", "displayName": "ACHON", "summary": {"categories": ["hybrid"], "triggers": ["3C"], "knownTotalMultiplier": 24.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "ACCURACY", "kind": "flat", "value": 11.0, "duration": 10.0, "target": "team", "sources": 2}, {"stat": "RESIST", "kind": "flat", "value": 11.0, "duration": 10.0, "target": "team", "sources": 2}], "unknownHitAssets": [], "notes": []}, "skills": [{"id": "SK_WI_ACHON_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 피해 구체1_2.asset", "kind": "dot", "statPercent": 0.48, "tickInterval": 0.24, "duration": 2.0, "totalMultiplier": 4.0, "damageType": 1, "targetSide": 1}, {"asset": "_AE_ 공격력 비례 피해 구체2_3.asset", "kind": "dot", "statPercent": 0.48, "tickInterval": 0.24, "duration": 2.0, "totalMultiplier": 4.0, "damageType": 1, "targetSide": 1}, {"asset": "_AE_ 공격력 비례 피해 구체3_4.asset", "kind": "dot", "statPercent": 0.48, "tickInterval": 0.24, "duration": 2.0, "totalMultiplier": 4.0, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 12.0, "unknownHitAssets": []}, "buffs": [{"stat": "ACCURACY", "value": {"kind": "flat", "value": 11.0}, "duration": 10.0, "target": "team", "asset": "Buff_3_4.asset"}, {"stat": "RESIST", "value": {"kind": "flat", "value": 11.0}, "duration": 10.0, "target": "team", "asset": "_Buff_ 관통력 증가_16.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_WI_ACHON_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 피해 구체1_2.asset", "kind": "dot", "statPercent": 0.48, "tickInterval": 0.24, "duration": 2.0, "totalMultiplier": 4.0, "damageType": 1, "targetSide": 1}, {"asset": "_AE_ 공격력 비례 피해 구체2_3.asset", "kind": "dot", "statPercent": 0.48, "tickInterval": 0.24, "duration": 2.0, "totalMultiplier": 4.0, "damageType": 1, "targetSide": 1}, {"asset": "_AE_ 공격력 비례 피해 구체3_4.asset", "kind": "dot", "statPercent": 0.48, "tickInterval": 0.24, "duration": 2.0, "totalMultiplier": 4.0, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 12.0, "unknownHitAssets": []}, "buffs": [{"stat": "ACCURACY", "value": {"kind": "flat", "value": 11.0}, "duration": 10.0, "target": "team", "asset": "Buff_3_4.asset"}, {"stat": "RESIST", "value": {"kind": "flat", "value": 11.0}, "duration": 10.0, "target": "team", "asset": "_Buff_ 관통력 증가_16.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}]}, {"character": "ATALANTE", "displayName": "ATALANTE", "summary": {"categories": ["hybrid"], "triggers": ["passive"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "ATK_SPEED", "kind": "flat", "value": 41.0, "duration": 12.0, "target": "team", "sources": 1}], "unknownHitAssets": ["Damage_2_0.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_AR_ATALANTE_PASSIVE_GRADE6", "trigger": "passive", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.83, "range": 5.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_2_0.asset"]}, "buffs": [{"stat": "ATK_SPEED", "value": {"kind": "flat", "value": 41.0}, "duration": 12.0, "target": "team", "asset": "Buff_9.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "ATHENA", "displayName": "ATHENA", "summary": {"categories": ["damage"], "triggers": ["2C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["_DMG_ 방어력 비례_4_2.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_PA_ATHENA_PASSIVE_GRADE6", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 3.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 방어력 비례_4_2.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_PA_ATHENA_PASSIVE_GRADE6", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 3.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 방어력 비례_4_2.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "BLIZZARD", "displayName": "BLIZZARD", "summary": {"categories": ["damage"], "triggers": ["triggered"], "knownTotalMultiplier": 24.65, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["_AE_ 공격력 비례 8회 _ 공격력 감소_11.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_WI_BLIZZARD_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 5.0, "duration": 0.0, "range": 5.0, "category": "damage", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 8회_10.asset", "kind": "dot", "statPercent": 1.45, "tickInterval": 0.1, "duration": 0.85, "totalMultiplier": 12.325, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 12.325, "unknownHitAssets": ["_AE_ 공격력 비례 8회 _ 공격력 감소_11.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WI_BLIZZARD_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 5.0, "duration": 0.0, "range": 5.0, "category": "damage", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 8회_10.asset", "kind": "dot", "statPercent": 1.45, "tickInterval": 0.1, "duration": 0.85, "totalMultiplier": 12.325, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 12.325, "unknownHitAssets": ["_AE_ 공격력 비례 8회 _ 공격력 감소_11.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "DARTAGNAN", "displayName": "DARTAGNAN", "summary": {"categories": ["hybrid"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 2, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["Damage_4_4.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_HU_DARTAGNAN_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 2.5, "duration": 0.75, "range": 7.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_4_4.asset"]}, "buffs": [], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_HU_DARTAGNAN_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 2.5, "duration": 0.75, "range": 7.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_4_4.asset"]}, "buffs": [], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "DOROTHY", "displayName": "DOROTHY", "summary": {"categories": ["hybrid"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 2, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["Damage_2_70.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_WI_DOROTHY_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 5.0, "duration": 1.08, "range": 7.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_2_70.asset"]}, "buffs": [], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WI_DOROTHY_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 5.0, "duration": 1.08, "range": 7.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_2_70.asset"]}, "buffs": [], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "DRAKE", "displayName": "DRAKE", "summary": {"categories": ["support_cycle"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 2, "allyBlocks": 0, "buffs": [{"stat": "HP", "kind": "flat", "value": 60.0, "duration": 5.0, "target": "team", "sources": 2}], "unknownHitAssets": [], "notes": []}, "skills": [{"id": "SK_PA_DRAKE_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 5.0, "duration": 2.0, "range": 0.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 60.0}, "duration": 5.0, "target": "team", "asset": "Buff_1_6.asset"}], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": []}, {"id": "SK_PA_DRAKE_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 5.0, "duration": 2.0, "range": 0.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 60.0}, "duration": 5.0, "target": "team", "asset": "Buff_1_6.asset"}], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": []}]}, {"character": "GON", "displayName": "GON", "summary": {"categories": ["damage", "hybrid"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "DEF", "kind": "flat", "value": -18.0, "duration": 15.0, "target": "enemy", "sources": 2}], "unknownHitAssets": ["Damage_5_3.asset", "_DMG_ 공격력 비레_5.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_AR_GON_PASSIVE_GRADE6_1", "trigger": "3C", "animation": "Skill_0", "cooldown": 5.0, "duration": 0.667, "range": 5.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비레_5.asset"]}, "buffs": [{"stat": "DEF", "value": {"kind": "flat", "value": -18.0}, "duration": 15.0, "target": "enemy", "asset": "Buff_1_3.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_AR_GON_PASSIVE_GRADE6_1", "trigger": "3C", "animation": "Skill_0", "cooldown": 5.0, "duration": 0.667, "range": 5.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비레_5.asset"]}, "buffs": [{"stat": "DEF", "value": {"kind": "flat", "value": -18.0}, "duration": 15.0, "target": "enemy", "asset": "Buff_1_3.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_AR_GON_PASSIVE_GRADE6_2", "trigger": "3C", "animation": "Skill_1", "cooldown": 5.0, "duration": 1.5, "range": 5.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_5_3.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_AR_GON_PASSIVE_GRADE6_2", "trigger": "3C", "animation": "Skill_1", "cooldown": 5.0, "duration": 1.5, "range": 5.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_5_3.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "IZUNA", "displayName": "IZUNA", "summary": {"categories": ["damage", "support"], "triggers": ["2C", "triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "ACCURACY", "kind": "flat", "value": 18.0, "duration": 10.0, "target": "self_or_team", "sources": 2}, {"stat": "HP", "kind": "flat", "value": 72.0, "duration": 10.0, "target": "self_or_team", "sources": 2}, {"stat": "CRIT", "kind": "percent", "value": -60.0, "duration": 10.0, "target": "self_or_team", "sources": 2}, {"stat": "ATK", "kind": "percent", "value": 13.0, "duration": 10.0, "target": "self_or_team", "sources": 2}], "unknownHitAssets": ["Damage_8_5.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed.", "Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, "skills": [{"id": "SK_WA_IZUNA_BASIC_ATK_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.5, "range": 1.8, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_8_5.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WA_IZUNA_BASIC_ATK_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.5, "range": 1.8, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_8_5.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WA_IZUNA_PASSIVE_GRADE6", "trigger": "2C", "animation": "Attack", "cooldown": 7.0, "duration": 0.0, "range": 0.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ACCURACY", "value": {"kind": "flat", "value": 18.0}, "duration": 10.0, "target": "self_or_team", "asset": "_Buff_ 관통력 증가_1_0.asset"}, {"stat": "HP", "value": {"kind": "flat", "value": 72.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_1_0.asset"}, {"stat": "CRIT", "value": {"kind": "percent", "value": -60.0}, "duration": 10.0, "target": "self_or_team", "asset": "_Buff_ 공격속도_3.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, {"id": "SK_WA_IZUNA_PASSIVE_GRADE6", "trigger": "2C", "animation": "Attack", "cooldown": 7.0, "duration": 0.0, "range": 0.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ACCURACY", "value": {"kind": "flat", "value": 18.0}, "duration": 10.0, "target": "self_or_team", "asset": "_Buff_ 관통력 증가_1_0.asset"}, {"stat": "HP", "value": {"kind": "flat", "value": 72.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_1_0.asset"}, {"stat": "CRIT", "value": {"kind": "percent", "value": -60.0}, "duration": 10.0, "target": "self_or_team", "asset": "_Buff_ 공격속도_3.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, {"id": "SK_WA_IZUNA_PASSIVE_GRADE6_2", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 13.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_1_14.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_WA_IZUNA_PASSIVE_GRADE6_2", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 13.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_1_14.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}]}, {"character": "JOANOFARC", "displayName": "JOANOFARC", "summary": {"categories": ["support_cycle"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 2, "buffs": [{"stat": "BLOCK", "kind": "flat", "value": 23.0, "duration": 5.0, "target": "team", "sources": 2}], "unknownHitAssets": [], "notes": []}, "skills": [{"id": "SK_WA_JOANOFARC_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 1.0, "duration": 0.5, "range": 1.5, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "BLOCK", "value": {"kind": "flat", "value": 23.0}, "duration": 5.0, "target": "team", "asset": "Buff_1_11.asset"}], "blocks": {"self": 0, "others": 1, "raw": [{"count": 1, "includeSelf": false}]}, "movement": [], "notes": []}, {"id": "SK_WA_JOANOFARC_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 1.0, "duration": 0.5, "range": 1.5, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "BLOCK", "value": {"kind": "flat", "value": 23.0}, "duration": 5.0, "target": "team", "asset": "Buff_1_11.asset"}], "blocks": {"self": 0, "others": 1, "raw": [{"count": 1, "includeSelf": false}]}, "movement": [], "notes": []}]}, {"character": "KAGUYA", "displayName": "KAGUYA", "summary": {"categories": ["damage"], "triggers": ["triggered"], "knownTotalMultiplier": 13.333334, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["AreaEffect_2_3.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_AR_KAGUYA_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.167, "range": 5.0, "category": "damage", "damage": {"knownParts": [{"asset": "AreaEffect_2.asset", "kind": "dot", "statPercent": 0.64, "tickInterval": 0.48, "duration": 5.0, "totalMultiplier": 6.666666666666668, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 6.666667, "unknownHitAssets": ["AreaEffect_2_3.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_AR_KAGUYA_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.167, "range": 5.0, "category": "damage", "damage": {"knownParts": [{"asset": "AreaEffect_2.asset", "kind": "dot", "statPercent": 0.64, "tickInterval": 0.48, "duration": 5.0, "totalMultiplier": 6.666666666666668, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 6.666667, "unknownHitAssets": ["AreaEffect_2_3.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "KAORI", "displayName": "KAORI", "summary": {"categories": ["damage"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["Damage_6.asset", "_DMG_ 공격력 비례_6_1.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_WA_KAORI_PASSIVE_GRADE6_1", "trigger": "triggered", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.433, "range": 2.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비례_6_1.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WA_KAORI_PASSIVE_GRADE6_1", "trigger": "triggered", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.433, "range": 2.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비례_6_1.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WA_KAORI_PASSIVE_GRADE6_2", "trigger": "triggered", "animation": "Skill_1", "cooldown": 5.0, "duration": 1.433, "range": 2.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_6.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WA_KAORI_PASSIVE_GRADE6_2", "trigger": "triggered", "animation": "Skill_1", "cooldown": 5.0, "duration": 1.433, "range": 2.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_6.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "KORIN", "displayName": "KORIN", "summary": {"categories": ["damage"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["_DMG_ 공격력 비례 1회_4.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_WI_KORIN_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 6.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비례 1회_4.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WI_KORIN_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 6.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비례 1회_4.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "LEON", "displayName": "LEON", "summary": {"categories": ["damage"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["Damage_1_52.asset", "Damage_5_1.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_WA_LEON_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.3, "range": 3.5, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_52.asset", "Damage_5_1.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [{"asset": "MoveToTarget_7.asset", "duration": 0.4, "moveDistance": 2.0, "minDistance": 0.5}], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WA_LEON_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.3, "range": 3.5, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_52.asset", "Damage_5_1.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [{"asset": "MoveToTarget_7.asset", "duration": 0.4, "moveDistance": 2.0, "minDistance": 0.5}], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "LUCY", "displayName": "LUCY", "summary": {"categories": ["damage", "support"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "BLOCK", "kind": "flat", "value": 8.0, "duration": 20.0, "target": "team", "sources": 2}], "unknownHitAssets": ["Damage_1_57.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_PA_LUCY_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.917, "range": 6.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_57.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_PA_LUCY_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.917, "range": 6.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_57.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_PA_LUCY_PASSIVE_GRADE6_2", "trigger": "triggered", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.917, "range": 6.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "BLOCK", "value": {"kind": "flat", "value": 8.0}, "duration": 20.0, "target": "team", "asset": "Buff_1_16.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_PA_LUCY_PASSIVE_GRADE6_2", "trigger": "triggered", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.917, "range": 6.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "BLOCK", "value": {"kind": "flat", "value": 8.0}, "duration": 20.0, "target": "team", "asset": "Buff_1_16.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}]}, {"character": "MARIA", "displayName": "MARIA", "summary": {"categories": ["damage"], "triggers": ["2C"], "knownTotalMultiplier": 0.96, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["AreaEffect_1_7.asset", "_AE_ 공격력 증가1_4.asset", "_AE_ 방어력 증가1_6.asset", "_AE_ 방어력 증가2_5.asset", "_AE_ 방어력 증가2_7.asset", "_AE_ 방어력 증가_2_0.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_PR_MARIA_PASSIVE_GRADE6", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 1.42, "range": 5.0, "category": "damage", "damage": {"knownParts": [{"asset": "_AE_ 공격력비례 치유_3.asset", "kind": "dot", "statPercent": 0.06, "tickInterval": 1.0, "duration": 8.0, "totalMultiplier": 0.48, "damageType": 0, "targetSide": 3}], "knownTotalMultiplier": 0.48, "unknownHitAssets": ["AreaEffect_1_7.asset", "_AE_ 방어력 증가_2_0.asset", "_AE_ 방어력 증가1_6.asset", "_AE_ 공격력 증가1_4.asset", "_AE_ 방어력 증가2_5.asset", "_AE_ 방어력 증가2_7.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_PR_MARIA_PASSIVE_GRADE6", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 1.42, "range": 5.0, "category": "damage", "damage": {"knownParts": [{"asset": "_AE_ 공격력비례 치유_3.asset", "kind": "dot", "statPercent": 0.06, "tickInterval": 1.0, "duration": 8.0, "totalMultiplier": 0.48, "damageType": 0, "targetSide": 3}], "knownTotalMultiplier": 0.48, "unknownHitAssets": ["AreaEffect_1_7.asset", "_AE_ 방어력 증가_2_0.asset", "_AE_ 방어력 증가1_6.asset", "_AE_ 공격력 증가1_4.asset", "_AE_ 방어력 증가2_5.asset", "_AE_ 방어력 증가2_7.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "NIGHTINGALE", "displayName": "NIGHTINGALE", "summary": {"categories": ["support", "utility"], "triggers": ["3C", "triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "CRIT", "kind": "percent", "value": -58.0, "duration": 10.0, "target": "team", "sources": 2}, {"stat": "HP", "kind": "flat", "value": 46.0, "duration": 10.0, "target": "team", "sources": 2}], "unknownHitAssets": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, "skills": [{"id": "SK_PR_NIGHTINGALE_BASIC_ATK_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.92, "range": 6.0, "category": "utility", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_PR_NIGHTINGALE_BASIC_ATK_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.92, "range": 6.0, "category": "utility", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_PR_NIGHTINGALE_PASSIVE_GRADE6", "trigger": "3C", "animation": "Attack", "cooldown": 0.0, "duration": 0.0, "range": 6.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "CRIT", "value": {"kind": "percent", "value": -58.0}, "duration": 10.0, "target": "team", "asset": "_Buff_ 공격속도 증가_1_0.asset"}, {"stat": "HP", "value": {"kind": "flat", "value": 46.0}, "duration": 10.0, "target": "team", "asset": "_Buff_ 공격속도 증가_2.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, {"id": "SK_PR_NIGHTINGALE_PASSIVE_GRADE6", "trigger": "3C", "animation": "Attack", "cooldown": 0.0, "duration": 0.0, "range": 6.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "CRIT", "value": {"kind": "percent", "value": -58.0}, "duration": 10.0, "target": "team", "asset": "_Buff_ 공격속도 증가_1_0.asset"}, {"stat": "HP", "value": {"kind": "flat", "value": 46.0}, "duration": 10.0, "target": "team", "asset": "_Buff_ 공격속도 증가_2.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}]}, {"character": "NO9", "displayName": "NO9", "summary": {"categories": ["damage", "support"], "triggers": ["2C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "HP", "kind": "flat", "value": 45.0, "duration": 15.0, "target": "self_or_team", "sources": 2}, {"stat": "ATK_SPEED", "kind": "flat", "value": 56.0, "duration": 15.0, "target": "self_or_team", "sources": 2}], "unknownHitAssets": ["Damage_1_32.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_HU_NO9_PASSIVE_GRADE6_1", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_32.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_HU_NO9_PASSIVE_GRADE6_1", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_32.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_HU_NO9_PASSIVE_GRADE6_2", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 45.0}, "duration": 15.0, "target": "self_or_team", "asset": "Buff_1_1.asset"}, {"stat": "ATK_SPEED", "value": {"kind": "flat", "value": 56.0}, "duration": 15.0, "target": "self_or_team", "asset": "Buff_2.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_HU_NO9_PASSIVE_GRADE6_2", "trigger": "2C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 0.0, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 45.0}, "duration": 15.0, "target": "self_or_team", "asset": "Buff_1_1.asset"}, {"stat": "ATK_SPEED", "value": {"kind": "flat", "value": 56.0}, "duration": 15.0, "target": "self_or_team", "asset": "Buff_2.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}]}, {"character": "R", "displayName": "R", "summary": {"categories": ["damage"], "triggers": ["triggered"], "knownTotalMultiplier": 23.52, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": [], "notes": []}, "skills": [{"id": "SK_AR_R_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.5, "range": 1.5, "category": "damage", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 16회_3.asset", "kind": "dot", "statPercent": 0.7, "tickInterval": 0.0625, "duration": 1.05, "totalMultiplier": 11.76, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 11.76, "unknownHitAssets": []}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_AR_R_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.5, "range": 1.5, "category": "damage", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 16회_3.asset", "kind": "dot", "statPercent": 0.7, "tickInterval": 0.0625, "duration": 1.05, "totalMultiplier": 11.76, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 11.76, "unknownHitAssets": []}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}]}, {"character": "RACHEAL", "displayName": "RACHEAL", "summary": {"categories": ["support_cycle"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 4, "allyBlocks": 0, "buffs": [{"stat": "ATK", "kind": "percent", "value": 32.0, "duration": 3.0, "target": "team", "sources": 2}, {"stat": "CRIT", "kind": "percent", "value": -53.0, "duration": 3.0, "target": "team", "sources": 2}], "unknownHitAssets": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, "skills": [{"id": "SK_WI_RACHEAL_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 3.0, "duration": 0.5, "range": 0.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 32.0}, "duration": 3.0, "target": "team", "asset": "Buff_2_1.asset"}, {"stat": "CRIT", "value": {"kind": "percent", "value": -53.0}, "duration": 3.0, "target": "team", "asset": "_Buff_ 공격속도 증가_4.asset"}], "blocks": {"self": 2, "others": 0, "raw": [{"count": 2, "includeSelf": true}]}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, {"id": "SK_WI_RACHEAL_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 3.0, "duration": 0.5, "range": 0.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 32.0}, "duration": 3.0, "target": "team", "asset": "Buff_2_1.asset"}, {"stat": "CRIT", "value": {"kind": "percent", "value": -53.0}, "duration": 3.0, "target": "team", "asset": "_Buff_ 공격속도 증가_4.asset"}], "blocks": {"self": 2, "others": 0, "raw": [{"count": 2, "includeSelf": true}]}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}]}, {"character": "RANDGRID", "displayName": "RANDGRID", "summary": {"categories": ["hybrid"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "BLOCK", "kind": "flat", "value": 14.0, "duration": 8.0, "target": "self_or_team", "sources": 2}, {"stat": "EVADE", "kind": "flat", "value": 100.0, "duration": 8.0, "target": "self_or_team", "sources": 2}], "unknownHitAssets": ["Damage_1_23.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_WA_RANDGRID_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 5.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_23.asset"]}, "buffs": [{"stat": "BLOCK", "value": {"kind": "flat", "value": 14.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_3_0.asset"}, {"stat": "EVADE", "value": {"kind": "flat", "value": 100.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_5_0.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_WA_RANDGRID_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 0.0, "duration": 0.0, "range": 5.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_1_23.asset"]}, "buffs": [{"stat": "BLOCK", "value": {"kind": "flat", "value": 14.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_3_0.asset"}, {"stat": "EVADE", "value": {"kind": "flat", "value": 100.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_5_0.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "ROLAND", "displayName": "ROLAND", "summary": {"categories": ["hybrid"], "triggers": ["triggered"], "knownTotalMultiplier": 0.0, "selfBlocks": 2, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["_DMG_ 공격력 비례_3_0.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_PA_ROLAND_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.5, "range": 0.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비례_3_0.asset"]}, "buffs": [], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_PA_ROLAND_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Attack", "cooldown": 0.0, "duration": 0.5, "range": 0.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["_DMG_ 공격력 비례_3_0.asset"]}, "buffs": [], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "SCARLET", "displayName": "SCARLET", "summary": {"categories": ["hybrid"], "triggers": ["3C"], "knownTotalMultiplier": 14.693878, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "CRIT_DMG", "kind": "percent", "value": -85.0, "duration": 10.0, "target": "enemy", "sources": 2}], "unknownHitAssets": ["Damage_4_6.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed.", "Negative CRIT_DMG percent may represent debuff or mis-mapped stat; verify in-game."]}, "skills": [{"id": "SK_HU_SCARLET_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 5.0, "duration": 1.33, "range": 8.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "DOT_7.asset", "kind": "dot", "statPercent": 0.36, "tickInterval": 0.49, "duration": 10.0, "totalMultiplier": 7.346938775510203, "damageType": 0, "targetSide": null}], "knownTotalMultiplier": 7.346939, "unknownHitAssets": ["Damage_4_6.asset"]}, "buffs": [{"stat": "CRIT_DMG", "value": {"kind": "percent", "value": -85.0}, "duration": 10.0, "target": "enemy", "asset": "Buff_6_1.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed.", "Negative CRIT_DMG percent may represent debuff or mis-mapped stat; verify in-game."]}, {"id": "SK_HU_SCARLET_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 5.0, "duration": 1.33, "range": 8.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "DOT_7.asset", "kind": "dot", "statPercent": 0.36, "tickInterval": 0.49, "duration": 10.0, "totalMultiplier": 7.346938775510203, "damageType": 0, "targetSide": null}], "knownTotalMultiplier": 7.346939, "unknownHitAssets": ["Damage_4_6.asset"]}, "buffs": [{"stat": "CRIT_DMG", "value": {"kind": "percent", "value": -85.0}, "duration": 10.0, "target": "enemy", "asset": "Buff_6_1.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed.", "Negative CRIT_DMG percent may represent debuff or mis-mapped stat; verify in-game."]}]}, {"character": "SIGURUNA", "displayName": "SIGURUNA", "summary": {"categories": ["hybrid"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "HP", "kind": "flat", "value": 88.0, "duration": 20.0, "target": "self_or_team", "sources": 2}], "unknownHitAssets": ["Damage_2_28.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_AR_SIGURUNA_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.33, "range": 7.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_2_28.asset"]}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 88.0}, "duration": 20.0, "target": "self_or_team", "asset": "Buff_8.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_AR_SIGURUNA_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.33, "range": 7.0, "category": "hybrid", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_2_28.asset"]}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 88.0}, "duration": 20.0, "target": "self_or_team", "asset": "Buff_8.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "SPYRO", "displayName": "SPYRO", "summary": {"categories": ["hybrid"], "triggers": ["triggered"], "knownTotalMultiplier": 9.45, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "ATK", "kind": "percent", "value": 11.0, "duration": 3.0, "target": "team", "sources": 2}], "unknownHitAssets": [], "notes": []}, "skills": [{"id": "SK_HU_SPYRO_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 1.0, "duration": 0.0, "range": 6.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "AreaEffect_10_8.asset", "kind": "dot", "statPercent": 2.1, "tickInterval": 0.2, "duration": 0.45, "totalMultiplier": 4.7250000000000005, "damageType": 0, "targetSide": 1}], "knownTotalMultiplier": 4.725, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 11.0}, "duration": 3.0, "target": "team", "asset": "Buff_5.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_HU_SPYRO_PASSIVE_GRADE6", "trigger": "triggered", "animation": "Skill_0", "cooldown": 1.0, "duration": 0.0, "range": 6.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "AreaEffect_10_8.asset", "kind": "dot", "statPercent": 2.1, "tickInterval": 0.2, "duration": 0.45, "totalMultiplier": 4.7250000000000005, "damageType": 0, "targetSide": 1}], "knownTotalMultiplier": 4.725, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 11.0}, "duration": 3.0, "target": "team", "asset": "Buff_5.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}]}, {"character": "SYRINGEHEAL", "displayName": "SYRINGEHEAL", "summary": {"categories": ["hybrid"], "triggers": ["3C"], "knownTotalMultiplier": 22.916666, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "ATK", "kind": "percent", "value": 12.0, "duration": 8.0, "target": "team", "sources": 2}], "unknownHitAssets": [], "notes": []}, "skills": [{"id": "SK_PR_SYRINGEHEAL_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 5.0, "duration": 0.0, "range": 5.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 9회_1_0.asset", "kind": "dot", "statPercent": 1.1, "tickInterval": 0.48, "duration": 5.0, "totalMultiplier": 11.458333333333336, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 11.458333, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 12.0}, "duration": 8.0, "target": "team", "asset": "Buff_2_4.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}, {"id": "SK_PR_SYRINGEHEAL_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_0", "cooldown": 5.0, "duration": 0.0, "range": 5.0, "category": "hybrid", "damage": {"knownParts": [{"asset": "_AE_ 공격력 비례 9회_1_0.asset", "kind": "dot", "statPercent": 1.1, "tickInterval": 0.48, "duration": 5.0, "totalMultiplier": 11.458333333333336, "damageType": 1, "targetSide": 1}], "knownTotalMultiplier": 11.458333, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 12.0}, "duration": 8.0, "target": "team", "asset": "Buff_2_4.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": []}]}, {"character": "THOR", "displayName": "THOR", "summary": {"categories": ["support"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [{"stat": "HP", "kind": "flat", "value": 73.0, "duration": 10.0, "target": "self_or_team", "sources": 2}, {"stat": "CRIT", "kind": "percent", "value": -80.0, "duration": 10.0, "target": "self_or_team", "sources": 2}], "unknownHitAssets": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, "skills": [{"id": "SK_PA_THOR_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 0.0, "range": 1.5, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 73.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_1_13.asset"}, {"stat": "CRIT", "value": {"kind": "percent", "value": -80.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_2_0.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}, {"id": "SK_PA_THOR_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 0.0, "range": 1.5, "category": "support", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 73.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_1_13.asset"}, {"stat": "CRIT", "value": {"kind": "percent", "value": -80.0}, "duration": 10.0, "target": "self_or_team", "asset": "Buff_2_0.asset"}], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Negative CRIT percent may actually be another stat due to stat-id mapping uncertainty."]}]}, {"character": "THOR_BASIC_ATK", "displayName": "?打 6??篣圉雩窸虛痔 黺??潤", "summary": {"categories": ["damage"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 0, "allyBlocks": 0, "buffs": [], "unknownHitAssets": ["Damage_0_25.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_PA_THOR_BASIC_ATK_ADD_DMG_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 0.0, "range": 3.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_0_25.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_PA_THOR_BASIC_ATK_ADD_DMG_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 0.0, "range": 3.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_0_25.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "VINCENT", "displayName": "VINCENT", "summary": {"categories": ["damage", "support_cycle"], "triggers": ["3C", "3C + triggered@1.0s"], "knownTotalMultiplier": 0.0, "selfBlocks": 6, "allyBlocks": 0, "buffs": [{"stat": "ATK", "kind": "percent", "value": 26.0, "duration": 8.0, "target": "self_or_team", "sources": 2}], "unknownHitAssets": ["Damage_4_3.asset"], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, "skills": [{"id": "SK_HU_VINCENT_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 0.0, "range": 7.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 26.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_6.asset"}], "blocks": {"self": 3, "others": 0, "raw": [{"count": 3, "includeSelf": true}]}, "movement": [], "notes": []}, {"id": "SK_HU_VINCENT_PASSIVE_GRADE6", "trigger": "3C", "animation": "Skill_1", "cooldown": 0.0, "duration": 0.0, "range": 7.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "ATK", "value": {"kind": "percent", "value": 26.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_6.asset"}], "blocks": {"self": 3, "others": 0, "raw": [{"count": 3, "includeSelf": true}]}, "movement": [], "notes": []}, {"id": "SK_HU_VINCENT_PASSIVE_GRADE6_2", "trigger": "3C + triggered@1.0s", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.25, "range": 7.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_4_3.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}, {"id": "SK_HU_VINCENT_PASSIVE_GRADE6_2", "trigger": "3C + triggered@1.0s", "animation": "Skill_1", "cooldown": 0.0, "duration": 1.25, "range": 7.0, "category": "damage", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": ["Damage_4_3.asset"]}, "buffs": [], "blocks": {"self": 0, "others": 0, "raw": []}, "movement": [], "notes": ["Contains hit damage assets without parsed multiplier; manual lookup still needed."]}]}, {"character": "YEOWOODONG", "displayName": "YEOWOODONG", "summary": {"categories": ["support_cycle"], "triggers": ["3C"], "knownTotalMultiplier": 0.0, "selfBlocks": 2, "allyBlocks": 0, "buffs": [{"stat": "HP", "kind": "flat", "value": 56.0, "duration": 8.0, "target": "team", "sources": 2}, {"stat": "PENETRATION", "kind": "flat", "value": 15.0, "duration": 8.0, "target": "self_or_team", "sources": 2}], "unknownHitAssets": [], "notes": []}, "skills": [{"id": "SK_PR_YEOWOODONG_GRADE6", "trigger": "3C", "animation": "Attack", "cooldown": 0.0, "duration": 1.0, "range": 0.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 56.0}, "duration": 8.0, "target": "team", "asset": "_Buff_ 치명타 확률 증가_2.asset"}, {"stat": "PENETRATION", "value": {"kind": "flat", "value": 15.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_3.asset"}], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": []}, {"id": "SK_PR_YEOWOODONG_GRADE6", "trigger": "3C", "animation": "Attack", "cooldown": 0.0, "duration": 1.0, "range": 0.0, "category": "support_cycle", "damage": {"knownParts": [], "knownTotalMultiplier": 0, "unknownHitAssets": []}, "buffs": [{"stat": "HP", "value": {"kind": "flat", "value": 56.0}, "duration": 8.0, "target": "team", "asset": "_Buff_ 치명타 확률 증가_2.asset"}, {"stat": "PENETRATION", "value": {"kind": "flat", "value": 15.0}, "duration": 8.0, "target": "self_or_team", "asset": "Buff_3.asset"}], "blocks": {"self": 1, "others": 0, "raw": [{"count": 1, "includeSelf": true}]}, "movement": [], "notes": []}]}];
+
+    function dedupeGrade6Skills(skills = []) {
+      const map = new Map();
+      skills.forEach((skill) => {
+        const key = `${skill.id || ''}__${skill.trigger || ''}__${skill.cooldown || 0}`;
+        if (!map.has(key)) map.set(key, skill);
+      });
+      return Array.from(map.values());
+    }
+
+    const BASE_GRADE6_DATABASE = Object.fromEntries(
+      GRADE6_DATABASE_RAW.map((entry) => [entry.character, {
+        ...entry,
+        skills: dedupeGrade6Skills(entry.skills || [])
+      }])
+    );
+
+    const GRADE6_PROFESSION_META = {
+      WA: { label: '戰士', placeholderPrefix: '新戰士' },
+      PA: { label: '聖騎', placeholderPrefix: '新聖騎' },
+      AR: { label: '弓手', placeholderPrefix: '新弓手' },
+      HU: { label: '獵人', placeholderPrefix: '新獵人' },
+      WI: { label: '法師', placeholderPrefix: '新法師' },
+      PR: { label: '祭師', placeholderPrefix: '新祭師' }
+    };
+
+    const GRADE6_PLACEHOLDERS = (() => {
+      const result = {};
+      Object.entries(GRADE6_PROFESSION_META).forEach(([code, meta]) => {
+        for (let index = 1; index <= 2; index += 1) {
+          const key = `NEW_${code}_${index}`;
+          result[key] = {
+            character: key,
+            displayName: `${meta.placeholderPrefix}${index}`,
+            professionCode: code,
+            isPlaceholder: true,
+            summary: {
+              categories: ['placeholder'],
+              triggers: ['手動輸入'],
+              knownTotalMultiplier: 0,
+              selfBlocks: 0,
+              allyBlocks: 0,
+              buffs: [],
+              unknownHitAssets: [],
+              notes: ['這是保留給新版角色的占位資料，請手動填入目前看到的面板與技能。']
+            },
+            skills: []
+          };
+        }
+      });
+      return result;
+    })();
+
+    const GRADE6_DATABASE = {
+      ...BASE_GRADE6_DATABASE,
+      ...GRADE6_PLACEHOLDERS
+    };
+
+    
+    const GRADE6_NAME_ZH = {
+      ACHON: '阿雄',
+      ATALANTE: '阿塔蘭忒',
+      GON: '小傑',
+      KAGUYA: '輝夜',
+      R: '阿爾',
+      SIGURUNA: '西格露娜',
+      DARTAGNAN: '達太安',
+      NO9: 'No.9',
+      SCARLET: '史嘉蕾',
+      SPYRO: '史派羅',
+      VINCENT: '文森特',
+      ATHENA: '雅典娜',
+      DRAKE: '德瑞克',
+      LUCY: '露西',
+      ROLAND: '羅蘭',
+      THOR: '索爾',
+      THOR_BASIC_ATK: '索爾',
+      MARIA: '瑪麗亞',
+      NIGHTINGALE: '南丁格爾',
+      SYRINGEHEAL: 'Nurspy',
+      YEOWOODONG: '九尾狐',
+      IZUNA: '伊綱',
+      JOANOFARC: '貞德',
+      KAORI: '香織',
+      LEON: '雷昂',
+      RANDGRID: '蘭德克莉特',
+      BLIZZARD: '暴雪',
+      DOROTHY: '桃樂絲',
+      KORIN: '柯琳',
+      RACHEAL: '瑞秋',
+      NEW_WA_1: '新戰士1',
+      NEW_WA_2: '新戰士2',
+      NEW_PA_1: '新聖騎1',
+      NEW_PA_2: '新聖騎2',
+      NEW_AR_1: '新弓手1',
+      NEW_AR_2: '新弓手2',
+      NEW_HU_1: '新獵人1',
+      NEW_HU_2: '新獵人2',
+      NEW_WI_1: '新法師1',
+      NEW_WI_2: '新法師2',
+      NEW_PR_1: '新祭師1',
+      NEW_PR_2: '新祭師2'
+    };
+
+    function inferProfessionCode(entryOrKey) {
+      const entry = typeof entryOrKey === 'string' ? GRADE6_DATABASE[entryOrKey] : entryOrKey;
+      if (!entry) return '';
+      if (entry.professionCode) return entry.professionCode;
+      const firstSkillId = (entry.skills || []).find((skill) => skill?.id)?.id || '';
+      const match = firstSkillId.match(/^SK_([A-Z]{2})_/);
+      return match ? match[1] : '';
+    }
+
+    function getGrade6DisplayName(key = '') {
+      const en = String(key || '').trim();
+      const zh = GRADE6_NAME_ZH[en];
+      if (zh) return `${zh} (${en})`;
+      const entry = GRADE6_DATABASE[en];
+      if (entry?.displayName) return `${entry.displayName} (${en})`;
+      return en;
+    }
+
+    function getCharacterDisplayName(character) {
+      if (!character) return '未命名角色';
+      const key = character.grade6Key || character.character || character.name || '';
+      return getGrade6DisplayName(key) || `${character.name || '未命名角色'}`;
+    }
+
+const CHARACTER_TEMPLATES = {
+      '蘭德克莉特': {
+        atk: 1466,
+        hp: 5453,
+        pdef: 312,
+        mdef: 409,
+        pPen: 409,
+        mPen: 373,
+        crit: 34,
+        critDmg: 104,
+        buffs: [],
+        aura: null,
+        skills: [
+          { name: '1C', damageType: 'physical', hits: 1, hitMultiplier: 2.5, cycle: 2 },
+          { name: '2C', damageType: 'physical', hits: 1, hitMultiplier: 3.75, cycle: 4 },
+          { name: '3C', damageType: 'physical', hits: 1, hitMultiplier: 14.09, cycle: 6 }
+        ]
+      },
+      '九尾狐': {
+        atk: 1200,
+        hp: 5200,
+        pdef: 0,
+        mdef: 0,
+        pPen: 0,
+        mPen: 0,
+        crit: 0,
+        critDmg: 100,
+        buffs: [],
+        selfBuffs: [],
+        teamBuffs: [{ label: '九尾狐 暴擊率+56%', type: 'critPct', value: 56, enabled: true, applyToSelf: false }],
+        aura: null,
+        skills: []
+      },
+      'Nurspy': {
+        atk: 1200,
+        hp: 5200,
+        pdef: 0,
+        mdef: 0,
+        pPen: 0,
+        mPen: 0,
+        crit: 0,
+        critDmg: 100,
+        buffs: [],
+        selfBuffs: [],
+        teamBuffs: [{ label: 'Nurspy ATK+12%', type: 'atkPct', value: 12, enabled: true, applyToSelf: true }],
+        aura: null,
+        skills: []
+      },
+      'Randgrid': {
+        atk: 1400,
+        hp: 5600,
+        pdef: 0,
+        mdef: 0,
+        pPen: 0,
+        mPen: 0,
+        crit: 0,
+        critDmg: 100,
+        buffs: [],
+        aura: null,
+        skills: []
+      }
+    };
+
+    const MONSTERS = {
+      '普草人': { hp: 105, atk: 15, def: -3, pRes: -3, mRes: -3 },
+      '黑暗巨龍': { hp: 4801265, atk: 1119, def: 323, pRes: 323, mRes: 323 }
+    };
+
+    const EFFECT_OPTIONS = [
+      { value: 'none', label: '無' },
+      { value: 'atkPct', label: '攻擊力%' },
+      { value: 'critPct', label: '暴擊率%' },
+      { value: 'penPct', label: '穿透%' },
+      { value: 'finalDamagePct', label: '最終傷害%' },
+      { value: 'skillDamagePct', label: '技能傷害%' },
+      { value: 'pPenFlat', label: '物理穿透' },
+      { value: 'mPenFlat', label: '魔法穿透' }
+    ];
+
+    const JOB_PASSIVE_PROFILES = {
+      warrior: {
+        key: 'warrior',
+        label: '戰士｜懲罰之魂',
+        kind: 'damage',
+        sourceStat: 'atk',
+        multiplier: 2.0,
+        interval: 5,
+        target: '周圍敵人',
+        canCrit: true,
+        useCritDamage: true,
+        summary: '每 5 秒對周圍造成攻擊力 200% 的固定傷害'
+      },
+      paladin: {
+        key: 'paladin',
+        label: '聖騎士｜守護之魂',
+        kind: 'damage',
+        sourceStat: 'hp',
+        multiplier: 0.25,
+        interval: 5,
+        target: '周圍敵人',
+        canCrit: true,
+        useCritDamage: true,
+        summary: '每 5 秒對周圍造成生命值 25% 的固定傷害'
+      },
+      archer: {
+        key: 'archer',
+        label: '弓箭手｜速射之魂',
+        kind: 'damage',
+        sourceStat: 'atk',
+        multiplier: 1.5,
+        interval: 5,
+        target: '最遠敵人',
+        canCrit: true,
+        useCritDamage: true,
+        summary: '每 5 秒對最遠的敵人造成攻擊力 150% 的固定傷害'
+      },
+      hunter: {
+        key: 'hunter',
+        label: '獵人｜必殺之魂',
+        kind: 'damage',
+        sourceStat: 'atk',
+        multiplier: 1.5,
+        interval: 5,
+        target: '最近敵人',
+        canCrit: true,
+        useCritDamage: true,
+        summary: '每 5 秒對最近的敵人造成攻擊力 150% 的固定傷害'
+      },
+      wizard: {
+        key: 'wizard',
+        label: '魔法師｜魔力之魂',
+        kind: 'utility',
+        interval: 5,
+        summary: '每 5 秒為隊伍生成 1 個方塊（v1 先顯示，不算進 DPS）'
+      },
+      priest: {
+        key: 'priest',
+        label: '祭師｜慈愛之魂',
+        kind: 'heal',
+        sourceStat: 'atk',
+        multiplier: 0.25,
+        interval: 3,
+        target: '最低生命友軍',
+        summary: '每 3 秒以攻擊力 25% 為生命值最低的友軍恢復生命（v1 先顯示，不算進 DPS）'
+      }
+    };
+
+    const PROFESSION_TO_PASSIVE = {
+      WA: 'warrior',
+      PA: 'paladin',
+      AR: 'archer',
+      HU: 'hunter',
+      WI: 'wizard',
+      PR: 'priest'
+    };
+
+    function inferPassiveKeyFromCharacter(character = {}) {
+      if (character.jobPassiveKey) return character.jobPassiveKey;
+      const gradeKey = character.grade6Key || character.character || '';
+      const professionCode = inferProfessionCode(gradeKey);
+      return PROFESSION_TO_PASSIVE[professionCode] || '';
+    }
+
+    function updateJobPassiveInfo(key = '') {
+      if (!el.jobPassiveInfo) return;
+      const profile = JOB_PASSIVE_PROFILES[key];
+      if (!profile) {
+        el.jobPassiveInfo.textContent = '職業被動：未啟用';
+        return;
+      }
+      const enabled = (el.jobPassiveEnabled?.value || '1') === '1' ? '已啟用' : '已停用';
+      el.jobPassiveInfo.textContent = `職業被動：${profile.label}｜${enabled}｜${profile.summary}`;
+    }
+
+    function autoAssignPassiveFromGrade6(key = '', force = false) {
+      const professionCode = inferProfessionCode(key);
+      const passiveKey = PROFESSION_TO_PASSIVE[professionCode] || '';
+      if (!el.jobPassiveKey) return;
+      if (force || !el.jobPassiveKey.value) {
+        el.jobPassiveKey.value = passiveKey;
+      }
+      updateJobPassiveInfo(el.jobPassiveKey.value || '');
+    }
+
+    function computeJobPassive(character, derived, critRate, critMultiplier, fightSeconds) {
+      const passiveKey = character?.jobPassiveKey || inferPassiveKeyFromCharacter(character);
+      const enabled = character?.jobPassiveEnabled !== false;
+      const profile = JOB_PASSIVE_PROFILES[passiveKey];
+      if (!enabled || !profile) {
+        return {
+          key: passiveKey || '',
+          enabled: false,
+          kind: 'none',
+          summary: '未啟用',
+          dps: 0,
+          totalDamage: 0,
+          nonCrit: 0,
+          crit: 0,
+          avg: 0,
+          baseValue: 0
+        };
+      }
+
+      if (profile.kind !== 'damage') {
+        let amount = 0;
+        if (profile.kind === 'heal') amount = derived.finalAtk * (profile.multiplier || 0);
+        return {
+          key: passiveKey,
+          enabled: true,
+          kind: profile.kind,
+          summary: profile.summary,
+          dps: 0,
+          totalDamage: 0,
+          nonCrit: amount,
+          crit: amount,
+          avg: amount,
+          baseValue: profile.sourceStat === 'atk' ? derived.finalAtk : derived.roleHp,
+          interval: profile.interval
+        };
+      }
+
+      const baseValue = profile.sourceStat === 'hp'
+        ? (num(character?.finalHpInput) || num(character?.hp) || derived.roleHp || 0)
+        : (num(character?.finalAtkInput) || num(character?.atk) || derived.finalAtk || 0);
+      const nonCrit = baseValue * profile.multiplier;
+      const crit = profile.canCrit ? nonCrit * (profile.useCritDamage ? critMultiplier : 1) : nonCrit;
+      const avg = profile.canCrit ? (nonCrit * (1 - critRate) + crit * critRate) : nonCrit;
+      const dps = avg / Math.max(0.01, profile.interval || 5);
+      return {
+        key: passiveKey,
+        enabled: true,
+        kind: profile.kind,
+        summary: profile.summary,
+        sourceStat: profile.sourceStat,
+        baseValue,
+        multiplier: profile.multiplier,
+        interval: profile.interval,
+        canCrit: profile.canCrit,
+        nonCrit,
+        crit,
+        avg,
+        dps,
+        totalDamage: dps * fightSeconds
+      };
+    }
+
+
+    const state = {
+      monsterKey: '普草人',
+      fightSeconds: 60,
+      characters: [],
+      selectedId: null,
+      editingId: null,
+      skillDrafts: []
+    };
+
+    window.state = state;
+
+    const el = {
+      monsterSelect: document.getElementById('monsterSelect'),
+      fightSeconds: document.getElementById('fightSeconds'),
+      partySummary: document.getElementById('partySummary'),
+      roster: document.getElementById('roster'),
+      selectedCharacterName: document.getElementById('selectedCharacterName'),
+      nonCritHit: document.getElementById('nonCritHit'),
+      avgHit: document.getElementById('avgHit'),
+      effectiveAps: document.getElementById('effectiveAps'),
+      dps: document.getElementById('dps'),
+      fightDamage: document.getElementById('fightDamage'),
+      calcDebugPanel: document.getElementById('calcDebugPanel'),
+      dbgBaseAtk: document.getElementById('dbgBaseAtk'),
+      dbgAtkAfterBuff: document.getElementById('dbgAtkAfterBuff'),
+      dbgSkillMultiplier: document.getElementById('dbgSkillMultiplier'),
+      dbgNonCrit: document.getElementById('dbgNonCrit'),
+      dbgCrit: document.getElementById('dbgCrit'),
+      dbgAvg: document.getElementById('dbgAvg'),
+      dbgCritRate: document.getElementById('dbgCritRate'),
+      dbgCritMultiplier: document.getElementById('dbgCritMultiplier'),
+      dbgRawCycle: document.getElementById('dbgRawCycle'),
+      dbgEffectiveCycle: document.getElementById('dbgEffectiveCycle'),
+      dbgDefenseMultiplier: document.getElementById('dbgDefenseMultiplier'),
+      dbgFinalDps: document.getElementById('dbgFinalDps'),
+      dbgPassiveDps: document.getElementById('dbgPassiveDps'),
+      dbgPassiveSummary: document.getElementById('dbgPassiveSummary'),
+      pageWithDebug: document.getElementById('pageWithDebug'),
+      debugModePill: document.getElementById('debugModePill'),
+      debugPanelInlineMount: document.getElementById('debugPanelInlineMount'),
+      debugPanelSideMount: document.getElementById('debugPanelSideMount'),
+      dbgBuffSummary: document.getElementById('dbgBuffSummary'),
+      dbgSkillSummary: document.getElementById('dbgSkillSummary'),
+      effectiveBuffInfo: document.getElementById('effectiveBuffInfo'),
+      effectiveStatInfo: document.getElementById('effectiveStatInfo'),
+      modal: document.getElementById('characterModal'),
+      modalTitle: document.getElementById('modalTitle'),
+      charName: document.getElementById('charName'),
+      charTeam: document.getElementById('charTeam'),
+      charTemplate: document.getElementById('charTemplate'),
+      grade6Key: document.getElementById('grade6Key'),
+      grade6Info: document.getElementById('grade6Info'),
+      jobPassiveKey: document.getElementById('jobPassiveKey'),
+      jobPassiveEnabled: document.getElementById('jobPassiveEnabled'),
+      jobPassiveInfo: document.getElementById('jobPassiveInfo'),
+      charLeader: document.getElementById('charLeader'),
+      calcMode: document.getElementById('calcMode'),
+      simpleStatsGrid: document.getElementById('simpleStatsGrid'),
+      advancedStatsGrid: document.getElementById('advancedStatsGrid'),
+      finalAtkInput: document.getElementById('finalAtkInput'),
+      finalHpInput: document.getElementById('finalHpInput'),
+      level: document.getElementById('level'),
+      initialAttDmg: document.getElementById('initialAttDmg'),
+      growthAttDmg: document.getElementById('growthAttDmg'),
+      initialHp: document.getElementById('initialHp'),
+      growthHp: document.getElementById('growthHp'),
+      weaponAtk: document.getElementById('weaponAtk'),
+      flatAttack: document.getElementById('flatAttack'),
+      攻擊週期: document.getElementById('攻擊週期'),
+      atk: document.getElementById('atk'),
+      hp: document.getElementById('hp'),
+      pdef: document.getElementById('pdef'),
+      mdef: document.getElementById('mdef'),
+      pPen: document.getElementById('pPen'),
+      mPen: document.getElementById('mPen'),
+      crit: document.getElementById('crit'),
+      critDmg: document.getElementById('critDmg'),
+      buffRows: document.getElementById('buffRows'),
+      teamBuffRows: document.getElementById('teamBuffRows'),
+      skillList: document.getElementById('skillList')
+    };
+
+    const nf = new Intl.NumberFormat('zh-TW', { maximumFractionDigits: 2 });
+
+    function uid(prefix = 'id') {
+      return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
+    }
+
+    function cloneRows(rows = []) {
+      return rows.map((entry) => ({ type: entry?.type || 'none', value: num(entry?.value) }));
+    }
+
+
+    function populateGrade6Select() {
+      if (!el.grade6Key) return;
+      const groups = {};
+      Object.keys(GRADE6_PROFESSION_META).forEach((code) => { groups[code] = []; });
+
+      Object.keys(GRADE6_DATABASE)
+        .filter((key) => key !== 'THOR_BASIC_ATK')
+        .sort((a, b) => getGrade6DisplayName(a).localeCompare(getGrade6DisplayName(b), 'zh-Hant'))
+        .forEach((key) => {
+          const entry = GRADE6_DATABASE[key];
+          const code = inferProfessionCode(entry);
+          if (!groups[code]) groups[code] = [];
+          groups[code].push(`<option value="${key}">${getGrade6DisplayName(key)}${entry?.isPlaceholder ? '｜待輸入' : ''}</option>`);
+        });
+
+      const html = ['<option value="">未選擇</option>'];
+      Object.entries(GRADE6_PROFESSION_META).forEach(([code, meta]) => {
+        const options = groups[code] || [];
+        if (!options.length) return;
+        html.push(`<optgroup label="${meta.label}">${options.join('')}</optgroup>`);
+      });
+      el.grade6Key.innerHTML = html.join('');
+    }
+
+    function updateGrade6Info(key = '') {
+      if (!el.grade6Info) return;
+      const entry = key ? GRADE6_DATABASE[key] : null;
+      if (!entry) {
+        const currentCount = Object.keys(BASE_GRADE6_DATABASE).filter((name) => name !== 'THOR_BASIC_ATK').length;
+        const placeholderCount = Object.keys(GRADE6_PLACEHOLDERS).length;
+        el.grade6Info.textContent = `六星資料庫：正式 ${currentCount} 隻｜新版占位 ${placeholderCount} 隻`;
+        return;
+      }
+      if (entry.isPlaceholder) {
+        const code = inferProfessionCode(entry);
+        const jobLabel = GRADE6_PROFESSION_META[code]?.label || '未知職業';
+        el.grade6Info.textContent = `六星資料庫：${getGrade6DisplayName(key)}｜${jobLabel}｜新版占位資料，請手動輸入面板、Buff、技能倍率`;
+        return;
+      }
+      const triggerText = (entry.summary?.triggers || []).join(' / ') || '未標記';
+      const mult = Number(entry.summary?.knownTotalMultiplier || 0);
+      const buffs = (entry.summary?.buffs || []).length;
+      const blocks = Number(entry.summary?.selfBlocks || 0) + Number(entry.summary?.allyBlocks || 0);
+      el.grade6Info.textContent = `六星資料庫：${getGrade6DisplayName(key)}｜觸發 ${triggerText}｜已知總倍率 ${mult.toFixed(2)}｜Buff ${buffs}｜Block ${blocks}`;
+    }
+
+    function inferImportedDamageType(skillId = '') {
+      if (/_PR_|_WI_/.test(skillId)) return 'magic';
+      return 'physical';
+    }
+
+    function inferCycleFromTrigger(trigger = '', cooldown = 0, fallback = 2) {
+      const label = String(trigger || '').toUpperCase();
+      if (label.includes('1C')) return 2;
+      if (label.includes('2C')) return 4;
+      if (label.includes('3C')) return 6;
+      if (label.includes('BASIC_ATTACK')) return Math.max(0.01, fallback || 2);
+      if (label.includes('BLOCK_USE') || label.includes('BLOCK_CONSUME')) return Math.max(2, cooldown || 2);
+      if (label.includes('TAKE_HEAL') || label.includes('TRIGGERED')) return Math.max(2, cooldown || fallback || 2);
+      return Math.max(0.01, cooldown || fallback || 2);
+    }
+
+    function buildImportedSkillDrafts(key, fallbackCycle = 2) {
+      const entry = GRADE6_DATABASE[key];
+      if (!entry) return [];
+      return dedupeGrade6Skills(entry.skills || [])
+        .filter((skill) => Number(skill?.damage?.knownTotalMultiplier || 0) > 0)
+        .map((skill, index) => createSkillDraft({
+          id: uid('skill'),
+          name: `${skill.trigger || '觸發'} ${index + 1}`,
+          damageType: inferImportedDamageType(skill.id),
+          hits: 1,
+          hitMultiplier: Number(skill.damage.knownTotalMultiplier || 0),
+          cycle: inferCycleFromTrigger(skill.trigger, Number(skill.cooldown || 0), fallbackCycle)
+        }));
+    }
+
+    function applyGrade6Data(key) {
+      const entry = GRADE6_DATABASE[key];
+      if (!entry) {
+        updateGrade6Info('');
+        return;
+      }
+      if (!el.charName.value.trim()) {
+        el.charName.value = entry.isPlaceholder ? (entry.displayName || entry.character || '') : (entry.character || entry.displayName || '');
+      }
+      const baseCycle = Math.max(0.01, num(el.攻擊週期?.value) || 2);
+      const importedSkills = buildImportedSkillDrafts(key, baseCycle);
+      if (entry.isPlaceholder && !importedSkills.length && !state.skillDrafts.length) {
+        state.skillDrafts = [createSkillDraft({ name: '3C', damageType: 'physical', hits: 1, hitMultiplier: 0, cycle: 6 })];
+      } else if (importedSkills.length) {
+        state.skillDrafts = importedSkills;
+      }
+      renderSkills();
+      updateGrade6Info(key);
+      autoAssignPassiveFromGrade6(key, false);
+      updateLivePreview();
+    }
+
+    function getTemplateAura(character) {
+      const key = character?.templateKey;
+      if (!key || !CHARACTER_TEMPLATES[key]) return null;
+      return CHARACTER_TEMPLATES[key].aura || null;
+    }
+
+    function collectTeamAuraEffects(character, allCharacters = []) {
+      const totals = {
+        atkPct: 0,
+        critPct: 0,
+        penPct: 0,
+        finalDamagePct: 0,
+        skillDamagePct: 0,
+        pPenFlat: 0,
+        mPenFlat: 0
+      };
+      const labels = [];
+      const seen = new Set();
+
+      allCharacters.forEach((mate) => {
+        if (!mate || mate.id === character.id) return;
+        if (Number(mate.team) !== Number(character.team)) return;
+        const aura = getTemplateAura(mate);
+        if (!aura || seen.has(aura.key)) return;
+        seen.add(aura.key);
+        labels.push(aura.label || aura.key);
+        (aura.effects || []).forEach((entry) => {
+          if (!entry || !Object.prototype.hasOwnProperty.call(totals, entry.type)) return;
+          totals[entry.type] += num(entry.value);
+        });
+      });
+
+      return { totals, labels };
+    }
+
+    function num(value) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function optionsHtml(selectedValue = 'none') {
+      return EFFECT_OPTIONS.map((option) => `<option value="${option.value}" ${option.value === selectedValue ? 'selected' : ''}>${option.label}</option>`).join('');
+    }
+
+    function applyCharacterTemplate(templateName) {
+      const template = CHARACTER_TEMPLATES[templateName];
+      if (!template) return;
+
+      if (!el.charName.value.trim()) el.charName.value = templateName;
+      el.level.value = template.level ?? 60;
+      el.initialAttDmg.value = template.initialAttDmg ?? template.atk ?? 0;
+      el.growthAttDmg.value = template.growthAttDmg ?? 0;
+      el.initialHp.value = template.initialHp ?? template.hp ?? 0;
+      el.growthHp.value = template.growthHp ?? 0;
+      el.weaponAtk.value = template.weaponAtk ?? 0;
+      el.flatAttack.value = template.flatAttack ?? 0;
+      el.finalAtkInput.value = template.finalAtkInput ?? template.atk ?? template.initialAttDmg ?? 0;
+      el.finalHpInput.value = template.finalHpInput ?? template.hp ?? template.initialHp ?? 0;
+      el.攻擊週期.value = template.攻擊週期 ?? template.attackSpeed ?? (template.skills?.[0]?.cycle ?? 2);
+      syncDerivedFormStats();
+      el.pdef.value = template.pdef ?? 0;
+      el.mdef.value = template.mdef ?? 0;
+      el.pPen.value = template.pPen ?? 0;
+      el.mPen.value = template.mPen ?? 0;
+      el.crit.value = template.crit ?? 0;
+      el.critDmg.value = template.critDmg ?? 100;
+      fillEffectRows(el.buffRows, cloneRows(template.selfBuffs || template.buffs || []));
+      fillEffectRows(el.teamBuffRows, cloneRows(template.teamBuffs || []));
+      state.skillDrafts = (template.skills || []).map((skill) => createSkillDraft(skill));
+      renderSkills();
+      updateLivePreview();
+    }
+
+    function clearCharacterTemplateSelection() {
+      el.charTemplate.value = '';
+    }
+
+    function createEffectRows(container, prefix, count) {
+      container.innerHTML = '';
+      for (let i = 0; i < count; i += 1) {
+        appendEffectRow(container, prefix, {});
+      }
+      refreshEffectRowIndexes(container, prefix);
+    }
+
+    function appendEffectRow(container, prefix, entry = {}) {
+      const isTeam = container?.id === 'teamBuffRows';
+      const row = document.createElement('div');
+      row.className = 'skill-item effect-item';
+      row.innerHTML = `
+        <div class="skill-top">
+          <strong>${escapeHtml(entry.label || prefix)}</strong>
+          <button class="icon-btn danger" type="button" data-remove-effect="1">刪除</button>
+        </div>
+        <div class="affix-grid">
+          <div>
+            <label>Buff 名稱</label>
+            <input data-kind="label" type="text" value="${escapeHtml(entry.label || '')}" placeholder="例如：九尾 3C 暴擊" />
+          </div>
+          <div>
+            <label>效果類型</label>
+            <select data-kind="type">${optionsHtml(entry.type || 'none')}</select>
+          </div>
+          <div>
+            <label>數值</label>
+            <input data-kind="value" type="number" step="1" value="${entry.value ?? 0}" />
+          </div>
+          <div>
+            <label>啟用</label>
+            <select data-kind="enabled">
+              <option value="1" ${(entry.enabled ?? true) ? 'selected' : ''}>啟用</option>
+              <option value="0" ${(entry.enabled ?? true) ? '' : 'selected'}>停用</option>
+            </select>
+          </div>
+          ${isTeam ? `<div>
+            <label>也影響自己</label>
+            <select data-kind="applyToSelf">
+              <option value="1" ${(entry.applyToSelf ?? true) ? 'selected' : ''}>是</option>
+              <option value="0" ${(entry.applyToSelf ?? true) ? '' : 'selected'}>否</option>
+            </select>
+          </div>` : ''}
+          <div>
+            <label>條件備註</label>
+            <input data-kind="condition" type="text" value="${escapeHtml(entry.condition || '')}" placeholder="例如：3C 後 8 秒" />
+          </div>
+        </div>
+      `;
+      container.appendChild(row);
+      refreshEffectRowIndexes(container, prefix);
+    }
+
+    function refreshEffectRowIndexes(container, prefix = 'Buff') {
+      const rows = Array.from(container.querySelectorAll('.effect-item'));
+      rows.forEach((row, index) => {
+        row.querySelectorAll('[data-kind]').forEach((node) => {
+          node.setAttribute('data-index', String(index));
+        });
+        const title = row.querySelector('.skill-top strong');
+        const labelInput = row.querySelector('[data-kind="label"]');
+        if (title) title.textContent = (labelInput?.value || `${prefix} ${index + 1}`).trim();
+      });
+    }
+
+    function getSkillCycleByName(name, manualCycle = 2) {
+      const normalized = String(name || '').trim().toUpperCase();
+      if (normalized === '1C') return 2;
+      if (normalized === '2C') return 4;
+      if (normalized === '3C') return 6;
+      return Math.max(num(manualCycle), 0);
+    }
+
+    function createSkillDraft(skill = {}) {
+      return {
+        id: skill.id || uid('skill'),
+        name: skill.name || '',
+        damageType: skill.damageType || 'physical',
+        hits: skill.hits ?? 1,
+        hitMultiplier: skill.hitMultiplier ?? 1,
+        cycle: getSkillCycleByName(skill.name, skill.cycle ?? 2)
+      };
+    }
+
+    function renderSkills() {
+      el.skillList.innerHTML = '';
+
+      if (!state.skillDrafts.length) {
+        const empty = document.createElement('p');
+        empty.className = 'empty';
+        empty.textContent = '目前沒有技能。';
+        el.skillList.appendChild(empty);
+        return;
+      }
+
+      state.skillDrafts.forEach((skill, index) => {
+        const item = document.createElement('div');
+        item.className = 'skill-item';
+        item.innerHTML = `
+          <div class="skill-top">
+            <strong>${skill.name || `技能 ${index + 1}`}</strong>
+            <button class="icon-btn danger" type="button" data-remove-skill="${skill.id}">刪除</button>
+          </div>
+          <div class="skill-grid">
+            <div>
+              <label>技能名稱</label>
+              <input data-skill="name" data-id="${skill.id}" type="text" value="${escapeHtml(skill.name)}" />
+            </div>
+            <div>
+              <label>傷害類型</label>
+              <select data-skill="damageType" data-id="${skill.id}">
+                <option value="physical" ${skill.damageType === 'physical' ? 'selected' : ''}>物理</option>
+                <option value="magic" ${skill.damageType === 'magic' ? 'selected' : ''}>魔法</option>
+              </select>
+            </div>
+            <div>
+              <label>次數</label>
+              <input data-skill="hits" data-id="${skill.id}" type="number" step="1" value="${skill.hits}" />
+            </div>
+            <div>
+              <label>單次倍率</label>
+              <input data-skill="hitMultiplier" data-id="${skill.id}" type="number" step="0.01" value="${skill.hitMultiplier}" />
+            </div>
+            <div>
+              <label>週期（秒）</label>
+              <input data-skill="cycle" data-id="${skill.id}" type="number" step="0.01" value="${skill.cycle}" ${['1C','2C','3C'].includes(String(skill.name || '').trim().toUpperCase()) ? 'readonly' : ''} />
+            </div>
+          </div>
+        `;
+        el.skillList.appendChild(item);
+      });
+    }
+
+    function escapeHtml(value = '') {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+    }
+
+    function initMonsterSelect() {
+      el.monsterSelect.innerHTML = Object.keys(MONSTERS)
+        .map((key) => `<option value="${key}">${key}</option>`)
+        .join('');
+      el.monsterSelect.value = state.monsterKey;
+    }
+
+    function readEffectRows(container) {
+      const rows = [];
+      const items = Array.from(container.querySelectorAll('.effect-item'));
+      items.forEach((item, index) => {
+        const type = item.querySelector('[data-kind="type"]')?.value || 'none';
+        const value = num(item.querySelector('[data-kind="value"]')?.value);
+        const enabled = (item.querySelector('[data-kind="enabled"]')?.value || '1') === '1';
+        const label = (item.querySelector('[data-kind="label"]')?.value || '').trim();
+        const condition = (item.querySelector('[data-kind="condition"]')?.value || '').trim();
+        const applyToSelfNode = item.querySelector('[data-kind="applyToSelf"]');
+        const applyToSelf = applyToSelfNode ? applyToSelfNode.value === '1' : true;
+        if (type === 'none' && value === 0 && !label && !condition) return;
+        rows.push({ type, value, enabled, label, condition, applyToSelf, order: index });
+      });
+      return rows;
+    }
+
+    function fillEffectRows(container, rows) {
+      container.innerHTML = '';
+      const prefix = container?.id === 'teamBuffRows' ? '團隊Buff' : '自身Buff';
+      const source = Array.isArray(rows) && rows.length ? rows : [];
+      source.forEach((row) => appendEffectRow(container, prefix, row));
+      if (!source.length) {
+        appendEffectRow(container, prefix, {});
+      }
+      refreshEffectRowIndexes(container, prefix);
+    }
+
+    function getDerivedStats(character) {
+      const calcMode = character?.calcMode || 'simple';
+      const level = Math.max(1, num(character.level) || 1);
+      let roleAtk = 0;
+      let roleHp = 0;
+      let finalAtk = 0;
+
+      if (calcMode === 'advanced') {
+        roleAtk = num(character.initialAttDmg) + (level - 1) * num(character.growthAttDmg);
+        roleHp = num(character.initialHp) + (level - 1) * num(character.growthHp);
+        finalAtk = roleAtk + num(character.weaponAtk) + num(character.flatAttack);
+      } else {
+        finalAtk = num(character.finalAtkInput) || num(character.atk) || 0;
+        roleAtk = finalAtk;
+        roleHp = num(character.finalHpInput) || num(character.hp) || 0;
+      }
+
+      const 攻擊週期 = Math.max(0.01, num(character.攻擊週期) || num(character.attackSpeed) || 2);
+      return { level, roleAtk, roleHp, finalAtk, 攻擊週期 };
+    }
+
+    function updateCalcModeUI() {
+      const isAdvanced = (el.calcMode?.value || 'simple') === 'advanced';
+      if (el.simpleStatsGrid) el.simpleStatsGrid.style.display = isAdvanced ? 'none' : '';
+      if (el.advancedStatsGrid) el.advancedStatsGrid.style.display = isAdvanced ? '' : 'none';
+    }
+
+    function syncDerivedFormStats() {
+      updateCalcModeUI();
+      const level = Math.max(1, num(el.level?.value) || 1);
+      const roleAtk = num(el.initialAttDmg?.value) + (level - 1) * num(el.growthAttDmg?.value);
+      const roleHp = num(el.initialHp?.value) + (level - 1) * num(el.growthHp?.value);
+      if (el.atk) el.atk.value = String(Number.isFinite(roleAtk) ? roleAtk : 0);
+      if (el.hp) el.hp.value = String(Number.isFinite(roleHp) ? roleHp : 0);
+    }
+
+    function aggregateEffects(character, allCharacters = state.characters) {
+      const totals = {
+        atkPct: 0,
+        critPct: 0,
+        penPct: 0,
+        finalDamagePct: 0,
+        skillDamagePct: 0,
+        pPenFlat: 0,
+        mPenFlat: 0
+      };
+      const ownLabels = [];
+      const teamLabels = [];
+
+      const selfBuffs = Array.isArray(character.selfBuffs) ? character.selfBuffs : (Array.isArray(character.buffs) ? character.buffs : []);
+
+      selfBuffs.forEach((entry) => {
+        if (!entry || entry.enabled === false || !Object.prototype.hasOwnProperty.call(totals, entry.type)) return;
+        totals[entry.type] += num(entry.value);
+        if (entry.type !== 'none' && num(entry.value) !== 0) {
+          const opt = EFFECT_OPTIONS.find((item) => item.value === entry.type);
+          const prefix = entry.label ? `${entry.label}` : `自身 ${opt ? opt.label : entry.type}`;
+          const conditionText = entry.condition ? `（${entry.condition}）` : '';
+          ownLabels.push(`${prefix}${conditionText} ${num(entry.value) > 0 ? '+' : ''}${num(entry.value)}`);
+        }
+      });
+
+      allCharacters.forEach((mate) => {
+        if (!mate || Number(mate.team) !== Number(character.team)) return;
+        const sharedBuffs = Array.isArray(mate.teamBuffs) ? mate.teamBuffs : [];
+        sharedBuffs.forEach((entry) => {
+          if (!entry || entry.enabled === false || !Object.prototype.hasOwnProperty.call(totals, entry.type)) return;
+          if (mate.id === character.id && entry.applyToSelf === false) return;
+          totals[entry.type] += num(entry.value);
+          if (entry.type !== 'none' && num(entry.value) !== 0) {
+            const opt = EFFECT_OPTIONS.find((item) => item.value === entry.type);
+            const ownerName = mate.id === character.id ? '自己團隊Buff' : getCharacterDisplayName(mate);
+            const baseLabel = entry.label || (opt ? opt.label : entry.type);
+            const conditionText = entry.condition ? `（${entry.condition}）` : '';
+            const selfNote = mate.id === character.id ? '' : (entry.applyToSelf === false ? '〔不含施放者〕' : '');
+            teamLabels.push(`${ownerName}：${baseLabel}${conditionText}${selfNote} ${num(entry.value) > 0 ? '+' : ''}${num(entry.value)}`);
+          }
+        });
+      });
+
+      const auraInfo = collectTeamAuraEffects(character, allCharacters);
+      Object.keys(totals).forEach((key) => {
+        totals[key] += auraInfo.totals[key] || 0;
+      });
+
+      return { totals, ownLabels, teamLabels, auraLabels: auraInfo.labels };
+    }
+
+    function getDefenseContext(monster, damageType, totalPen) {
+      const resistance = damageType === 'magic' ? monster.mRes : monster.pRes;
+      const effectivePen = Math.max(totalPen - resistance, 0);
+      const penRate = effectivePen / (effectivePen + 100);
+      const effectiveDefense = (monster.def - totalPen) * (1 - penRate);
+      const damageMultiplier = 100 / (100 + effectiveDefense);
+      return { resistance, effectivePen, penRate, effectiveDefense, damageMultiplier };
+    }
+
+    function computeCharacter(character, monster, fightSeconds) {
+      const effectInfo = aggregateEffects(character, state.characters);
+      const totals = effectInfo.totals;
+      const derived = getDerivedStats(character);
+      const leaderChanceFactor = character?.isLeader ? 1.1 : 1;
+      const effectiveCycle = Math.max(0.01, derived.攻擊週期 / leaderChanceFactor);
+
+      const critRate = Math.min(Math.max(0, num(character.crit) / 100 + totals.critPct / 100), 1);
+      const critPower = Math.max(0, num(character.critDmg) / 100);
+      const critMultiplier = 1 + critPower;
+
+      const atkFactor = 1 + totals.atkPct / 100;
+      const finalDamageFactor = 1 + totals.finalDamagePct / 100;
+      const skillDamageFactor = 1 + totals.skillDamagePct / 100;
+      const penFactor = 1 + totals.penPct / 100;
+
+      const skillList = Array.isArray(character.skills) ? character.skills : [];
+      const skills = skillList.map((skill) => {
+        const basePen = skill.damageType === 'magic' ? num(character.mPen) + totals.mPenFlat : num(character.pPen) + totals.pPenFlat;
+        const totalPen = basePen * penFactor;
+        const defense = getDefenseContext(monster, skill.damageType, totalPen);
+        const skillMultiplier = Math.max(0, num(skill.hits) * num(skill.hitMultiplier));
+        const nonCritCast = derived.finalAtk * atkFactor * skillMultiplier * defense.damageMultiplier * finalDamageFactor * skillDamageFactor;
+        const critCast = nonCritCast * critMultiplier;
+        const avgCast = nonCritCast * (1 - critRate) + critCast * critRate;
+        const rawSkillCycle = Math.max(0.01, num(skill.cycle) || derived.攻擊週期);
+        const skillCycle = Math.max(0.01, rawSkillCycle / leaderChanceFactor);
+        const dps = avgCast / skillCycle;
+        return { ...skill, cycle: skillCycle, rawCycle: rawSkillCycle, skillMultiplier, nonCritCast, avgCast, critCast, dps };
+      });
+
+      const totalSkillMultiplier = skills.length
+        ? skills.reduce((sum, skill) => sum + skill.skillMultiplier, 0)
+        : 1;
+
+      const primaryDamageType = skills[0]?.damageType || 'physical';
+      const basePen = primaryDamageType === 'magic' ? num(character.mPen) + totals.mPenFlat : num(character.pPen) + totals.pPenFlat;
+      const totalPen = basePen * penFactor;
+      const defense = getDefenseContext(monster, primaryDamageType, totalPen);
+
+      const nonCritHit = skills.length
+        ? skills.reduce((sum, skill) => sum + skill.nonCritCast, 0)
+        : derived.finalAtk * atkFactor * totalSkillMultiplier * defense.damageMultiplier * finalDamageFactor * skillDamageFactor;
+      const critHit = skills.length
+        ? skills.reduce((sum, skill) => sum + skill.critCast, 0)
+        : nonCritHit * critMultiplier;
+      const avgHit = skills.length
+        ? skills.reduce((sum, skill) => sum + skill.avgCast, 0)
+        : nonCritHit * (1 - critRate) + critHit * critRate;
+      const baseSkillDps = skills.length
+        ? skills.reduce((sum, skill) => sum + skill.dps, 0)
+        : avgHit / effectiveCycle;
+      const passive = computeJobPassive(character, derived, critRate, critMultiplier, fightSeconds);
+      const totalDps = baseSkillDps + (passive.dps || 0);
+
+      return {
+        debug: {
+          baseAtk: derived.finalAtk,
+          atkAfterBuff: derived.finalAtk * atkFactor,
+          skillMultiplierTotal: totalSkillMultiplier,
+          critRate,
+          critMultiplier,
+          rawCycle: derived.攻擊週期,
+          effectiveCycle,
+          defenseMultiplier: defense.damageMultiplier,
+          passiveDps: passive.dps || 0,
+          passiveText: passive.enabled ? `${JOB_PASSIVE_PROFILES[passive.key]?.label || passive.key}｜${passive.summary}${passive.kind === 'damage' ? `｜來源 ${passive.sourceStat === 'hp' ? '生命值' : '攻擊力'}｜基底 ${formatValue(passive.baseValue)}｜非暴 ${formatValue(passive.nonCrit)}｜平均 ${formatValue(passive.avg)}｜DPS ${formatValue(passive.dps)}` : ''}` : '未啟用',
+          buffText: [
+            ...(character?.isLeader ? ['隊長：生成機率 +10%（已套用）'] : []),
+            ...effectInfo.ownLabels,
+            ...effectInfo.teamLabels,
+            ...effectInfo.auraLabels
+          ],
+          skillText: skills.length
+            ? skills.map((skill) => `${skill.name || '技能'}｜倍率 ${formatValue(skill.skillMultiplier)}｜週期 ${formatValue(skill.cycle)} 秒｜DPS ${formatValue(skill.dps)}`).join('\n')
+            : '未設定主技能，若有職業被動會只顯示被動 DPS'
+        },
+        autoDps: skills.length ? 0 : baseSkillDps,
+        totalDps,
+        fightDamage: totalDps * fightSeconds,
+        attackFrequency: 1 / effectiveCycle,
+        nonCritHit,
+        critHit,
+        avgHit,
+        effectiveCritRate: critRate,
+        leaderChanceFactor,
+        activeBuffText: [
+          ...(character?.isLeader ? ['隊長：生成機率 +10%（已套用）'] : []),
+          ...effectInfo.ownLabels,
+          ...effectInfo.teamLabels,
+          ...effectInfo.auraLabels
+        ],
+        effectiveStats: {
+          roleAtk: derived.roleAtk,
+          roleHp: derived.roleHp,
+          finalAtk: derived.finalAtk,
+          攻擊週期: effectiveCycle,
+          原始攻擊週期: derived.攻擊週期,
+          totalSkillMultiplier
+        },
+        passive,
+        skills
+      };
+    }
+
+    function partyComputations() {
+      const monster = MONSTERS[state.monsterKey];
+      return state.characters.map((character) => ({
+        character,
+        result: computeCharacter(character, monster, state.fightSeconds)
+      }));
+    }
+
+    function formatValue(value, suffix = '') {
+      if (!Number.isFinite(value)) {
+        return value > 0 ? `∞${suffix}` : `-${suffix}`;
+      }
+      return `${nf.format(Math.round(value))}${suffix}`;
+    }
+
+
+    function getTeamLeaderName(team) {
+      const leader = state.characters.find((item) => Number(item.team) === Number(team) && item.isLeader);
+      return leader ? getCharacterDisplayName(leader) : '未設定';
+    }
+
+    function normalizeLeaders() {
+      for (let team = 1; team <= TEAM_COUNT; team += 1) {
+        let found = false;
+        state.characters.forEach((item) => {
+          if (Number(item.team) !== team) return;
+          if (item.isLeader && !found) {
+            found = true;
+          } else if (item.isLeader && found) {
+            item.isLeader = false;
+          }
+        });
+      }
+    }
+
+    function setLeaderForTeam(team, id) {
+      state.characters.forEach((item) => {
+        if (Number(item.team) === Number(team)) {
+          item.isLeader = item.id === id;
+        }
+      });
+      normalizeLeaders();
+      syncDebugLayout();
+      renderAll();
+    }
+
+    function moveCharacterToTeam(id, targetTeam) {
+      const character = state.characters.find((item) => item.id === id);
+      if (!character) return;
+      const oldTeam = Number(character.team);
+      const wasLeader = !!character.isLeader;
+      character.team = Number(targetTeam);
+
+      if (wasLeader) {
+        state.characters.forEach((item) => {
+          if (item.id !== id && Number(item.team) === Number(targetTeam) && item.isLeader) {
+            item.isLeader = false;
+          }
+        });
+      }
+
+      normalizeLeaders();
+      renderAll();
+    }
+
+
+
+    function getPassiveDisplayLabel(character = {}) {
+      const key = character.jobPassiveKey || inferPassiveKeyFromCharacter(character);
+      const profile = JOB_PASSIVE_PROFILES[key];
+      if (!profile) return '無';
+      return profile.label.replace('｜', ' ');
+    }
+
+    function getPrimarySkillMeta(character = {}) {
+      const skill = (character.skills || [])[0];
+      if (!skill) {
+        return { cycle: num(character['攻擊週期']) || 0, multiplier: 0 };
+      }
+      return {
+        cycle: num(skill.cycle) || num(character['攻擊週期']) || 0,
+        multiplier: num(skill.skillMultiplier) || 0
+      };
+    }
+
+
+    function renderRoster() {
+      const computations = partyComputations();
+      const partyDps = computations.reduce((sum, entry) => sum + entry.result.totalDps, 0);
+      el.partySummary.textContent = `隊伍總 DPS：${formatValue(partyDps)}`;
+      el.roster.innerHTML = '';
+
+      for (let team = 1; team <= TEAM_COUNT; team += 1) {
+        const teamEntries = computations.filter((entry) => Number(entry.character.team) === team);
+        const teamDps = teamEntries.reduce((sum, entry) => sum + entry.result.totalDps, 0);
+        const block = document.createElement('div');
+        block.className = 'team-block';
+
+        const title = document.createElement('div');
+        title.className = 'team-title';
+        title.innerHTML = `<h3>第 ${team} 隊</h3><div class="team-head-right"><div class="captain-chip">隊長：${escapeHtml(getTeamLeaderName(team))}</div><div class="team-dps">隊伍 DPS：<strong>${formatValue(teamDps)}</strong></div></div>`;
+        block.appendChild(title);
+
+        if (!teamEntries.length) {
+          const empty = document.createElement('p');
+          empty.className = 'empty';
+          empty.textContent = '尚未加入角色';
+          block.appendChild(empty);
+        }
+
+        teamEntries.forEach(({ character, result }) => {
+          const row = document.createElement('div');
+          row.className = `character-row${character.id === state.selectedId ? ' active' : ''}`;
+          row.setAttribute('draggable', 'true');
+          row.setAttribute('data-char-id', character.id);
+          row.setAttribute('data-team', String(team));
+          const skillMeta = getPrimarySkillMeta(character);
+          const selfBuffCount = ((character.selfBuffs || character.buffs || []).filter((b) => b && b.type && b.type !== 'none' && num(b.value) !== 0)).length;
+          const teamBuffCount = ((character.teamBuffs || []).filter((b) => b && b.type && b.type !== 'none' && num(b.value) !== 0)).length;
+          const passiveKey = character.jobPassiveKey || inferPassiveKeyFromCharacter(character);
+          const passiveClass = passiveKey ? (character.jobPassiveEnabled === false ? 'passive-off' : 'passive-on') : '';
+          const passiveSuffix = passiveKey ? (character.jobPassiveEnabled === false ? '（停用）' : '（啟用）') : '';
+
+          row.innerHTML = `
+            <div>
+              <div class="char-name">${character.isLeader ? '👑 ' : ''}${escapeHtml(getCharacterDisplayName(character))}</div>
+              <div class="char-sub">${character.grade6Key ? '六星資料角色' : '自訂角色'}</div>
+              <div class="char-meta-list">
+                <span class="char-meta-pill">技能 ${(character.skills || []).length}</span>
+                <span class="char-meta-pill">週期 ${formatValue(skillMeta.cycle || num(character['攻擊週期']) || 0)} 秒</span>
+                <span class="char-meta-pill">倍率 ${formatValue(skillMeta.multiplier || 0)}</span>
+                <span class="char-meta-pill">暴擊 ${formatValue(num(character.crit))}%</span>
+                <span class="char-meta-pill">自身 Buff ${selfBuffCount}</span>
+                <span class="char-meta-pill">團隊 Buff ${teamBuffCount}</span>
+                <span class="char-meta-pill ${passiveClass}">被動 ${getPassiveDisplayLabel(character)}${passiveSuffix}</span>
+                ${character.grade6Key ? '<span class="char-meta-pill">六星資料</span>' : ''}
+                ${character.isLeader ? '<span class="char-meta-pill passive-on">隊長</span>' : ''}
+              </div>
+            </div>
+            <div class="char-dps">DPS：<strong>${formatValue(result.totalDps)}</strong></div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+              <button class="icon-btn" type="button" data-select-id="${character.id}">選取</button>
+              <button class="icon-btn" type="button" data-edit-id="${character.id}">編輯</button>
+              <button class="icon-btn danger" type="button" data-delete-id="${character.id}">刪除</button>
+            </div>
+          `;
+          block.appendChild(row);
+        });
+
+        el.roster.appendChild(block);
+      }
+    }
+
+    
+    function renderResults() {
+      if (!state.selectedId && state.characters.length) {
+        state.selectedId = state.characters[0].id;
+      }
+
+      const advisorBox = document.getElementById('advisorBox');
+
+      if (!state.selectedId) {
+        el.selectedCharacterName.textContent = '尚未選取角色';
+        if (el.dps) el.dps.textContent = '-';
+        if (el.effectiveAps) el.effectiveAps.textContent = '-';
+        if (el.fightDamage) el.fightDamage.textContent = '-';
+        if (el.effectiveBuffInfo) el.effectiveBuffInfo.textContent = '目前 Buff：-';
+        if (el.effectiveStatInfo) el.effectiveStatInfo.textContent = '最終暴擊率：-';
+        if (advisorBox) advisorBox.innerHTML = '尚未建立角色';
+        syncDebugLayout();
+        ['dbgBaseAtk','dbgAtkAfterBuff','dbgSkillMultiplier','dbgNonCrit','dbgCrit','dbgAvg','dbgCritRate','dbgCritMultiplier','dbgRawCycle','dbgEffectiveCycle','dbgDefenseMultiplier','dbgFinalDps','dbgPassiveDps','dbgBuffSummary','dbgSkillSummary','dbgPassiveSummary'].forEach((id) => setDebugText(id, id.includes('Summary') ? '-' : '-'));
+        return;
+      }
+
+      const character = state.characters.find((item) => item.id === state.selectedId);
+      if (!character) {
+        state.selectedId = state.characters[0]?.id || null;
+        renderResults();
+        return;
+      }
+
+      const result = computeCharacter(character, MONSTERS[state.monsterKey], state.fightSeconds);
+      el.selectedCharacterName.textContent = getCharacterDisplayName(character);
+      if (el.effectiveAps) el.effectiveAps.textContent = formatValue(result.attackFrequency);
+      if (el.dps) el.dps.textContent = formatValue(result.totalDps);
+      if (el.fightDamage) el.fightDamage.textContent = Math.floor(result.fightDamage).toLocaleString();
+      if (el.effectiveBuffInfo) {
+        el.effectiveBuffInfo.textContent = `目前 Buff：${result.activeBuffText.length ? result.activeBuffText.join('｜') : '無'}`;
+      }
+      if (el.effectiveStatInfo) {
+        const stats = result.effectiveStats || {};
+        el.effectiveStatInfo.textContent = `實際暴擊率：${(result.effectiveCritRate * 100).toFixed(1)}%｜攻擊力：${formatValue(stats.finalAtk || 0)}｜技能總倍率：${formatValue(stats.totalSkillMultiplier || 0)}｜攻速(秒)：${formatValue(stats.攻擊週期 || 0)}${character?.isLeader ? '｜隊長加速：+10% 已套用' : ''}`;
+      }
+
+      if (advisorBox) {
+        advisorBox.innerHTML = buildAdvisorHtml(character);
+      }
+
+      syncDebugLayout();
+      if (debugMode) {
+        const stats = result.effectiveStats || {};
+        const dbg = result.debug || {};
+        setDebugText('dbgBaseAtk', formatValue(dbg.baseAtk || stats.finalAtk || 0));
+        setDebugText('dbgAtkAfterBuff', formatValue(dbg.atkAfterBuff || 0));
+        setDebugText('dbgSkillMultiplier', formatValue(dbg.skillMultiplierTotal || stats.totalSkillMultiplier || 0));
+        setDebugText('dbgNonCrit', formatValue(result.nonCritHit || 0));
+        setDebugText('dbgCrit', formatValue(result.critHit || 0));
+        setDebugText('dbgAvg', formatValue(result.avgHit || 0));
+        setDebugText('dbgCritRate', `${((dbg.critRate || result.effectiveCritRate || 0) * 100).toFixed(1)}%`);
+        setDebugText('dbgCritMultiplier', `x${formatValue(dbg.critMultiplier || 0)}`);
+        setDebugText('dbgRawCycle', `${formatValue(dbg.rawCycle || stats['原始攻擊週期'] || 0)} 秒`);
+        setDebugText('dbgEffectiveCycle', `${formatValue(dbg.effectiveCycle || stats['攻擊週期'] || 0)} 秒`);
+        setDebugText('dbgDefenseMultiplier', `x${formatValue(dbg.defenseMultiplier || 0)}`);
+        setDebugText('dbgFinalDps', formatValue(result.totalDps || 0));
+        setDebugText('dbgPassiveDps', formatValue(result.passive?.dps || 0));
+        setDebugText('dbgBuffSummary', `Buff：${(dbg.buffText || result.activeBuffText || []).length ? (dbg.buffText || result.activeBuffText).join('｜') : '無'}`);
+        setDebugText('dbgSkillSummary', `技能：${dbg.skillText || '未設定技能'}`);
+        setDebugText('dbgPassiveSummary', `職業被動：${dbg.passiveText || '未啟用'}`);
+      }
+    }
+
+
+    function renderAll() {
+      renderRoster();
+      renderResults();
+      saveStateToLocal();
+    }
+
+    
+    function collectCharacterFormData(idValue) {
+      return {
+        id: idValue,
+        name: el.charName.value.trim(),
+        team: num(el.charTeam.value) || 1,
+        isLeader: el.charLeader.value === '1',
+        templateKey: el.charTemplate.value || '',
+        grade6Key: el.grade6Key?.value || '',
+        jobPassiveKey: el.jobPassiveKey?.value || '',
+        jobPassiveEnabled: (el.jobPassiveEnabled?.value || '1') === '1',
+        calcMode: el.calcMode.value || 'simple',
+        level: num(el.level.value) || 1,
+        finalAtkInput: num(el.finalAtkInput.value),
+        finalHpInput: num(el.finalHpInput.value),
+        initialAttDmg: num(el.initialAttDmg.value),
+        growthAttDmg: num(el.growthAttDmg.value),
+        initialHp: num(el.initialHp.value),
+        growthHp: num(el.growthHp.value),
+        weaponAtk: num(el.weaponAtk.value),
+        flatAttack: num(el.flatAttack.value),
+        攻擊週期: num(el.攻擊週期.value) || 2,
+        atk: num(el.atk.value),
+        hp: num(el.hp.value),
+        pdef: num(el.pdef.value),
+        mdef: num(el.mdef.value),
+        pPen: num(el.pPen.value),
+        mPen: num(el.mPen.value),
+        crit: num(el.crit.value),
+        critDmg: num(el.critDmg.value),
+        buffs: readEffectRows(el.buffRows),
+        selfBuffs: readEffectRows(el.buffRows),
+        teamBuffs: readEffectRows(el.teamBuffRows),
+        skills: state.skillDrafts.map((skill) => ({
+          id: skill.id,
+          name: skill.name,
+          damageType: skill.damageType,
+          hits: num(skill.hits),
+          hitMultiplier: num(skill.hitMultiplier),
+          cycle: getSkillCycleByName(skill.name, skill.cycle)
+        }))
+      };
+    }
+
+function buildCharacterFromForm() {
+      return collectCharacterFormData(state.editingId || uid('char-preview'));
+    }
+
+    function updateLivePreview() {
+      const panel = document.getElementById('livePreviewPanel');
+      if (!panel || !panel.classList.contains('open')) return;
+
+      const character = buildCharacterFromForm();
+      const result = computeCharacter(character, MONSTERS[state.monsterKey], state.fightSeconds);
+
+      const setText = (id, value) => {
+        const node = document.getElementById(id);
+        if (node) node.textContent = value;
+      };
+      setText('previewAps', formatValue(result.attackFrequency));
+      setText('previewDps', formatValue(result.totalDps));
+      setText('previewFightDamage', Math.floor(result.fightDamage).toLocaleString());
+    }
+
+    function setPreviewButtonText() {
+      const panel = document.getElementById('livePreviewPanel');
+      const btn = document.getElementById('togglePreviewBtn');
+      if (!panel || !btn) return;
+      btn.textContent = panel.classList.contains('open') ? '收起DPS' : '觀看DPS';
+    }
+
+    function openModal(character = null) {
+      state.editingId = character?.id || null;
+      el.modalTitle.textContent = character ? '編輯角色' : '新增角色';
+
+      el.charName.value = character?.name || '';
+      el.charTeam.value = String(character?.team || 1);
+      el.charTemplate.value = character?.templateKey || '';
+      if (el.grade6Key) el.grade6Key.value = character?.grade6Key || '';
+      if (el.jobPassiveKey) el.jobPassiveKey.value = character?.jobPassiveKey || inferPassiveKeyFromCharacter(character) || '';
+      if (el.jobPassiveEnabled) el.jobPassiveEnabled.value = character?.jobPassiveEnabled === false ? '0' : '1';
+      updateGrade6Info(character?.grade6Key || '');
+      updateJobPassiveInfo(el.jobPassiveKey?.value || '');
+      el.charLeader.value = character?.isLeader ? '1' : '0';
+      el.calcMode.value = character?.calcMode || 'simple';
+      el.level.value = character?.level ?? 60;
+      el.finalAtkInput.value = character?.finalAtkInput ?? character?.atk ?? 0;
+      el.finalHpInput.value = character?.finalHpInput ?? character?.hp ?? 0;
+      el.initialAttDmg.value = character?.initialAttDmg ?? character?.atk ?? 0;
+      el.growthAttDmg.value = character?.growthAttDmg ?? 0;
+      el.initialHp.value = character?.initialHp ?? character?.hp ?? 0;
+      el.growthHp.value = character?.growthHp ?? 0;
+      el.weaponAtk.value = character?.weaponAtk ?? 0;
+      el.flatAttack.value = character?.flatAttack ?? 0;
+      el.攻擊週期.value = character?.攻擊週期 ?? (character?.skills?.[0]?.cycle ?? 2);
+      el.atk.value = character?.atk ?? 0;
+      el.hp.value = character?.hp ?? 0;
+      el.pdef.value = character?.pdef ?? 0;
+      el.mdef.value = character?.mdef ?? 0;
+      el.pPen.value = character?.pPen ?? 0;
+      el.mPen.value = character?.mPen ?? 0;
+      el.crit.value = character?.crit ?? 0;
+      el.critDmg.value = character?.critDmg ?? 100;
+      fillEffectRows(el.buffRows, character?.selfBuffs || character?.buffs || []);
+      fillEffectRows(el.teamBuffRows, character?.teamBuffs || []);
+      state.skillDrafts = (character?.skills || []).map((skill) => createSkillDraft(skill));
+      renderSkills();
+      syncDerivedFormStats();
+      updateCalcModeUI();
+      const previewPanel = document.getElementById('livePreviewPanel');
+      if (previewPanel) previewPanel.classList.remove('open');
+      setPreviewButtonText();
+      el.modal.classList.add('open');
+      el.modal.setAttribute('aria-hidden', 'false');
+    }
+
+    window.__safeOpenCharacterModal = function () {
+      if (state.characters.length >= MAX_CHARACTERS) {
+        alert(`最多只能建立 ${MAX_CHARACTERS} 隻角色`);
+        return;
+      }
+      openModal();
+    };
+
+    function closeModal() {
+      el.modal.classList.remove('open');
+      el.modal.setAttribute('aria-hidden', 'true');
+      const previewPanel = document.getElementById('livePreviewPanel');
+      if (previewPanel) previewPanel.classList.remove('open');
+      setPreviewButtonText();
+      state.editingId = null;
+      state.skillDrafts = [];
+    }
+
+    function saveCharacter() {
+      const character = collectCharacterFormData(state.editingId || uid('char'));
+
+      if (!state.editingId && state.characters.length >= MAX_CHARACTERS) {
+        return;
+      }
+
+      const index = state.characters.findIndex((item) => item.id === character.id);
+      if (index >= 0) {
+        state.characters[index] = character;
+      } else {
+        state.characters.push(character);
+      }
+
+      if (character.isLeader) {
+        state.characters = state.characters.map((item) => {
+          if (item.id === character.id) return item;
+          if (Number(item.team) === Number(character.team)) {
+            return { ...item, isLeader: false };
+          }
+          return item;
+        });
+      }
+
+      if (!state.selectedId) {
+        state.selectedId = character.id;
+      }
+      if (state.editingId === state.selectedId || !state.selectedId) {
+        state.selectedId = character.id;
+      }
+
+      closeModal();
+      renderAll();
+    }
+
+    function removeCharacter(id) {
+      state.characters = state.characters.filter((item) => item.id !== id);
+      if (state.selectedId === id) {
+        state.selectedId = state.characters[0]?.id || null;
+      }
+      renderAll();
+    }
+
+    
+    function createSkill(name, hitMultiplier, cycle = 6, damageType = 'physical', hits = 1) {
+      return {
+        id: uid('skill'),
+        name,
+        damageType,
+        hits,
+        hitMultiplier,
+        cycle
+      };
+    }
+
+    function createTestCharacter({
+      name,
+      team = 1,
+      atk = 1400,
+      hp = 0,
+      pdef = 0,
+      mdef = 0,
+      pPen = 300,
+      mPen = 0,
+      crit = 0,
+      critDmg = 100,
+      cycle = 6,
+      hitMultiplier = 10,
+      damageType = 'physical',
+      selfBuffs = [],
+      teamBuffs = [],
+      jobPassiveKey = '',
+      jobPassiveEnabled = true,
+      includeDefaultSkill = true
+    }) {
+      return {
+        id: uid('char'),
+        name,
+        team,
+        isLeader: false,
+        templateKey: '',
+        grade6Key: '',
+        jobPassiveKey,
+        jobPassiveEnabled,
+        calcMode: 'simple',
+        level: 60,
+        finalAtkInput: atk,
+        finalHpInput: hp,
+        initialAttDmg: atk,
+        growthAttDmg: 0,
+        initialHp: hp,
+        growthHp: 0,
+        weaponAtk: 0,
+        flatAttack: 0,
+        攻擊週期: cycle,
+        atk,
+        hp,
+        pdef,
+        mdef,
+        pPen,
+        mPen,
+        crit,
+        critDmg,
+        buffs: [...selfBuffs],
+        selfBuffs: [...selfBuffs],
+        teamBuffs: [...teamBuffs],
+        skills: includeDefaultSkill ? [createSkill('3C', hitMultiplier, cycle, damageType, 1)] : []
+      };
+    }
+
+    function getDefaultTestCharacters() {
+      return [
+        createTestCharacter({ name: '攻速1', team: 1, atk: 1400, hp: 0, pPen: 300, crit: 0, critDmg: 100, cycle: 6, hitMultiplier: 10 }),
+        createTestCharacter({ name: '攻速2', team: 1, atk: 1400, hp: 0, pPen: 300, crit: 0, critDmg: 100, cycle: 3, hitMultiplier: 10 }),
+        createTestCharacter({ name: '攻速3', team: 1, atk: 1400, hp: 0, pPen: 300, crit: 0, critDmg: 100, cycle: 2, hitMultiplier: 10 }),
+        createTestCharacter({ name: '生命測試1', team: 1, atk: 1200, hp: 6000, pPen: 300, crit: 0, critDmg: 100, cycle: 6, hitMultiplier: 0, jobPassiveKey: 'paladin', jobPassiveEnabled: true, includeDefaultSkill: false }),
+        createTestCharacter({ name: '生命測試2', team: 1, atk: 1200, hp: 8000, pPen: 300, crit: 0, critDmg: 100, cycle: 6, hitMultiplier: 0, jobPassiveKey: 'paladin', jobPassiveEnabled: true, includeDefaultSkill: false })
+      ];
+    }
+
+    function getCritTestCharacters() {
+      return [
+        createTestCharacter({ name: '暴擊0', team: 2, atk: 1400, hp: 0, pPen: 300, crit: 0, critDmg: 100, cycle: 6, hitMultiplier: 10 }),
+        createTestCharacter({ name: '暴擊44', team: 2, atk: 1400, hp: 0, pPen: 300, crit: 44, critDmg: 100, cycle: 6, hitMultiplier: 10 }),
+        createTestCharacter({ name: '暴擊100', team: 2, atk: 1400, hp: 0, pPen: 300, crit: 100, critDmg: 100, cycle: 6, hitMultiplier: 10 })
+      ];
+    }
+
+    function addPresetCharacters(presets, label) {
+      const presetNames = new Set(presets.map((item) => item.name));
+      const existingNonPreset = state.characters.filter((item) => !presetNames.has(item.name));
+      const existingPresetCount = state.characters.length - existingNonPreset.length;
+      const availableSlots = Math.max(0, MAX_CHARACTERS - existingNonPreset.length);
+      const finalPresets = presets.slice(0, availableSlots);
+
+      if (!finalPresets.length) {
+        alert(`${label}無法加入，因為目前非測試角色已達上限。`);
+        return;
+      }
+
+      state.characters = [...existingNonPreset, ...finalPresets];
+
+      if (!state.characters.some((item) => item.id === state.selectedId)) {
+        state.selectedId = state.characters[0]?.id || null;
+      }
+      normalizeLeaders();
+      renderAll();
+
+      const modeText = existingPresetCount ? '已刷新' : '已新增';
+      alert(`${modeText} ${finalPresets.length} 隻${label}：${finalPresets.map((item) => item.name).join('、')}`);
+    }
+
+    function generateTestCharacters() {
+      addPresetCharacters(getDefaultTestCharacters(), '攻速/生命測試角色');
+    }
+
+    function generateCritTestCharacters() {
+      addPresetCharacters(getCritTestCharacters(), '暴擊測試角色');
+    }
+
+
+function attachEvents() {
+      document.getElementById('openCharacterModal')?.addEventListener('click', () => {
+        if (typeof window.__safeOpenCharacterModal === 'function') {
+          window.__safeOpenCharacterModal();
+        }
+      });
+
+      document.getElementById('generateTestCharactersBtn')?.addEventListener('click', () => {
+        generateTestCharacters();
+      });
+
+      document.getElementById('generateCritTestCharactersBtn')?.addEventListener('click', () => {
+        generateCritTestCharacters();
+      });
+
+      document.getElementById('quickEditSelected')?.addEventListener('click', () => {
+        const character = state.characters.find((item) => item.id === state.selectedId);
+        if (!character) {
+          alert('請先選取角色。');
+          return;
+        }
+        openModal(character);
+      });
+
+      document.getElementById('closeModal').addEventListener('click', closeModal);
+      document.getElementById('cancelModal').addEventListener('click', closeModal);
+      document.getElementById('saveCharacter').addEventListener('click', saveCharacter);
+
+      document.getElementById('addSelfBuff')?.addEventListener('click', () => {
+        appendEffectRow(el.buffRows, '自身Buff', {});
+        updateLivePreview();
+      });
+
+      document.getElementById('addTeamBuff')?.addEventListener('click', () => {
+        appendEffectRow(el.teamBuffRows, '團隊Buff', { applyToSelf: true, enabled: true });
+        updateLivePreview();
+      });
+
+      [el.buffRows, el.teamBuffRows].forEach((container) => {
+        container?.addEventListener('click', (event) => {
+          const btn = event.target.closest('[data-remove-effect]');
+          if (!btn) return;
+          const item = btn.closest('.effect-item');
+          if (!item) return;
+          item.remove();
+          const prefix = container.id === 'teamBuffRows' ? '團隊Buff' : '自身Buff';
+          if (!container.querySelector('.effect-item')) appendEffectRow(container, prefix, {});
+          refreshEffectRowIndexes(container, prefix);
+          updateLivePreview();
+        });
+        ['input','change'].forEach((evtName) => {
+          container?.addEventListener(evtName, (event) => {
+            const item = event.target.closest('.effect-item');
+            if (!item) return;
+            const prefix = container.id === 'teamBuffRows' ? '團隊Buff' : '自身Buff';
+            refreshEffectRowIndexes(container, prefix);
+            updateLivePreview();
+          });
+        });
+      });
+
+      el.charTemplate.addEventListener('change', (event) => {
+        applyCharacterTemplate(event.target.value);
+      });
+
+      el.grade6Key?.addEventListener('change', (event) => {
+        updateGrade6Info(event.target.value);
+        autoAssignPassiveFromGrade6(event.target.value, false);
+        updateLivePreview();
+      });
+
+      el.jobPassiveKey?.addEventListener('change', () => {
+        updateJobPassiveInfo(el.jobPassiveKey.value || '');
+        updateLivePreview();
+      });
+
+      el.jobPassiveEnabled?.addEventListener('change', () => {
+        updateJobPassiveInfo(el.jobPassiveKey?.value || '');
+        updateLivePreview();
+      });
+
+      document.getElementById('applyGrade6Btn')?.addEventListener('click', () => {
+        const key = el.grade6Key?.value || '';
+        if (!key) return;
+        applyGrade6Data(key);
+        autoAssignPassiveFromGrade6(key, false);
+      });
+
+      if (el.calcMode) {
+        el.calcMode.addEventListener('change', () => {
+          syncDerivedFormStats();
+          updateLivePreview();
+        });
+      }
+
+      ['level','initialAttDmg','growthAttDmg','initialHp','growthHp','weaponAtk','flatAttack','攻擊週期','finalAtkInput','finalHpInput'].forEach((key) => {
+        if (!el[key]) return;
+        el[key].addEventListener('input', () => {
+          syncDerivedFormStats();
+          updateLivePreview();
+        });
+      });
+
+      el.monsterSelect.addEventListener('change', (event) => {
+        state.monsterKey = event.target.value;
+        renderAll();
+      });
+
+      el.fightSeconds.addEventListener('input', (event) => {
+        state.fightSeconds = Math.max(1, num(event.target.value));
+        renderAll();
+      });
+
+
+      let draggingCharId = null;
+
+      el.roster.addEventListener('click', (event) => {
+        const target = event.target;
+        const selectId = target.getAttribute('data-select-id');
+        const editId = target.getAttribute('data-edit-id');
+        const deleteId = target.getAttribute('data-delete-id');
+
+        if (selectId) {
+          state.selectedId = selectId;
+          renderAll();
+          return;
+        }
+
+        if (editId) {
+          const character = state.characters.find((item) => item.id === editId);
+          if (character) openModal(character);
+          return;
+        }
+
+        if (deleteId) {
+          if (confirm("確定要刪除這個角色？")) {
+            removeCharacter(deleteId);
+          }
+          return;
+        }
+
+        const row = target.closest('.character-row');
+        if (!row) return;
+
+        const clickedControl = target.closest('button, a, input, select, textarea, label');
+        if (clickedControl) return;
+
+        const charId = row.getAttribute('data-char-id');
+        const team = row.getAttribute('data-team');
+        if (charId && team) {
+          setLeaderForTeam(Number(team), charId);
+        }
+      });
+
+      el.roster.addEventListener('dragstart', (event) => {
+        const row = event.target.closest('.character-row');
+        if (!row) return;
+        draggingCharId = row.getAttribute('data-char-id');
+        row.classList.add('dragging');
+        try {
+          event.dataTransfer.effectAllowed = 'move';
+          event.dataTransfer.setData('text/plain', draggingCharId || '');
+        } catch (e) {}
+      });
+
+      el.roster.addEventListener('dragend', (event) => {
+        const row = event.target.closest('.character-row');
+        if (row) row.classList.remove('dragging');
+        draggingCharId = null;
+        el.roster.querySelectorAll('.drag-over, .drag-over-team').forEach((node) => {
+          node.classList.remove('drag-over', 'drag-over-team');
+        });
+      });
+
+      el.roster.addEventListener('dragover', (event) => {
+        const row = event.target.closest('.character-row');
+        const teamBlock = event.target.closest('.team-block');
+        if (!row && !teamBlock) return;
+        event.preventDefault();
+
+        const edge = 120;
+        const scrollStep = 18;
+        if (event.clientY < edge) {
+          window.scrollBy(0, -scrollStep);
+        } else if (event.clientY > window.innerHeight - edge) {
+          window.scrollBy(0, scrollStep);
+        }
+
+        el.roster.querySelectorAll('.drag-over, .drag-over-team').forEach((node) => {
+          node.classList.remove('drag-over', 'drag-over-team');
+        });
+        if (row) {
+          row.classList.add('drag-over');
+        } else if (teamBlock) {
+          teamBlock.classList.add('drag-over-team');
+        }
+      });
+
+      el.roster.addEventListener('drop', (event) => {
+        const teamBlock = event.target.closest('.team-block');
+        if (!teamBlock || !draggingCharId) return;
+        event.preventDefault();
+        const teamTitle = teamBlock.querySelector('.team-title h3');
+        const match = teamTitle ? teamTitle.textContent.match(/第\s*(\d+)\s*隊/) : null;
+        const targetTeam = match ? Number(match[1]) : null;
+        if (!targetTeam) return;
+        moveCharacterToTeam(draggingCharId, targetTeam);
+      });
+
+      document.getElementById('addSkill').addEventListener('click', () => {
+        state.skillDrafts.push(createSkillDraft());
+        renderSkills();
+        updateLivePreview();
+      });
+
+      document.getElementById('forceSaveBtn')?.addEventListener('click', () => {
+        saveStateToLocal();
+      });
+
+      el.skillList.addEventListener('input', (event) => {
+        const target = event.target;
+        const id = target.getAttribute('data-id');
+        const key = target.getAttribute('data-skill');
+        if (!id || !key) return;
+        const skill = state.skillDrafts.find((item) => item.id === id);
+        if (!skill) return;
+        skill[key] = target.value;
+        updateLivePreview();
+      });
+
+      el.skillList.addEventListener('change', (event) => {
+        const target = event.target;
+        const id = target.getAttribute('data-id');
+        const key = target.getAttribute('data-skill');
+        if (!id || !key) return;
+        const skill = state.skillDrafts.find((item) => item.id === id);
+        if (!skill) return;
+
+        skill[key] = target.value;
+        updateLivePreview();
+      });
+
+      el.skillList.addEventListener('click', (event) => {
+        const removeId = event.target.getAttribute('data-remove-skill');
+        if (!removeId) return;
+        state.skillDrafts = state.skillDrafts.filter((item) => item.id !== removeId);
+        renderSkills();
+        updateLivePreview();
+      });
+
+      // 已移除點擊外部關閉，避免誤觸
+    }
+
+
+    
+    function buildAdvisorHtml(character) {
+      if (!character) return '尚未建立角色';
+
+      const derived = getDerivedStats(character);
+      const atk = Math.max(0, num(derived.finalAtk));
+      const critRate = Math.max(0, Math.min(1, num(character.crit) / 100));
+      const critDmg = Math.max(0, num(character.critDmg) / 100);
+      const firstSkill = character.skills?.[0] || null;
+      const hitMultiplier = Math.max(0, num(firstSkill?.hitMultiplier) || 0);
+      const hits = Math.max(1, num(firstSkill?.hits) || 1);
+      const skillMul = Math.max(1, hitMultiplier * hits);
+      const base = Math.max(0, atk * skillMul * (1 + critRate * critDmg));
+
+      const compareItems = [
+        { label: '攻擊 +10%', value: base ? (((atk * 1.1 * skillMul * (1 + critRate * critDmg)) - base) / base) : 0 },
+        { label: '暴擊率 +10%', value: base ? (((atk * skillMul * (1 + Math.min(1, critRate + 0.1) * critDmg)) - base) / base) : 0 },
+        { label: '暴擊傷害 +20%', value: base ? (((atk * skillMul * (1 + critRate * (critDmg + 0.2))) - base) / base) : 0 }
+      ];
+
+      let bestIndex = 0;
+      for (let i = 1; i < compareItems.length; i += 1) {
+        if (compareItems[i].value > compareItems[bestIndex].value) bestIndex = i;
+      }
+
+      const formatPercent = (value) => {
+        const percentage = Math.round(value * 1000) / 10;
+        return Number.isInteger(percentage) ? String(percentage) : percentage.toFixed(1);
+      };
+
+      const lines = compareItems.map((item, index) => {
+        const isBest = index === bestIndex;
+        const prefix = isBest ? '✨' : '&nbsp;&nbsp;&nbsp;&nbsp;';
+        const lineStyle = isBest
+          ? 'color:#fde68a;font-weight:800;text-shadow:0 0 2px rgba(250,204,21,0.16),0 0 6px rgba(250,204,21,0.06);letter-spacing:0.1px;'
+          : 'color:#e2e8f0;font-weight:600;';
+        return `<div class="advisor-compare-item"><span style="${lineStyle}">${prefix}${item.label} +${formatPercent(item.value)}%</span></div>`;
+      }).join('');
+
+      return `<div class="advisor-compare-list">${lines}</div>`;
+    }
+
+
+    const STORAGE_KEY = 'dps_simulator_save_v51';
+    const LEGACY_STORAGE_KEYS = ['dps_simulator_save_v3', 'dps_simulator_save_v27'];
+
+    function updateSaveDebug(status, detail = '') {
+      const statusEl = document.getElementById('saveStatus');
+      const timeEl = document.getElementById('saveTime');
+      const countEl = document.getElementById('saveCharacterCount');
+      const textEl = document.getElementById('saveDebugText');
+
+      if (statusEl) statusEl.textContent = status;
+      if (timeEl) timeEl.textContent = new Date().toLocaleTimeString('zh-TW', { hour12: false });
+      if (countEl) countEl.textContent = String(state.characters.length);
+      if (textEl) textEl.textContent = detail || '正常';
+    }
+
+    function saveStateToLocal() {
+      try {
+        const payload = {
+          monsterKey: state.monsterKey,
+          fightSeconds: state.fightSeconds,
+          characters: state.characters,
+          selectedId: state.selectedId
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        updateSaveDebug('已儲存', 'localStorage 寫入成功');
+      } catch (err) {
+        updateSaveDebug('失敗', '儲存錯誤：' + err.message);
+      }
+    }
+
+    function loadStateFromLocal() {
+      try {
+        const candidateKeys = [STORAGE_KEY, ...LEGACY_STORAGE_KEYS];
+        let raw = null;
+        let usedKey = '';
+        for (const key of candidateKeys) {
+          const value = localStorage.getItem(key);
+          if (value) {
+            raw = value;
+            usedKey = key;
+            break;
+          }
+        }
+        if (!raw) {
+          updateSaveDebug('未找到', '目前沒有舊存檔，先新增角色再按 F5 測試');
+          return;
+        }
+        const payload = JSON.parse(raw);
+        state.monsterKey = payload.monsterKey || state.monsterKey;
+        state.fightSeconds = Number(payload.fightSeconds) || state.fightSeconds;
+        state.characters = Array.isArray(payload.characters) ? payload.characters : [];
+        state.selectedId = payload.selectedId || (state.characters[0]?.id || null);
+        if (state.selectedId && !state.characters.some((item) => item.id === state.selectedId)) {
+          state.selectedId = state.characters[0]?.id || null;
+        }
+        if (usedKey && usedKey !== STORAGE_KEY) {
+          localStorage.setItem(STORAGE_KEY, raw);
+        }
+        updateSaveDebug('已載入', usedKey === STORAGE_KEY ? '成功讀取舊資料' : '已兼容讀取前一版本資料');
+      } catch (err) {
+        updateSaveDebug('失敗', '讀取錯誤：' + err.message);
+      }
+    }
+
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('characterModal');
+        if (modal && modal.classList.contains('open')) closeModal();
+      }
+    });
+
+    loadStateFromLocal();
+
+    createEffectRows(el.buffRows, '自身Buff', 1);
+    createEffectRows(el.teamBuffRows, '團隊Buff', 1);
+    populateGrade6Select();
+    initMonsterSelect();
+    el.monsterSelect.value = state.monsterKey;
+    el.fightSeconds.value = state.fightSeconds;
+    attachEvents();
+
+document.getElementById("saveCharacterSticky")?.addEventListener("click", saveCharacter);
+
+      document.getElementById('togglePreviewBtn')?.addEventListener('click', () => {
+        const panel = document.getElementById('livePreviewPanel');
+        if (!panel) return;
+        panel.classList.toggle('open');
+        setPreviewButtonText();
+        updateLivePreview();
+      });
+
+      ['input', 'change'].forEach((evtName) => {
+        el.modal.addEventListener(evtName, () => {
+          updateLivePreview();
+        });
+      });
+
+      renderAll();
+    
+  </script>
+<script>
+function clearTestChars(){
+  const names = ['攻速1','攻速2','攻速3','生命測試1','生命測試2','暴擊0','暴擊44','暴擊100'];
+  const before = Array.isArray(state.characters) ? state.characters.length : 0;
+  const remaining = (state.characters || []).filter((c) => !names.includes(c.name));
+  const removed = before - remaining.length;
+
+  if (removed <= 0) {
+    alert('目前沒有可清除的測試角色。');
+    return;
+  }
+
+  if (!confirm(`確定要清除 ${removed} 隻測試角色嗎？此操作不可復原。`)) {
+    return;
+  }
+
+  state.characters = remaining;
+
+  if (state.selectedId && !state.characters.some((c) => c.id === state.selectedId)) {
+    state.selectedId = state.characters.length ? state.characters[0].id : null;
+  }
+
+  normalizeLeaders();
+  renderAll();
+  alert(`已清除 ${removed} 隻測試角色。`);
+}
+</script>
+<script>
+let debugMode = false;
+
+function syncDebugLayout(){
+  const page = document.getElementById('pageWithDebug');
+  const pill = document.getElementById('debugModePill');
+  const panel = document.getElementById('calcDebugPanel');
+  const inlineMount = document.getElementById('debugPanelInlineMount');
+  const sideMount = document.getElementById('debugPanelSideMount');
+
+  if (page) page.classList.toggle('debug-layout-on', debugMode);
+  if (pill) pill.textContent = `Debug：${debugMode ? '開啟' : '關閉'}`;
+
+  if (panel) {
+    panel.classList.toggle('open', debugMode);
+    if (debugMode && sideMount && panel.parentElement !== sideMount) {
+      sideMount.appendChild(panel);
+    } else if (!debugMode && inlineMount && panel.parentElement !== inlineMount) {
+      inlineMount.appendChild(panel);
+    }
+  }
+}
+
+function toggleDebug(){
+  debugMode = !debugMode;
+  syncDebugLayout();
+  renderResults();
+}
+
+function setDebugText(id, value){
+  const node = document.getElementById(id);
+  if (node) node.textContent = value;
+}
+</script>
+<img alt="九尾狐彩蛋" class="fox-easter-egg" id="foxEasterEgg" src=""/>
+</div><script>
+(function () {
+  function safeSetValue(id, value) {
+    var el = document.getElementById(id);
+    if (el) el.value = value;
+  }
+
+  function fallbackOpenCharacterModal() {
+    var modal = document.getElementById('characterModal');
+    if (!modal) {
+      throw new Error('找不到 characterModal');
+    }
+
+    var title = document.getElementById('modalTitle');
+    if (title) title.textContent = '新增角色';
+
+    safeSetValue('charName', '');
+    safeSetValue('charTeam', '1');
+    safeSetValue('charTemplate', '');
+    safeSetValue('grade6Key', '');
+    safeSetValue('jobPassiveKey', '');
+    safeSetValue('jobPassiveEnabled', '1');
+    safeSetValue('charLeader', '0');
+    safeSetValue('calcMode', 'simple');
+    safeSetValue('level', '60');
+    safeSetValue('finalAtkInput', '0');
+    safeSetValue('finalHpInput', '0');
+    safeSetValue('initialAttDmg', '0');
+    safeSetValue('growthAttDmg', '0');
+    safeSetValue('initialHp', '0');
+    safeSetValue('growthHp', '0');
+    safeSetValue('weaponAtk', '0');
+    safeSetValue('flatAttack', '0');
+    safeSetValue('攻擊週期', '2');
+    safeSetValue('atk', '0');
+    safeSetValue('hp', '0');
+    safeSetValue('pdef', '0');
+    safeSetValue('mdef', '0');
+    safeSetValue('pPen', '0');
+    safeSetValue('mPen', '0');
+    safeSetValue('crit', '0');
+    safeSetValue('critDmg', '100');
+
+    var buffRows = document.getElementById('buffRows');
+    if (buffRows) buffRows.innerHTML = '';
+    var teamBuffRows = document.getElementById('teamBuffRows');
+    if (teamBuffRows) teamBuffRows.innerHTML = '';
+    var skillList = document.getElementById('skillList');
+    if (skillList) skillList.innerHTML = '';
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function protectedOpenCharacterModal() {
+    try {
+      if (typeof window.__safeOpenCharacterModal === 'function') {
+        window.__safeOpenCharacterModal();
+        var modal = document.getElementById('characterModal');
+        if (modal && modal.classList.contains('open')) return;
+      }
+      fallbackOpenCharacterModal();
+    } catch (err) {
+      console.error('新增角色主開啟流程失敗，已改用保底開啟：', err);
+      fallbackOpenCharacterModal();
+    }
+  }
+
+  function bindProtectedAddButton() {
+    var addBtn = document.getElementById('openCharacterModal');
+    if (!addBtn) return;
+
+    if (addBtn.dataset.protectedBound === '1') return;
+
+    var replacement = addBtn.cloneNode(true);
+    replacement.type = 'button';
+    replacement.removeAttribute('onclick');
+    replacement.dataset.protectedBound = '1';
+
+    addBtn.parentNode.replaceChild(replacement, addBtn);
+
+    replacement.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      protectedOpenCharacterModal();
+    }, true);
+  }
+
+  window.addEventListener('DOMContentLoaded', function () {
+    bindProtectedAddButton();
+
+    // Protection: if later scripts replace the button again, rebind it.
+    var root = document.body || document.documentElement;
+    if (!root || typeof MutationObserver === 'undefined') return;
+
+    var observer = new MutationObserver(function () {
+      var btn = document.getElementById('openCharacterModal');
+      if (btn && btn.dataset.protectedBound !== '1') {
+        bindProtectedAddButton();
+      }
+    });
+
+    observer.observe(root, { childList: true, subtree: true });
+  });
+})();
+</script></body>
+</html>
