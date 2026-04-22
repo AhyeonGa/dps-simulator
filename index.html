@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>DPS 模擬器 v63 全自動測試角色版</title>
+<title>DPS 模擬器 v94 去重整理穩定版</title>
 <style>
     :root {
       color-scheme: dark;
@@ -864,38 +864,38 @@
 
   /* === Title cards grid === */
   .title-stack{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(118px,1fr));
+    display:flex;
+    flex-wrap:wrap;
     gap:8px;
-    margin-top:8px;
+    margin-top:0;
   }
   .title-card{
-    min-height:72px;
-    border-radius:14px;
-    padding:10px 12px;
-    display:flex;
-    flex-direction:column;
+    min-height:auto;
+    border-radius:999px;
+    padding:6px 10px;
+    display:inline-flex;
+    align-items:center;
     justify-content:center;
-    gap:6px;
+    gap:0;
     border:1px solid rgba(148,163,184,0.18);
     background:rgba(15,23,42,0.82);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
-  }
-  .title-card-rarity{
+    box-shadow:none;
     font-size:12px;
-    font-weight:800;
-    letter-spacing:.06em;
+    font-weight:700;
+    line-height:1.2;
+    white-space:nowrap;
   }
+  .title-card-rarity{ display:none; }
   .title-card-name{
-    font-size:14px;
-    line-height:1.35;
+    font-size:12px;
+    line-height:1.2;
     font-weight:700;
     color:#f8fafc;
-    word-break:break-word;
+    word-break:normal;
   }
 
-  /* === Floating admin tools === */
-  .comment-admin-fab{
+  /* === Comment drawer / floating tools === */
+  .comment-open-fab{
     position:fixed;
     right:18px;
     bottom:18px;
@@ -913,23 +913,65 @@
     inset:0;
     z-index:100011;
     display:none;
-    align-items:flex-end;
-    justify-content:flex-end;
+    align-items:center;
+    justify-content:center;
     padding:24px;
-    background:rgba(2,6,23,0.52);
+    background:rgba(2,6,23,0.60);
   }
   .comment-admin-modal.open{
     display:flex;
   }
   .comment-admin-sheet{
-    width:min(420px,calc(100vw - 24px));
-    border-radius:20px;
-    padding:18px;
-    background:rgba(15,23,42,0.98);
-    border:1px solid rgba(148,163,184,0.18);
-    box-shadow:0 20px 48px rgba(0,0,0,0.34);
+    width:min(560px,calc(100vw - 24px));
+    max-height:min(84vh,760px);
+    overflow:auto;
+    border-radius:24px;
+    padding:24px;
+    background:linear-gradient(180deg, rgba(15,23,42,0.99), rgba(2,6,23,0.98));
+    border:1px solid rgba(167,139,250,0.22);
+    box-shadow:0 24px 60px rgba(0,0,0,0.42);
     display:grid;
-    gap:14px;
+    gap:16px;
+  }
+
+  .comment-drawer{
+    position:fixed;
+    right:18px;
+    bottom:82px;
+    width:min(760px, calc(100vw - 32px));
+    max-height:calc(100vh - 110px);
+    overflow:auto;
+    z-index:100009;
+    display:none;
+    padding:20px;
+  }
+  .comment-drawer.open{ display:block; }
+  .comment-board-top-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .comment-admin-entry-btn,
+  .comment-close-btn{
+    border-radius:12px;
+  }
+  .comment-form-grid input[type="text"]{
+    min-height:48px;
+  }
+  @media (max-width: 640px){
+    .comment-drawer{
+      right:12px;
+      left:12px;
+      width:auto;
+      bottom:74px;
+      max-height:calc(100vh - 94px);
+      padding:16px;
+    }
+    .comment-open-fab{
+      right:12px;
+      bottom:12px;
+    }
   }
 
   /* === Comment board + DC push === */
@@ -995,14 +1037,14 @@
   }
   .comment-admin-note {
     color: var(--muted);
-    font-size: 12px;
-    line-height: 1.7;
+    font-size: 13px;
+    line-height: 1.8;
   }
   .comment-admin-grid {
     display: grid;
-    grid-template-columns: minmax(0, 220px) auto 1fr;
-    gap: 10px;
-    align-items: end;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: stretch;
   }
   .comment-pill-admin {
     background: rgba(250, 204, 21, 0.12);
@@ -1014,12 +1056,61 @@
     color: #fecaca;
     border: 1px solid rgba(248, 113, 113, 0.22);
   }
+  .comment-admin-card{
+    border-radius:16px;
+    padding:14px;
+    background:rgba(2,6,23,0.56);
+    border:1px solid rgba(148,163,184,0.14);
+    display:grid;
+    gap:10px;
+  }
+  .comment-admin-card strong{
+    color:#f8fafc;
+    font-size:14px;
+  }
+  .comment-admin-card span{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+  }
+
+  .comment-admin-only{
+    display:none;
+  }
+  .comment-admin-only.show{
+    display:grid;
+  }
+  .title-card{
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+  }
+  .title-rarity-legendary {
+    background: linear-gradient(180deg, rgba(250, 204, 21, 0.34), rgba(250, 204, 21, 0.16));
+    color: #fff4b8;
+    border: 2px solid rgba(250, 204, 21, 0.62);
+    box-shadow: inset 0 0 0 1px rgba(255, 248, 196, 0.18), 0 8px 22px rgba(250, 204, 21, 0.12);
+  }
+  .title-rarity-epic {
+    background: linear-gradient(180deg, rgba(168, 85, 247, 0.34), rgba(168, 85, 247, 0.16));
+    color: #f5e8ff;
+    border: 2px solid rgba(168, 85, 247, 0.58);
+    box-shadow: inset 0 0 0 1px rgba(255, 240, 255, 0.14), 0 8px 22px rgba(168, 85, 247, 0.12);
+  }
+  .title-rarity-rare {
+    background: linear-gradient(180deg, rgba(59, 130, 246, 0.34), rgba(59, 130, 246, 0.16));
+    color: #e3f0ff;
+    border: 2px solid rgba(59, 130, 246, 0.58);
+    box-shadow: inset 0 0 0 1px rgba(240, 248, 255, 0.14), 0 8px 22px rgba(59, 130, 246, 0.12);
+  }
+
   .comment-form-grid {
     display: grid;
-    grid-template-columns: minmax(0, 220px) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) minmax(180px, 220px);
     gap: 12px;
-    align-items: stretch;
+    align-items: end;
     margin-top: 4px;
+  }
+  .comment-form-grid > div {
+    min-width: 0;
   }
   .comment-field-card,
   .comment-list-card {
@@ -1029,14 +1120,23 @@
     border: 1px solid rgba(148, 163, 184, 0.14);
   }
   .comment-form-grid textarea {
-    min-height: 124px;
-    resize: vertical;
+    min-height: 48px;
+    height: 48px;
+    resize: none;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    overflow: hidden;
   }
   .comment-actions {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    justify-content: stretch;
+    justify-content: flex-end;
+    align-self: stretch;
+  }
+  .comment-actions .btn {
+    width: 100%;
+    min-height: 48px;
   }
   .comment-status {
     min-height: 24px;
@@ -1125,6 +1225,27 @@
     color: var(--muted);
     font-size: 12px;
   }
+
+
+  .debug-toggle-btn {
+    min-width: 138px;
+    justify-content: center;
+  }
+  .debug-inline-mount {
+    margin-top: 16px;
+  }
+  .debug-panel-title-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .debug-panel-title-row h3 {
+    color:#f8fafc;
+  }
+
   @media (max-width: 900px) {
     .comment-form-grid,
     .comment-admin-grid {
@@ -1140,85 +1261,239 @@
     }
   }
 
+
+  .battle-summary-grid {
+    margin-top: 18px;
+  }
+  .team-compare-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.95fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .team-compare-shell .team-card-shell,
+  .team-compare-shell .team-debug-side-mount {
+    margin: 0;
+    min-width: 0;
+  }
+  .team-compare-shell .team-card-shell {
+    padding: 16px;
+  }
+  .team-compare-shell .team-card-shell .team-block {
+    margin: 0;
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+  .team-debug-side-mount {
+    min-height: 100%;
+    padding: 16px;
+  }
+  .team-debug-side-mount .debug-panel {
+    display: block;
+    margin-top: 0;
+    position: sticky;
+    top: 16px;
+  }
+  @media (max-width: 1100px) {
+    .team-compare-shell {
+      grid-template-columns: 1fr;
+    }
+    .team-debug-side-mount .debug-panel {
+      position: static;
+    }
+  }
+
+  .system-id-badge {
+    display:none;
+    align-items:center;
+    justify-content:center;
+    min-width:30px;
+    height:30px;
+    padding:0 10px;
+    border-radius:999px;
+    background:rgba(167, 139, 250, 0.14);
+    color:#ddd6fe;
+    border:1px solid rgba(167, 139, 250, 0.26);
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:0.3px;
+    margin-right:10px;
+    vertical-align:middle;
+  }
+  .system-sub-id {
+    display:none;
+    align-items:center;
+    border-radius:999px;
+    padding:4px 8px;
+    margin-right:8px;
+    font-size:11px;
+    font-weight:800;
+    color:#c4b5fd;
+    background:rgba(76, 29, 149, 0.18);
+    border:1px solid rgba(167, 139, 250, 0.22);
+  }
+  .system-note-inline {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    margin-top:10px;
+  }
+  .page-with-debug.debug-layout-on {
+    grid-template-columns:minmax(0,1.5fr) minmax(420px,0.92fr);
+    gap:20px;
+    align-items:start;
+  }
+  .page-with-debug.debug-layout-on .main-content {
+    min-width:0;
+  }
+  .page-with-debug.debug-layout-on .debug-side-panel {
+    display:block;
+    position:sticky;
+    top:16px;
+    align-self:start;
+  }
+  .page-with-debug .debug-side-panel { display:none; }
+  .debug-side-panel .debug-panel {
+    display:block;
+    margin-top:0;
+    position:static;
+  }
+  .debug-side-panel .card {
+    padding:0;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+  }
+  .standalone-debug-card {
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(10px);
+  }
+  .standalone-debug-card .debug-grid {
+    margin-top:12px;
+  }
+  .standalone-debug-card .debug-list + .debug-list {
+    margin-top:10px;
+  }
+  @media (max-width: 1200px) {
+    .page-with-debug.debug-layout-on {
+      grid-template-columns:1fr;
+    }
+    .page-with-debug.debug-layout-on .debug-side-panel {
+      position:static;
+    }
+  }
+  body:not(.show-system-ids) .system-id-badge,
+  body:not(.show-system-ids) .system-sub-id {
+    display:none !important;
+  }
+  body.show-system-ids .system-id-badge,
+  body.show-system-ids .system-sub-id {
+    display:inline-flex !important;
+  }
+
 </style>
 </head>
 <body>
 <div class="wrap">
 <section class="card hero">
-<h1>DPS 模擬器 v82.1</h1>
-<p>依照你給的公式重做，主畫面只保留核心結果，角色改成用彈窗設定，並整理成只留六星的 bytes 模板，名稱先翻成中文顯示。</p>
-<div class="tag">最多 12 角色，4 隊</div>
-<div class="tag">支援模板也會顯示自身 DPS</div>
-<div class="tag">一般模式直接填遊戲內目前面板</div>
-<div class="tag">已匯入 bytes 六星角色模板 42 筆</div>
-<button class="btn secondary" onclick="window.open('收益模擬器.html','_blank')">收益模擬器</button>
-<div class="fox-advisor-wrap"><div class="fox-advisor-content"><div class="fox-advisor-title">阿狐建議</div><div class="fox-advisor-text" id="advisorBox">尚未建立角色</div></div><img alt="阿狐" class="fox-advisor-image" src="data:image/png;base64,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"/></div>
-<div class="note" id="effectiveBuffInfo">目前 Buff：-</div>
-<div class="note" id="effectiveStatInfo">實際暴擊率：-</div>
-<div class="note" id="healSynergyInfo">治療聯動：-</div>
+<h1>DPS 模擬器 v94</h1>
+<p>v94：保留目前可用主程式，整理重複的系統編號 / Debug 補丁，讓怪物、隊伍、管理員開關與可點擊 Debug 共存且更穩定。</p>
+<div class="tag">主畫面核心結果｜最多 12 角色，4 隊</div>
+<button class="btn secondary" onclick="window.open('收益模擬器.html','_blank')"><span class="system-id-badge">UI-10</span>收益模擬器</button>
+<div class="fox-advisor-wrap"><div class="fox-advisor-content"><div class="fox-advisor-title"><span class="system-id-badge">UI-5</span>阿狐建議</div><div class="fox-advisor-text" id="advisorBox">尚未建立角色</div></div><img alt="阿狐" class="fox-advisor-image" src="data:image/png;base64,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"/></div>
+<div class="note" id="effectiveBuffInfo"><span class="system-sub-id">CALC-4-1</span>當前面板（Buff後）：-</div>
+<div class="note" id="effectiveStatInfo"><span class="system-sub-id">CALC-4-2</span>技能摘要：-</div>
+<div class="note" id="healSynergyInfo"><span class="system-sub-id">CALC-4-3</span>治療聯動：-</div>
+<div class="system-note-inline"><span class="system-sub-id">CALC-4-1</span><span class="muted">當前面板（Buff後）</span><span class="system-sub-id">CALC-4-2</span><span class="muted">技能 / 職業被動摘要</span><span class="system-sub-id">CALC-4-3</span><span class="muted">治療聯動</span></div>
 </section>
 <div class="page-with-debug" id="pageWithDebug"><div class="main-content">
 <section class="card">
 <div class="section-head">
-<h2>戰鬥設定</h2>
+<h2><span class="system-id-badge">UI-2</span>戰鬥設定</h2>
+<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
 <div class="summary-pill" id="partySummary">隊伍總 DPS：0</div>
+<button class="btn secondary debug-toggle-btn" id="debugModePill" onclick="toggleDebug()" type="button">傷害組成：開啟</button>
+</div>
 </div>
 <div class="toolbar">
 <div>
-<label for="monsterSelect">怪物</label>
+<label for="monsterSelect"><span class="system-sub-id">UI-2-1</span>怪物</label>
 <select id="monsterSelect"></select>
 </div>
 <div>
-<label for="fightSeconds">戰鬥秒數</label>
+<label for="fightSeconds"><span class="system-sub-id">UI-2-2</span>戰鬥秒數</label>
 <input id="fightSeconds" min="1" step="0.01" type="number" value="60"/>
 </div>
 <div>
 <label> </label>
-<div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn" id="openCharacterModal" type="button">新增角色</button><button class="btn secondary" id="generateTestCharactersBtn" type="button">一鍵生成攻速/生命測試角色</button><button class="btn secondary" id="generateCritTestCharactersBtn" type="button">一鍵生成暴擊測試角色</button><button class="btn secondary" id="generateHealPassiveTestBtn" type="button">快速新增：南丁＋女槍測試組</button><button class="btn secondary" id="saveTeamPresetBtn" type="button">儲存當下隊伍素質</button><button class="btn secondary" id="loadTeamPresetBtn" type="button">快速新增已存隊伍</button>
-<button class="btn danger" onclick="clearTestChars()">一鍵清除測試角色</button>
-<button class="btn" onclick="toggleDebug()">傷害組成</button>
+<div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn" id="openCharacterModal" type="button"><span class="system-sub-id">UI-2-3</span>新增角色</button><button class="btn secondary" id="generateTestCharactersBtn" type="button"><span class="system-sub-id">UI-2-4</span>一鍵生成攻速/生命測試角色</button><button class="btn secondary" id="generateCritTestCharactersBtn" type="button"><span class="system-sub-id">UI-2-5</span>一鍵生成暴擊測試角色</button><button class="btn secondary" id="generateHealPassiveTestBtn" type="button"><span class="system-sub-id">UI-2-6</span>快速新增：南丁＋女槍測試組</button><button class="btn secondary" id="saveTeamPresetBtn" type="button"><span class="system-sub-id">UI-2-7</span>儲存當下隊伍素質</button><button class="btn secondary" id="loadTeamPresetBtn" type="button"><span class="system-sub-id">UI-2-8</span>快速新增已存隊伍</button>
+<button class="btn danger" onclick="clearTestChars()"><span class="system-sub-id">UI-2-9</span>一鍵清除測試角色</button>
 </div>
 </div>
 </div>
-<div class="roster-wrap" id="roster"></div>
+<div class="results battle-summary-grid">
+<div class="stat highlight">
+<span><span class="system-sub-id">UI-1-1</span>目前選取角色</span>
+<strong id="selectedCharacterName">尚未選取角色</strong>
+</div>
+<div class="stat">
+<span><span class="system-sub-id">UI-1-2</span>目前 DPS</span>
+<strong id="dps">-</strong>
+</div>
+<div class="stat">
+<span><span class="system-sub-id">UI-1-3</span>每秒攻擊次數</span>
+<strong id="effectiveAps">-</strong>
+</div>
+<div class="stat">
+<span><span class="system-sub-id">UI-1-4</span>戰鬥總傷害</span>
+<strong id="fightDamage">-</strong>
+</div>
+</div>
 </section>
 <section class="card">
 <div class="section-head">
-<h2>傷害組成</h2>
-<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-<p class="muted" id="selectedCharacterName">尚未選取角色</p>
+<h2><span class="system-id-badge">UI-3</span>隊伍配置</h2>
+<p class="muted"><span class="system-sub-id">UI-3-1</span>隊伍一在左，傷害組成卡獨立在右，不再共用同一張大框</p>
 </div>
-</div>
-<div class="results">
-<div id="debugPanelInlineMount"><div class="debug-panel" id="calcDebugPanel">
-<div class="debug-grid">
-<div class="debug-box" id="dbgBaseAtkBox"><span>角色本體攻擊（推定）</span><strong id="dbgBaseAtk">-</strong></div>
-<div class="debug-box" id="dbgResearchAtkBox"><span>研究院攻擊</span><strong id="dbgResearchAtk">-</strong></div>
-<div class="debug-box" id="dbgPanelAtkBox"><span>目前面板攻擊</span><strong id="dbgPanelAtk">-</strong></div>
-<div class="debug-box" id="dbgAtkAfterBuffBox"><span>吃完 Buff 後攻擊</span><strong id="dbgAtkAfterBuff">-</strong></div>
-<div class="debug-box" id="dbgSkillMultiplierBox"><span>技能總倍率</span><strong id="dbgSkillMultiplier">-</strong></div>
-<div class="debug-box" id="dbgNonCritBox"><span>一次施放傷害（非暴）</span><strong id="dbgNonCrit">-</strong></div>
-<div class="debug-box" id="dbgCritBox"><span>一次施放傷害（暴擊）</span><strong id="dbgCrit">-</strong></div>
-<div class="debug-box" id="dbgAvgBox"><span>平均一次施放傷害</span><strong id="dbgAvg">-</strong></div>
-<div class="debug-box" id="dbgCritRateBox"><span>實際暴擊率</span><strong id="dbgCritRate">-</strong></div>
-<div class="debug-box" id="dbgCritMultiplierBox"><span>暴擊倍率</span><strong id="dbgCritMultiplier">-</strong></div>
-<div class="debug-box" id="dbgRawCycleBox"><span>原始週期</span><strong id="dbgRawCycle">-</strong></div>
-<div class="debug-box" id="dbgEffectiveCycleBox"><span>套用後週期</span><strong id="dbgEffectiveCycle">-</strong></div>
-<div class="debug-box" id="dbgDefenseMultiplierBox"><span>防禦減傷倍率</span><strong id="dbgDefenseMultiplier">-</strong></div>
-<div class="debug-box" id="dbgFinalDpsBox"><span>最終 DPS</span><strong id="dbgFinalDps">-</strong></div>
-<div class="debug-box" id="dbgPassiveDpsBox"><span>職業被動 DPS</span><strong id="dbgPassiveDps">-</strong></div>
-</div>
-<div class="debug-list" id="dbgBuffSummary">Buff：-</div>
-<div class="debug-list" id="dbgSkillSummary">技能：-</div>
-<div class="debug-list" id="dbgPassiveSummary">職業被動：-</div>
-<div class="debug-list" id="dbgTitleSummary">稱號：-</div>
-</div></div>
-</div>
+<div class="roster-wrap" id="roster"></div>
+<div class="debug-inline-mount" id="debugPanelInlineMount" style="display:none;"></div>
 </section>
-</div><aside class="debug-side-panel" id="debugSidePanel"><div class="debug-mode-pill" id="debugModePill">傷害組成：關閉</div><div id="debugPanelSideMount"></div></aside></div>
+</div><aside class="debug-side-panel"><section id="debugPanelSideMount"><section class="debug-panel standalone-debug-card" id="calcDebugPanel">
+    <div class="debug-panel-title-row">
+      <h3><span class="system-id-badge">CALC-4</span>傷害組成</h3>
+      <span class="mode-note-badge">CALC-4-1 面板｜CALC-4-2 技能｜CALC-4-3 治療 / 被動｜CALC-4-4 最終輸出</span>
+    </div>
+    <div class="debug-grid">
+      <div class="debug-box" id="dbgBaseAtkBox"><span><span class="system-sub-id">CALC-4-1-1</span>基礎攻擊</span><strong id="dbgBaseAtk">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-2</span>研究院攻擊</span><strong id="dbgResearchAtk">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-3</span>目前面板攻擊</span><strong id="dbgPanelAtk">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-4</span>Buff 後攻擊</span><strong id="dbgAtkAfterBuff">-</strong></div>
+      <div class="debug-box" id="dbgSkillMultiplierBox"><span><span class="system-sub-id">CALC-4-2-1</span>技能總倍率</span><strong id="dbgSkillMultiplier">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-2-2</span>防禦修正</span><strong id="dbgDefenseMultiplier">-</strong></div>
+      <div class="debug-box" id="dbgNonCritBox"><span><span class="system-sub-id">CALC-4-2-3</span>非暴擊單次</span><strong id="dbgNonCrit">-</strong></div>
+      <div class="debug-box" id="dbgCritBox"><span><span class="system-sub-id">CALC-4-2-4</span>暴擊單次</span><strong id="dbgCrit">-</strong></div>
+      <div class="debug-box" id="dbgAvgBox"><span><span class="system-sub-id">CALC-4-2-5</span>平均單次</span><strong id="dbgAvg">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-5</span>最終暴擊率</span><strong id="dbgCritRate">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-6</span>暴擊倍率</span><strong id="dbgCritMultiplier">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-7</span>原始攻擊週期</span><strong id="dbgRawCycle">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-8</span>有效攻擊週期</span><strong id="dbgEffectiveCycle">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-3-1</span>職業被動 DPS</span><strong id="dbgPassiveDps">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-4-1</span>最終 DPS</span><strong id="dbgFinalDps">-</strong></div>
+    </div>
+    <div class="debug-list" id="dbgBuffSummary"><span class="system-sub-id">CALC-4-1</span>當前面板：-</div>
+    <div class="debug-list" id="dbgSkillSummary"><span class="system-sub-id">CALC-4-2</span>技能：-</div>
+    <div class="debug-list" id="dbgPassiveSummary"><span class="system-sub-id">CALC-4-3</span>職業被動：-</div>
+    <div class="debug-list" id="dbgTitleSummary"><span class="system-sub-id">CALC-8</span>稱號：-</div>
+  </section></section></aside></div>
 <section class="card" id="debugCard" style="display:none;">
 <div class="section-head">
-<h2>儲存 Debug</h2>
+<h2><span class="system-id-badge">UI-11</span>儲存 Debug</h2>
 <p class="muted">確認自動儲存與讀取是否正常</p>
 </div>
 <div class="results">
@@ -1278,19 +1553,19 @@
 <button class="btn secondary" id="applyGrade6Btn" type="button">套用六星資料</button>
 </div>
 <div>
-<label for="legendTitleKey">稱號 A</label>
+<label for="legendTitleKey"><span class="system-sub-id">8-1</span>稱號 A</label>
 <select id="legendTitleKey">
 <option value="">未裝備</option>
 </select>
 </div>
 <div>
-<label for="legendTitleKey2">稱號 B</label>
+<label for="legendTitleKey2"><span class="system-sub-id">8-2</span>稱號 B</label>
 <select id="legendTitleKey2">
 <option value="">未裝備</option>
 </select>
 </div>
 <div>
-<label for="legendTitleKey3">稱號 C</label>
+<label for="legendTitleKey3"><span class="system-sub-id">8-3</span>稱號 C</label>
 <select id="legendTitleKey3">
 <option value="">未裝備</option>
 </select>
@@ -1339,7 +1614,18 @@
 <div><label for="atk">角色ATK（自動）</label><input id="atk" readonly="" step="0.01" type="number" value="0"/></div>
 <div><label for="hp">角色HP（自動）</label><input id="hp" readonly="" step="0.01" type="number" value="0"/></div>
 </div>
-<p class="note">一般模式：直接填遊戲內目前看到的攻擊力 / 生命值。進階模式：角色ATK = 初始攻擊 + (等級 - 1) × 每級攻擊成長；角色HP = 初始生命 + (等級 - 1) × 每級生命成長；最終ATK = 角色ATK + 武器ATK + 固定攻擊加成；DPS = 各技能平均單次傷害 ÷ 各自週期後加總；未設定技能時才用攻擊週期計算基礎 DPS。</p>
+<p class="note">一般模式：直接填遊戲內目前看到的攻擊力 / 生命值。進階模式：角色ATK = 初始攻擊 + (等級 - 1) × 每級攻擊成長；角色HP = 初始生命 + (等級 - 1) × 每級生命成長；最終ATK = 角色ATK + 武器ATK + 武器基礎攻擊 200 + 武器詞綴 + 固定攻擊加成；DPS = 各技能平均單次傷害 ÷ 各自週期後加總；未設定技能時才用攻擊週期計算基礎 DPS。</p>
+</div>
+<div class="sub-card section-stack">
+<div class="section-head">
+<h3>武器系統</h3>
+</div>
+<div class="compact-grid">
+<div><label for="weaponBaseAtkDisplay">武器基礎攻擊</label><input id="weaponBaseAtkDisplay" readonly="" type="number" value="200"/></div>
+<div><label for="weaponAffix1">武器詞綴 A</label><select id="weaponAffix1"><option value="none">未選擇</option><option value="atk80">攻擊力 +80</option><option value="critDmg20">暴擊傷害 +20%</option><option value="crit20">暴擊率 +20%</option><option value="pPen15">物理貫通力 +15</option></select></div>
+<div><label for="weaponAffix2">武器詞綴 B</label><select id="weaponAffix2"><option value="none">未選擇</option><option value="atk80">攻擊力 +80</option><option value="critDmg20">暴擊傷害 +20%</option><option value="crit20">暴擊率 +20%</option><option value="pPen15">物理貫通力 +15</option></select></div>
+</div>
+<p class="note">武器基礎攻擊固定 +200，且可選 2 個詞綴。詞綴可重複，會直接套用到角色計算。</p>
 </div>
 <div class="sub-card section-stack">
 <div class="section-head">
@@ -1418,28 +1704,26 @@
 </div>
 </div>
 </div>
-<section class="card">
+<button class="btn comment-open-fab" id="commentOpenFab" type="button">💬 留言</button>
+<section class="card comment-drawer" id="commentDrawer">
   <div class="comment-board">
     <div class="comment-board-top">
-      <div>
+      <div class="comment-board-title">
         <h2>網站留言板</h2>
-        <p class="comment-board-note">
-          現在先用免登入版。可直接輸入暱稱留言；若有設定 Firebase，留言會同步到公開網站資料。若有設定推送端點，送出後也會通知 Discord。
-        </p>
+        <p class="comment-board-note">直接留言即可。主頁維持看數據，留言板收進這裡，不打擾主畫面。</p>
       </div>
-      <div class="comment-inline-actions">
-        <span class="mode-note-badge" id="commentStorageMode">留言模式：初始化中</span>
-        <span class="mode-note-badge" id="commentPushMode">DC 推送：未設定</span>
+      <div class="comment-board-top-actions">
+        <button class="btn secondary comment-admin-entry-btn" id="commentAdminEntryBtn" type="button">⚙ 管理</button>
+        <button class="btn secondary comment-close-btn" id="commentCloseBtn" type="button">關閉</button>
       </div>
     </div>
-
 
     <div class="comment-admin-modal" id="commentAdminModal">
       <div class="comment-admin-sheet">
         <div class="comment-admin-head">
           <div>
             <h3>管理員工具</h3>
-            <div class="comment-admin-note">輸入金鑰後即可顯示刪除按鈕。刪除網站留言時，若這則留言有對應的 DC 訊息，也會一起嘗試刪除。</div>
+            <div class="comment-admin-note">輸入金鑰後即可顯示刪除按鈕。刪除網站留言時，若這則留言有對應的 DC 訊息，也會一起嘗試刪除。管理模式在關閉視窗、關閉留言板或重新整理頁面後仍會自動鎖定；但「系統編號顯示」會獨立記憶，不會被重設。</div>
           </div>
           <div class="comment-inline-actions">
             <span class="mode-note-badge" id="commentAdminMode">管理模式：未解鎖</span>
@@ -1447,20 +1731,31 @@
           </div>
         </div>
         <div class="comment-admin-grid">
-          <div>
+          <div class="comment-admin-card">
             <label for="commentAdminKeyInput">管理員金鑰</label>
             <input id="commentAdminKeyInput" placeholder="輸入管理金鑰後解鎖" type="password"/>
+            <div class="comment-inline-actions">
+              <button class="btn" id="commentAdminUnlockBtn" type="button"><span class="system-id-badge">UI-7</span>解鎖管理模式</button>
+              <button class="btn secondary" disabled id="commentAdminLockBtn" type="button">鎖定</button>
+            </div>
           </div>
-          <button class="btn" id="commentAdminUnlockBtn" type="button">解鎖管理模式</button>
-          <div class="comment-admin-actions">
-            <button class="btn secondary" disabled id="commentAdminLockBtn" type="button">鎖定</button>
+          <div class="comment-admin-card comment-admin-only" id="commentPushCard">
+            <strong><span class="system-id-badge">UI-7-3</span>DC 留言即時推送</strong>
+            <span id="commentPushToggleDesc">目前會在網站留言後同步推送到 Discord。</span>
+            <button class="btn secondary comment-toggle-btn" id="commentPushToggleBtn" type="button">載入中...</button>
+          </div>
+          <div class="comment-admin-card comment-admin-only" id="commentAdminStateCard">
+            <strong><span class="system-id-badge">UI-7-1</span>管理狀態</strong>
             <span class="comment-status" id="commentAdminStatus">尚未解鎖。只有解鎖後才會顯示刪除按鈕。</span>
+          </div>
+          <div class="comment-admin-card comment-admin-only" id="commentSystemIdCard">
+            <strong><span class="system-id-badge">UI-7-2</span>系統編號顯示</strong>
+            <span id="commentSystemIdDesc">目前不顯示系統編號。這個開關會永久記住，不會因為離開頁面重設。</span>
+            <button class="btn secondary comment-toggle-btn" id="commentSystemIdToggleBtn" type="button">載入中...</button>
           </div>
         </div>
       </div>
     </div>
-
-    <button class="btn secondary comment-admin-fab" id="commentAdminFab" type="button">⚙ 管理</button>
 
     <div class="sub-card">
       <div class="comment-form-grid">
@@ -1470,13 +1765,13 @@
         </div>
         <div>
           <label for="commentMessageInput">留言內容</label>
-          <textarea id="commentMessageInput" maxlength="500" placeholder="想講什麼直接打這裡，最多 500 字。"></textarea>
+          <input id="commentMessageInput" maxlength="500" placeholder="想講什麼直接打這裡，最多 500 字。" type="text"/>
         </div>
         <div class="comment-actions">
           <label>&nbsp;</label>
           <button class="btn" id="commentSubmitBtn" type="button">送出留言</button>
-          <button class="btn secondary" id="commentRefreshBtn" type="button">重新讀取</button>
-          <div class="comment-status" id="commentStatus">尚未送出留言。</div>
+          <button class="btn secondary" id="commentRefreshBtn" type="button">刷新留言</button>
+          <div class="comment-status" id="commentStatus">尚未送出留言。刷新留言 = 重新抓一次最新留言。</div>
         </div>
       </div>
     </div>
@@ -1703,6 +1998,7 @@ const CHARACTER_TEMPLATES = {
       { value: 'none', label: '無' },
       { value: 'atkPct', label: '攻擊力%' },
       { value: 'critPct', label: '暴擊率%' },
+      { value: 'critDmgPct', label: '暴擊傷害%' },
       { value: 'penPct', label: '穿透%' },
       { value: 'finalDamagePct', label: '最終傷害%' },
       { value: 'skillDamagePct', label: '技能傷害%' },
@@ -1800,6 +2096,45 @@ const CHARACTER_TEMPLATES = {
     };
 
     const LEGEND_TITLE_PROFILES = {
+
+      legendary_doushi: { rarity: 'legendary', name: '鬥士', bonuses: { atkPct: 15 } },
+      legendary_jujishou: { rarity: 'legendary', name: '狙擊手', bonuses: { critPct: 15 } },
+      legendary_dajiwang: { rarity: 'legendary', name: '打擊王', bonuses: { critDmgPct: 15 } },
+      legendary_xianfeng: { rarity: 'legendary', name: '先鋒', bonuses: { penPct: 15 } },
+      legendary_shoumenren: { rarity: 'legendary', name: '守門人', bonuses: { defPct: 15 } },
+      legendary_tieren: { rarity: 'legendary', name: '鐵人', bonuses: { hpPct: 15 } },
+      legendary_tiebi: { rarity: 'legendary', name: '鐵壁', bonuses: { damageReductionPct: 15 } },
+      legendary_yili: { rarity: 'legendary', name: '毅力', bonuses: { knockbackResistPct: 15 } },
+      legendary_feimaotui: { rarity: 'legendary', name: '飛毛腿', bonuses: { moveSpeedPct: 15 } },
+      legendary_zajishi: { rarity: 'legendary', name: '雜技師', bonuses: { evadePct: 15 } },
+      legendary_fuweng: { rarity: 'legendary', name: '富翁', bonuses: { goldPct: 15 } },
+
+      legendary_minruichujue: { rarity: 'legendary', name: '敏銳觸覺', bonuses: { atkPct: 7.5, critPct: 7.5 } },
+      legendary_chenzhongyiji: { rarity: 'legendary', name: '沉重一擊', bonuses: { atkPct: 7.5, critDmgPct: 7.5 } },
+      legendary_ruilizhili: { rarity: 'legendary', name: '銳利之力', bonuses: { atkPct: 7.5, penPct: 7.5 } },
+      legendary_chenwenjunheng: { rarity: 'legendary', name: '沉穩均衡', bonuses: { atkPct: 7.5, defPct: 7.5 } },
+      legendary_chongfengzhiqi: { rarity: 'legendary', name: '衝鋒之氣', bonuses: { atkPct: 7.5, hpPct: 7.5 } },
+      legendary_jingzhunmiaozhun: { rarity: 'legendary', name: '精準瞄準', bonuses: { penPct: 7.5, critPct: 7.5 } },
+      legendary_shensuiyiji: { rarity: 'legendary', name: '深邃一擊', bonuses: { penPct: 7.5, critDmgPct: 7.5 } },
+      legendary_jianguzhiren: { rarity: 'legendary', name: '堅固之刃', bonuses: { penPct: 7.5, defPct: 7.5 } },
+      legendary_wanqiangtupo: { rarity: 'legendary', name: '頑強突破', bonuses: { hpPct: 7.5, penPct: 7.5 } },
+      legendary_houshizhicheng: { rarity: 'legendary', name: '厚實支撐', bonuses: { hpPct: 7.5, defPct: 7.5 } },
+      legendary_jianshishengming: { rarity: 'legendary', name: '堅實生命', bonuses: { hpPct: 7.5, damageReductionPct: 7.5 } },
+      legendary_qingyingzhishen: { rarity: 'legendary', name: '輕盈之身', bonuses: { hpPct: 7.5, evadePct: 7.5 } },
+      legendary_shuangchongfangyu: { rarity: 'legendary', name: '雙重防禦', bonuses: { defPct: 7.5, damageReductionPct: 7.5 } },
+      legendary_qingkuaibufa: { rarity: 'legendary', name: '輕快步伐', bonuses: { defPct: 7.5, evadePct: 7.5 } },
+
+      epic_doushi: { rarity: 'epic', name: '鬥士', bonuses: { atkPct: 12 } },
+      epic_jujishou: { rarity: 'epic', name: '狙擊手', bonuses: { critPct: 12 } },
+      epic_dajiwang: { rarity: 'epic', name: '打擊王', bonuses: { critDmgPct: 12 } },
+      epic_xianfeng: { rarity: 'epic', name: '先鋒', bonuses: { penPct: 12 } },
+      epic_shoumenren: { rarity: 'epic', name: '守門人', bonuses: { defPct: 12 } },
+      epic_tieren: { rarity: 'epic', name: '鐵人', bonuses: { hpPct: 12 } },
+      epic_tiebi: { rarity: 'epic', name: '鐵壁', bonuses: { damageReductionPct: 12 } },
+      epic_yili: { rarity: 'epic', name: '毅力', bonuses: { knockbackResistPct: 12 } },
+      epic_feimaotui: { rarity: 'epic', name: '飛毛腿', bonuses: { moveSpeedPct: 12 } },
+      epic_zajishi: { rarity: 'epic', name: '雜技師', bonuses: { evadePct: 12 } },
+      epic_fuweng: { rarity: 'epic', name: '富翁', bonuses: { goldPct: 12 } },
       legendary_taichuzhiyan: { rarity: 'legendary', name: '太初之焰', bonuses: { atkPct: 5, critPct: 5, critDmgPct: 5 } },
       legendary_dongbugongxian: { rarity: 'legendary', name: '東部弓弦', bonuses: { atkPct: 5, penPct: 5, critPct: 5 } },
       legendary_hunshitou: { rarity: 'legendary', name: '魂石頭波動', bonuses: { atkPct: 5, penPct: 5, critDmgPct: 5 } },
@@ -1908,7 +2243,7 @@ const CHARACTER_TEMPLATES = {
         const profile = getLegendTitleProfile(key);
         if (!profile) return '';
         const rarity = TITLE_RARITY_META[profile.rarity] || TITLE_RARITY_META.common;
-        return `<div class="title-card ${rarity.className}" title="${escapeHtml(getLegendTitleEffectText(profile))}"><div class="title-card-rarity">${rarity.label}</div><div class="title-card-name">${escapeHtml(profile.name)}</div></div>`;
+        return `<div class="title-card ${rarity.className}" title="${escapeHtml(getLegendTitleEffectText(profile))}"><div class="title-card-name">${escapeHtml(profile.name)}</div></div>`;
       }).filter(Boolean).join('');
       return cards ? `<div class="title-stack">${cards}</div>` : '';
     }
@@ -1920,7 +2255,7 @@ const CHARACTER_TEMPLATES = {
         const profile = getLegendTitleProfile(key);
         if (!profile) return '';
         const rarity = TITLE_RARITY_META[profile.rarity] || TITLE_RARITY_META.common;
-        return `${rarity.label}｜${getLegendTitleEffectText(profile)}`;
+        return `${profile.name}`;
       }).filter(Boolean).join('｜');
     }
 
@@ -1934,8 +2269,8 @@ const CHARACTER_TEMPLATES = {
           const options = Object.entries(LEGEND_TITLE_PROFILES)
             .filter(([, profile]) => profile.rarity === rarityKey)
             .sort((a, b) => a[1].name.localeCompare(b[1].name, 'zh-Hant'))
-            .map(([key, profile]) => `<option value="${key}">${rarity.label}｜${profile.name}</option>`);
-          if (options.length) html.push(`<optgroup label="${rarity.label}稱號">${options.join('')}</optgroup>`);
+            .map(([key, profile]) => `<option value="${key}">${profile.name}</option>`);
+          if (options.length) html.push(`<optgroup label="${rarity.label}">${options.join('')}</optgroup>`);
         });
         node.innerHTML = html.join('');
       });
@@ -2136,6 +2471,9 @@ const CHARACTER_TEMPLATES = {
       initialHp: document.getElementById('initialHp'),
       growthHp: document.getElementById('growthHp'),
       weaponAtk: document.getElementById('weaponAtk'),
+      weaponBaseAtkDisplay: document.getElementById('weaponBaseAtkDisplay'),
+      weaponAffix1: document.getElementById('weaponAffix1'),
+      weaponAffix2: document.getElementById('weaponAffix2'),
       flatAttack: document.getElementById('flatAttack'),
       攻擊週期: document.getElementById('攻擊週期'),
       atk: document.getElementById('atk'),
@@ -2159,6 +2497,27 @@ const CHARACTER_TEMPLATES = {
 
     function cloneRows(rows = []) {
       return rows.map((entry) => ({ type: entry?.type || 'none', value: num(entry?.value) }));
+    }
+    const WEAPON_BASE_ATK = 200;
+    const WEAPON_AFFIX_OPTIONS = {
+      none: { key: 'none', label: '未選擇', flatAtk: 0, critPct: 0, critDmgPct: 0, pPenFlat: 0 },
+      atk80: { key: 'atk80', label: '攻擊力 +80', flatAtk: 80, critPct: 0, critDmgPct: 0, pPenFlat: 0 },
+      critDmg20: { key: 'critDmg20', label: '暴擊傷害 +20%', flatAtk: 0, critPct: 0, critDmgPct: 20, pPenFlat: 0 },
+      crit20: { key: 'crit20', label: '暴擊率 +20%', flatAtk: 0, critPct: 20, critDmgPct: 0, pPenFlat: 0 },
+      pPen15: { key: 'pPen15', label: '物理貫通力 +15', flatAtk: 0, critPct: 0, critDmgPct: 0, pPenFlat: 15 }
+    };
+
+    function getWeaponAffixEffects(character = {}) {
+      const keys = [character?.weaponAffix1 || 'none', character?.weaponAffix2 || 'none'];
+      const profiles = keys.map((key) => WEAPON_AFFIX_OPTIONS[key] || WEAPON_AFFIX_OPTIONS.none);
+      return profiles.reduce((acc, profile) => {
+        acc.flatAtk += num(profile.flatAtk);
+        acc.critPct += num(profile.critPct);
+        acc.critDmgPct += num(profile.critDmgPct);
+        acc.pPenFlat += num(profile.pPenFlat);
+        if (profile.key !== 'none') acc.labels.push(profile.label);
+        return acc;
+      }, { flatAtk: 0, critPct: 0, critDmgPct: 0, pPenFlat: 0, labels: [] });
     }
 
 
@@ -2302,6 +2661,7 @@ const CHARACTER_TEMPLATES = {
       const totals = {
         atkPct: 0,
         critPct: 0,
+        critDmgPct: 0,
         penPct: 0,
         finalDamagePct: 0,
         skillDamagePct: 0,
@@ -2552,14 +2912,16 @@ const CHARACTER_TEMPLATES = {
       let roleAtk = 0;
       let roleHp = 0;
       let finalAtk = 0;
+      const weaponAffix = getWeaponAffixEffects(character);
+      const weaponBaseAtk = num(character.weaponBaseAtk) || WEAPON_BASE_ATK;
 
       if (calcMode === 'advanced') {
         roleAtk = num(character.initialAttDmg) + (level - 1) * num(character.growthAttDmg);
         roleHp = num(character.initialHp) + (level - 1) * num(character.growthHp);
-        finalAtk = roleAtk + num(character.weaponAtk) + num(character.flatAttack);
+        finalAtk = roleAtk + num(character.weaponAtk) + weaponBaseAtk + num(character.flatAttack) + weaponAffix.flatAtk;
       } else {
-        finalAtk = num(character.finalAtkInput) || num(character.atk) || 0;
-        roleAtk = Math.max(0, finalAtk - RESEARCH_BONUS.atk);
+        finalAtk = (num(character.finalAtkInput) || num(character.atk) || 0) + weaponBaseAtk + weaponAffix.flatAtk;
+        roleAtk = Math.max(0, finalAtk - RESEARCH_BONUS.atk - weaponBaseAtk - weaponAffix.flatAtk);
         roleHp = Math.max(0, (num(character.finalHpInput) || num(character.hp) || 0) - RESEARCH_BONUS.hp);
       }
 
@@ -2568,7 +2930,7 @@ const CHARACTER_TEMPLATES = {
         roleHp,
         pdef: num(character.pdef),
         mdef: num(character.mdef),
-        pPen: num(character.pPen),
+        pPen: num(character.pPen) + weaponAffix.pPenFlat,
         mPen: num(character.mPen)
       });
       const 攻擊週期 = Math.max(0.01, num(character.攻擊週期) || num(character.attackSpeed) || 2);
@@ -2581,6 +2943,8 @@ const CHARACTER_TEMPLATES = {
         baseFinalAtk: finalAtk,
         baseRoleHp: roleHp,
         researchAtk: RESEARCH_BONUS.atk,
+        weaponBaseAtk,
+        weaponAffix,
         estimatedBaseAtk: Math.max(0, finalAtk - RESEARCH_BONUS.atk),
         pdef: titleApplied.pdef,
         mdef: titleApplied.mdef,
@@ -2610,6 +2974,7 @@ const CHARACTER_TEMPLATES = {
       const totals = {
         atkPct: 0,
         critPct: 0,
+        critDmgPct: 0,
         penPct: 0,
         finalDamagePct: 0,
         skillDamagePct: 0,
@@ -2675,8 +3040,10 @@ const CHARACTER_TEMPLATES = {
       const effectiveCycle = Math.max(0.01, derived.攻擊週期 / leaderChanceFactor);
 
       const titleApplied = derived.titleApplied || applyLegendTitleBonuses(character, derived);
-      const critRate = Math.min(Math.max(0, (num(character.crit) + num(titleApplied.critBonusPct)) / 100 + totals.critPct / 100), 1);
-      const critPower = Math.max(0, (num(character.critDmg) + num(titleApplied.critDmgBonusPct)) / 100);
+      const weaponAffix = derived.weaponAffix || getWeaponAffixEffects(character);
+      const critRate = Math.min(Math.max(0, (num(character.crit) + num(titleApplied.critBonusPct) + num(weaponAffix.critPct)) / 100 + totals.critPct / 100), 1);
+      const critDmgPct = Math.max(0, num(character.critDmg) + num(titleApplied.critDmgBonusPct) + num(weaponAffix.critDmgPct) + totals.critDmgPct);
+      const critPower = critDmgPct / 100;
       const critMultiplier = 1 + critPower;
 
       const atkFactor = 1 + totals.atkPct / 100;
@@ -2734,6 +3101,7 @@ const CHARACTER_TEMPLATES = {
           skillMultiplierTotal: totalSkillMultiplier,
           critRate,
           critMultiplier,
+          critDmgPct,
           rawCycle: derived.攻擊週期,
           effectiveCycle,
           defenseMultiplier: defense.damageMultiplier,
@@ -2742,6 +3110,8 @@ const CHARACTER_TEMPLATES = {
           buffText: [
             ...(character?.isLeader ? ['隊長：生成機率 +10%（已套用）'] : []),
             ...(titleApplied.profiles?.length ? [`稱號：${titleApplied.summary}`] : []),
+          ...(weaponAffix.labels?.length ? [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}｜${weaponAffix.labels.join('｜')}`] : [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}`]),
+            ...(weaponAffix.labels?.length ? [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}｜${weaponAffix.labels.join('｜')}`] : [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}`]),
             ...effectInfo.ownLabels,
             ...effectInfo.teamLabels,
             ...effectInfo.auraLabels
@@ -2775,7 +3145,9 @@ const CHARACTER_TEMPLATES = {
         effectiveStats: {
           roleAtk: derived.roleAtk,
           roleHp: derived.roleHp,
-          finalAtk: derived.finalAtk,
+          finalAtk: derived.finalAtk * atkFactor,
+          critRatePct: critRate * 100,
+          critDmgPct,
           titleSummary: titleApplied.summary,
           攻擊週期: effectiveCycle,
           原始攻擊週期: derived.攻擊週期,
@@ -2915,8 +3287,8 @@ const CHARACTER_TEMPLATES = {
               <div class="char-sub">${character.grade6Key ? '六星資料角色' : '自訂角色'}</div>
               <div class="char-meta-list">
                 ${getLegendTitleBadgesHtml(character)}
-                <span class="char-meta-pill">自身 Buff ${selfBuffCount}</span>
-                <span class="char-meta-pill">團隊 Buff ${teamBuffCount}</span>
+                ${selfBuffCount > 0 ? `<span class="char-meta-pill">自身 Buff ${selfBuffCount}</span>` : ''}
+                ${teamBuffCount > 0 ? `<span class="char-meta-pill">團隊 Buff ${teamBuffCount}</span>` : ''}
                 <span class="char-meta-pill ${passiveClass}">被動 ${getPassiveDisplayLabel(character)}${passiveSuffix}</span>
                 ${result.healSynergy?.applied ? '<span class="char-meta-pill passive-on">治療觸發</span>' : ''}
                 ${character.grade6Key ? '<span class="char-meta-pill">六星資料</span>' : ''}
@@ -2946,12 +3318,12 @@ const CHARACTER_TEMPLATES = {
       const advisorBox = document.getElementById('advisorBox');
 
       if (!state.selectedId) {
-        el.selectedCharacterName.textContent = '尚未選取角色';
+        if (el.selectedCharacterName) el.selectedCharacterName.textContent = '尚未選取角色';
         if (el.dps) el.dps.textContent = '-';
         if (el.effectiveAps) el.effectiveAps.textContent = '-';
         if (el.fightDamage) el.fightDamage.textContent = '-';
-        if (el.effectiveBuffInfo) el.effectiveBuffInfo.textContent = '目前 Buff：-';
-        if (el.effectiveStatInfo) el.effectiveStatInfo.textContent = '最終暴擊率：-';
+        if (el.effectiveBuffInfo) el.effectiveBuffInfo.innerHTML = '<span class="system-sub-id">CALC-4-1</span>當前面板（Buff後）：-';
+        if (el.effectiveStatInfo) el.effectiveStatInfo.innerHTML = '<span class="system-sub-id">CALC-4-2</span>技能摘要：-';
         if (advisorBox) advisorBox.innerHTML = '尚未建立角色';
         syncDebugLayout();
         ['dbgBaseAtk','dbgResearchAtk','dbgPanelAtk','dbgAtkAfterBuff','dbgSkillMultiplier','dbgNonCrit','dbgCrit','dbgAvg','dbgCritRate','dbgCritMultiplier','dbgRawCycle','dbgEffectiveCycle','dbgDefenseMultiplier','dbgFinalDps','dbgPassiveDps','dbgBuffSummary','dbgSkillSummary','dbgPassiveSummary','dbgTitleSummary'].forEach((id) => setDebugText(id, id.includes('Summary') ? '-' : '-'));
@@ -2966,16 +3338,22 @@ const CHARACTER_TEMPLATES = {
       }
 
       const result = computeCharacter(character, MONSTERS[state.monsterKey], state.fightSeconds);
-      el.selectedCharacterName.textContent = getCharacterDisplayName(character);
+      if (el.selectedCharacterName) el.selectedCharacterName.textContent = getCharacterDisplayName(character);
       if (el.effectiveAps) el.effectiveAps.textContent = formatValue(result.attackFrequency);
       if (el.dps) el.dps.textContent = formatValue(result.totalDps);
       if (el.fightDamage) el.fightDamage.textContent = Math.floor(result.fightDamage).toLocaleString();
       if (el.effectiveBuffInfo) {
-        el.effectiveBuffInfo.textContent = `目前 Buff：${result.activeBuffText.length ? result.activeBuffText.join('｜') : '無'}`;
+        const stats = result.effectiveStats || {};
+        const finalAtk = num(stats.finalAtk) || num((result.debug || {}).atkAfterBuff) || 0;
+        const critRate = (((result.debug || {}).critRate || result.effectiveCritRate || 0) * 100).toFixed(1);
+        const critDmg = num(stats.critDmgPct) || num((result.debug || {}).critDmgPct) || 0;
+        const atkCycle = num(stats['攻擊週期']) || 0;
+        el.effectiveBuffInfo.innerHTML = `<span class="system-sub-id">4-1</span>當前面板（Buff後）：攻擊 ${formatValue(finalAtk)}｜暴擊率 ${critRate}%｜暴擊傷害 ${formatValue(critDmg)}%｜有效攻擊週期 ${formatValue(atkCycle)} 秒`;
       }
       if (el.effectiveStatInfo) {
-        const stats = result.effectiveStats || {};
-        el.effectiveStatInfo.textContent = `研究院：攻擊 +${RESEARCH_BONUS.atk}｜HP +${RESEARCH_BONUS.hp}｜物穿 +${RESEARCH_BONUS.pPen}｜魔穿 +${RESEARCH_BONUS.mPen}｜物防 +${RESEARCH_BONUS.pdef}｜魔防 +${RESEARCH_BONUS.mdef}｜暴率 +${RESEARCH_BONUS.crit}%｜暴傷 +${RESEARCH_BONUS.critDmg}%｜攻速 -${RESEARCH_BONUS.attackCycleReduction} 秒`;
+        const skillSummary = (result.debug || {}).skillText || '未設定主技能';
+        const passiveSummary = (result.passive && result.passive.enabled) ? `${result.passive.label || '職業被動'}｜${result.passive.summary || ''}` : '職業被動：未啟用';
+        el.effectiveStatInfo.innerHTML = `<span class="system-sub-id">4-2</span>${skillSummary}${passiveSummary ? `｜${passiveSummary}` : ''}`;
       }
 
       if (advisorBox) {
@@ -3001,7 +3379,8 @@ const CHARACTER_TEMPLATES = {
         setDebugText('dbgDefenseMultiplier', `x${formatValue(dbg.defenseMultiplier || 0)}`);
         setDebugText('dbgFinalDps', formatValue(result.totalDps || 0));
         setDebugText('dbgPassiveDps', formatValue(result.passive?.dps || 0));
-        setDebugText('dbgBuffSummary', `Buff：${(dbg.buffText || result.activeBuffText || []).length ? (dbg.buffText || result.activeBuffText).join('｜') : '無'}`);
+        const panelLine = `當前面板：攻擊 ${formatValue((result.effectiveStats || {}).finalAtk || 0)}｜暴擊率 ${(((result.debug || {}).critRate || result.effectiveCritRate || 0) * 100).toFixed(1)}%｜暴擊傷害 ${formatValue((result.effectiveStats || {}).critDmgPct || (result.debug || {}).critDmgPct || 0)}%｜有效攻擊週期 ${formatValue((result.effectiveStats || {})['攻擊週期'] || 0)} 秒`;
+        setDebugText('dbgBuffSummary', panelLine);
         setDebugText('dbgSkillSummary', `技能：${dbg.skillText || '未設定技能'}`);
         setDebugText('dbgPassiveSummary', `職業被動：${dbg.passiveText || '未啟用'}`);
         setDebugText('dbgTitleSummary', `稱號：${dbg.titleText || '未裝備'}`);
@@ -3044,6 +3423,9 @@ const CHARACTER_TEMPLATES = {
         initialHp: num(el.initialHp.value),
         growthHp: num(el.growthHp.value),
         weaponAtk: num(el.weaponAtk.value),
+        weaponBaseAtk: WEAPON_BASE_ATK,
+        weaponAffix1: el.weaponAffix1?.value || 'none',
+        weaponAffix2: el.weaponAffix2?.value || 'none',
         flatAttack: num(el.flatAttack.value),
         攻擊週期: num(el.攻擊週期.value) || 2,
         atk: num(el.atk.value),
@@ -3122,6 +3504,9 @@ function buildCharacterFromForm() {
       el.initialHp.value = character?.initialHp ?? character?.hp ?? 0;
       el.growthHp.value = character?.growthHp ?? 0;
       el.weaponAtk.value = character?.weaponAtk ?? 0;
+      if (el.weaponBaseAtkDisplay) el.weaponBaseAtkDisplay.value = String(character?.weaponBaseAtk ?? WEAPON_BASE_ATK);
+      if (el.weaponAffix1) el.weaponAffix1.value = character?.weaponAffix1 || 'none';
+      if (el.weaponAffix2) el.weaponAffix2.value = character?.weaponAffix2 || 'none';
       el.flatAttack.value = character?.flatAttack ?? 0;
       el.攻擊週期.value = character?.攻擊週期 ?? (character?.skills?.[0]?.cycle ?? 2);
       el.atk.value = character?.atk ?? 0;
@@ -3256,6 +3641,12 @@ function buildCharacterFromForm() {
         initialHp: hp,
         growthHp: 0,
         weaponAtk: 0,
+      weaponBaseAtk: WEAPON_BASE_ATK,
+      weaponAffix1: 'none',
+      weaponAffix2: 'none',
+        weaponBaseAtk: WEAPON_BASE_ATK,
+        weaponAffix1: 'none',
+        weaponAffix2: 'none',
         flatAttack: 0,
         攻擊週期: cycle,
         atk,
@@ -3427,7 +3818,7 @@ function attachEvents() {
         });
       }
 
-      ['level','initialAttDmg','growthAttDmg','initialHp','growthHp','weaponAtk','flatAttack','攻擊週期','finalAtkInput','finalHpInput'].forEach((key) => {
+      ['level','initialAttDmg','growthAttDmg','initialHp','growthHp','weaponAtk','flatAttack','攻擊週期','finalAtkInput','finalHpInput','weaponAffix1','weaponAffix2'].forEach((key) => {
         if (!el[key]) return;
         el[key].addEventListener('input', () => {
           syncDerivedFormStats();
@@ -3680,7 +4071,7 @@ function attachEvents() {
         state.monsterKey = payload.monsterKey || state.monsterKey;
         state.fightSeconds = Number(payload.fightSeconds) || state.fightSeconds;
         state.characters = Array.isArray(payload.characters) ? payload.characters : [];
-        state.characters = state.characters.map((item) => { if (!Array.isArray(item.legendTitleKeys)) item.legendTitleKeys = [item.legendTitleKey || ''].filter(Boolean); return item; });
+        state.characters = state.characters.map((item) => { if (!Array.isArray(item.legendTitleKeys)) item.legendTitleKeys = [item.legendTitleKey || ''].filter(Boolean); if (!('weaponBaseAtk' in item)) item.weaponBaseAtk = WEAPON_BASE_ATK; if (!('weaponAffix1' in item)) item.weaponAffix1 = 'none'; if (!('weaponAffix2' in item)) item.weaponAffix2 = 'none'; return item; });
         state.selectedId = payload.selectedId || (state.characters[0]?.id || null);
         if (state.selectedId && !state.characters.some((item) => item.id === state.selectedId)) {
           state.selectedId = state.characters[0]?.id || null;
@@ -3731,6 +4122,15 @@ document.getElementById("saveCharacterSticky")?.addEventListener("click", saveCh
       });
 
       renderAll();
+      setTimeout(() => {
+        try {
+          normalizeLeaders();
+          renderAll();
+          if (typeof syncDebugLayout === "function") syncDebugLayout();
+        } catch (err) {
+          console.error(err);
+        }
+      }, 0);
     
   </script>
 <script>
@@ -3761,7 +4161,7 @@ function clearTestChars(){
 }
 </script>
 <script>
-let debugMode = false;
+let debugMode = true;
 
 function syncDebugLayout(){
   const page = document.getElementById('pageWithDebug');
@@ -3773,10 +4173,16 @@ function syncDebugLayout(){
   if (page) page.classList.toggle('debug-layout-on', debugMode);
   if (pill) pill.textContent = `傷害組成：${debugMode ? '開啟' : '關閉'}`;
 
+  if (debugMode && !sideMount && typeof renderRoster === 'function') {
+    renderRoster();
+  }
+
+  const refreshedSideMount = document.getElementById('debugPanelSideMount');
+
   if (panel) {
     panel.classList.toggle('open', debugMode);
-    if (debugMode && sideMount && panel.parentElement !== sideMount) {
-      sideMount.appendChild(panel);
+    if (debugMode && refreshedSideMount && panel.parentElement !== refreshedSideMount) {
+      refreshedSideMount.appendChild(panel);
     } else if (!debugMode && inlineMount && panel.parentElement !== inlineMount) {
       inlineMount.appendChild(panel);
     }
@@ -3793,6 +4199,16 @@ function setDebugText(id, value){
   const node = document.getElementById(id);
   if (node) node.textContent = value;
 }
+
+window.addEventListener('load', function(){
+  try {
+    if (typeof normalizeLeaders === 'function') normalizeLeaders();
+    if (typeof renderAll === 'function') renderAll();
+    syncDebugLayout();
+  } catch (err) {
+    console.error(err);
+  }
+});
 </script>
 <img alt="九尾狐彩蛋" class="fox-easter-egg" id="foxEasterEgg" src=""/>
 </div><script>
@@ -3827,6 +4243,9 @@ function setDebugText(id, value){
     safeSetValue('initialHp', '0');
     safeSetValue('growthHp', '0');
     safeSetValue('weaponAtk', '0');
+    safeSetValue('weaponBaseAtkDisplay', '200');
+    safeSetValue('weaponAffix1', 'none');
+    safeSetValue('weaponAffix2', 'none');
     safeSetValue('flatAttack', '0');
     safeSetValue('攻擊週期', '2');
     safeSetValue('atk', '0');
@@ -3960,6 +4379,9 @@ function setDebugText(id, value){
       initialHp: 5198,
       growthHp: 0,
       weaponAtk: 0,
+      weaponBaseAtk: WEAPON_BASE_ATK,
+      weaponAffix1: 'none',
+      weaponAffix2: 'none',
       flatAttack: 0,
       攻擊週期: 2,
       atk: 1550,
@@ -4161,7 +4583,7 @@ function setDebugText(id, value){
   }
 
   function computeHealPassiveSynergy(character, currentResult) {
-    const support = character.healTriggerEnabled ? { name: '手動指定治療觸發', v80HealSupportProfile: { healEvents: 5, healWindow: 5, buffDuration: 10 } } : getNightingaleSupportForTarget(character);
+    const support = character.healTriggerEnabled ? getNightingaleSupportForTarget(character) : null;
     if (!support || !isAltanianCharacter(character)) {
       return {
         applied: false,
@@ -4197,7 +4619,7 @@ function setDebugText(id, value){
     const effectiveRate = Math.min(healPerSec, 1 / Math.max(0.01, Number(passive.cd || 1)));
 
     const critBefore = Number(character.crit || 0);
-    const critAfter = Math.min(100, critBefore + 46);
+    const critAfter = critBefore + 46;
     const atkSpeedPct = 58;
 
     const buffedCharacter = JSON.parse(JSON.stringify(character));
@@ -4207,11 +4629,13 @@ function setDebugText(id, value){
     const baseCompute = window.__baseComputeCharacter;
     const buffedResult = baseCompute(buffedCharacter, MONSTERS[window.state.monsterKey], window.state.fightSeconds);
 
-    const passiveBaseValue = passive.sourceStat === 'hp' ? Number(character.hp || 0) : Number(character.atk || 0);
+    const buffedAtk = Number((buffedResult.effectiveStats || {}).finalAtk || 0);
+    const buffedHp = Number((buffedResult.effectiveStats || {}).roleHp || character.hp || 0);
+    const passiveBaseValue = passive.sourceStat === 'hp' ? buffedHp : buffedAtk;
     const passiveNonCrit = passiveBaseValue * (Number(passive.multiplier || 0) / 100) * Number(passive.hits || 1);
-    const critRateAvg = Math.min(1, Math.max(0, critAfter / 100));
-    const critPower = 1 + Math.max(0, Number(character.critDmg || 0) / 100);
-    const passiveAvgCast = passive.canCrit ? passiveNonCrit * (1 - critRateAvg) + passiveNonCrit * critPower * critRateAvg : passiveNonCrit;
+    const critRateAvg = Math.max(0, Number(buffedResult.effectiveCritRate || 0));
+    const critMultiplier = Number((buffedResult.debug || {}).critMultiplier || (1 + Math.max(0, Number(character.critDmg || 0) / 100)));
+    const passiveAvgCast = passive.canCrit ? passiveNonCrit * (1 - critRateAvg) + passiveNonCrit * critMultiplier * critRateAvg : passiveNonCrit;
     const passiveAddedDps = passiveAvgCast * effectiveRate;
 
     const finalDps = buffedResult.totalDps + passiveAddedDps;
@@ -4269,22 +4693,22 @@ function setDebugText(id, value){
       try {
         const infoNode = document.getElementById('healSynergyInfo');
         if (!infoNode || !window.state || !window.state.selectedId) {
-          if (infoNode) infoNode.textContent = '治療聯動：-';
+          if (infoNode) infoNode.innerHTML = '<span class="system-sub-id">CALC-4-3</span>治療聯動：-';
           return;
         }
         const character = (window.state.characters || []).find(function (item) { return item.id === window.state.selectedId; });
         if (!character) {
-          infoNode.textContent = '治療聯動：-';
+          infoNode.innerHTML = '<span class="system-sub-id">CALC-4-3</span>治療聯動：-';
           return;
         }
         const result = computeCharacter(character, MONSTERS[window.state.monsterKey], window.state.fightSeconds);
         const s = result.healSynergy || {};
         if (!s.applied) {
-          infoNode.textContent = '治療聯動：目前未套用。';
+          infoNode.innerHTML = '<span class="system-sub-id">4-3</span>治療聯動：目前未套用。';
           return;
         }
-        infoNode.textContent =
-          '治療聯動：基礎 DPS ' + (s.baseDps || 0).toFixed(2) +
+        infoNode.innerHTML =
+          '<span class="system-sub-id">4-3</span>治療聯動：基礎 DPS ' + (s.baseDps || 0).toFixed(2) +
           '｜聯動後 DPS ' + (s.finalDps || 0).toFixed(2) +
           '｜南丁格爾貢獻 +' + (s.addedDps || 0).toFixed(2) +
           '｜其中被動 +' + (s.passiveAddedDps || 0).toFixed(2) +
@@ -4325,7 +4749,9 @@ function setDebugText(id, value){
   const COMMENT_LOCAL_KEY = "dps_site_comments_local_v1";
   const COMMENT_NAME_KEY = "dps_site_comment_name_v1";
   const COMMENT_ADMIN_SESSION_KEY = "dps_site_comment_admin_unlocked_v1";
-  const COMMENT_ADMIN_KEY = "fox-delete-2026";
+  const SYSTEM_ID_MODE_KEY = "dps_system_id_mode_v91";
+  const COMMENT_PUSH_ENABLED_KEY = "dps_site_comment_push_enabled_v1";
+  const COMMENT_ADMIN_KEY = "198921";
   const COMMENT_COOLDOWN_MS = 5000;
   const COMMENT_MAX_COUNT = 100;
 
@@ -4336,7 +4762,8 @@ function setDebugText(id, value){
     firestore: null,
     usingLocalMode: true,
     sending: false,
-    adminUnlocked: false
+    adminUnlocked: false,
+    pushEnabled: true
   };
 
   function byId(id) {
@@ -4373,14 +4800,7 @@ function setDebugText(id, value){
   }
 
   function setModes() {
-    const storage = byId("commentStorageMode");
-    const push = byId("commentPushMode");
-    if (storage) {
-      storage.textContent = state.usingLocalMode ? "留言模式：本地測試 / localStorage" : "留言模式：Firebase 公開版";
-    }
-    if (push) {
-      push.textContent = COMMENT_PUSH_ENDPOINT ? "DC 推送：已設定" : "DC 推送：未設定";
-    }
+    updatePushToggleUi();
   }
 
   function saveName() {
@@ -4403,6 +4823,67 @@ function setDebugText(id, value){
     }
   }
 
+  function savePushEnabled() {
+    try {
+      localStorage.setItem(COMMENT_PUSH_ENABLED_KEY, state.pushEnabled ? "1" : "0");
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function saveSystemIdMode() {
+    try {
+      localStorage.setItem(SYSTEM_ID_MODE_KEY, state.systemIdMode ? "1" : "0");
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function updateSystemIdToggleUi() {
+    const btn = byId("commentSystemIdToggleBtn");
+    const desc = byId("commentSystemIdDesc");
+    document.body.classList.toggle("show-system-ids", !!state.systemIdMode);
+    if (btn) {
+      btn.textContent = state.systemIdMode ? "目前：開啟，點此關閉" : "目前：關閉，點此開啟";
+      btn.className = state.systemIdMode ? "btn comment-toggle-btn" : "btn secondary comment-toggle-btn";
+    }
+    if (desc) {
+      desc.textContent = state.systemIdMode
+        ? "目前會顯示 UI / CALC 全系統與子模組編號；這個開關會永久記住。"
+        : "目前不顯示 UI / CALC 系統編號；這個開關會永久記住，不會因為離開頁面重設。";
+    }
+  }
+
+  function setSystemIdMode(isOn) {
+    state.systemIdMode = !!isOn;
+    saveSystemIdMode();
+    updateSystemIdToggleUi();
+  }
+
+  function updatePushToggleUi() {
+    const btn = byId("commentPushToggleBtn");
+    const desc = byId("commentPushToggleDesc");
+    if (btn) {
+      if (!COMMENT_PUSH_ENDPOINT) {
+        btn.textContent = "未設定 webhook";
+        btn.disabled = true;
+      } else {
+        btn.disabled = false;
+        btn.textContent = state.pushEnabled ? "目前：開啟，點此關閉" : "目前：關閉，點此開啟";
+        btn.className = state.pushEnabled ? "btn comment-toggle-btn" : "btn secondary comment-toggle-btn";
+      }
+    }
+    if (desc) {
+      if (!COMMENT_PUSH_ENDPOINT) {
+        desc.textContent = "尚未設定 Discord webhook，所以無法推送。";
+      } else {
+        desc.textContent = state.pushEnabled
+          ? "目前會在網站留言後同步推送到 Discord。"
+          : "目前只保留網站留言，不會即時推送到 Discord。";
+      }
+    }
+  }
+
   function setAdminStatus(text, isError) {
     const node = byId("commentAdminStatus");
     if (!node) return;
@@ -4422,17 +4903,39 @@ function setDebugText(id, value){
     if (lockBtn) lockBtn.disabled = !state.adminUnlocked;
     const input = byId("commentAdminKeyInput");
     if (input && state.adminUnlocked) input.value = "";
+    ["commentPushCard","commentAdminStateCard","commentSystemIdCard"].forEach(function(id){
+      const node = byId(id);
+      if (node) node.classList.toggle("show", state.adminUnlocked);
+    });
     setAdminStatus(statusText || (state.adminUnlocked ? "已解鎖。刪除按鈕已顯示。" : "尚未解鎖。只有解鎖後才會顯示刪除按鈕。"), !!isError);
     renderComments(state.comments);
   }
 
+  function autoLockAdmin(message) {
+    if (!state.adminUnlocked) return;
+    setAdminMode(false, message || "已自動鎖定管理模式。");
+  }
+
   function restoreAdminSession() {
+    state.adminUnlocked = false;
     try {
-      const raw = localStorage.getItem(COMMENT_ADMIN_SESSION_KEY) || "0";
-      state.adminUnlocked = raw === "1";
+      localStorage.removeItem(COMMENT_ADMIN_SESSION_KEY);
     } catch (err) {
       state.adminUnlocked = false;
     }
+    try {
+      const rawPush = localStorage.getItem(COMMENT_PUSH_ENABLED_KEY);
+      state.pushEnabled = rawPush === null ? true : rawPush === "1";
+    } catch (err) {
+      state.pushEnabled = true;
+    }
+    try {
+      const rawSystem = localStorage.getItem(SYSTEM_ID_MODE_KEY);
+      state.systemIdMode = rawSystem === "1";
+    } catch (err) {
+      state.systemIdMode = false;
+    }
+    updateSystemIdToggleUi();
   }
 
   function getLocalComments() {
@@ -4461,15 +4964,13 @@ function setDebugText(id, value){
       const name = escapeHtml(item.name || "訪客");
       const body = escapeHtml(item.message || "");
       const time = escapeHtml(item.createdAtText || nowText(item.createdAt));
-      const source = item.source === "firebase" ? "公開版" : "本地";
       const canDelete = state.adminUnlocked && item.id;
-      const fromDiscord = item.discordMessageId ? '<span class="comment-badge">已推送 DC</span>' : '';
       return '' +
         '<article class="comment-item ' + (state.adminUnlocked ? 'admin-open' : '') + '" data-comment-id="' + escapeHtml(item.id || '') + '">' +
           '<div class="comment-item-head">' +
             '<div class="comment-author-wrap">' +
               '<div class="comment-author">' + name + '</div>' +
-              '<div class="comment-meta-line"><span class="comment-badge">' + source + '</span>' + fromDiscord + '</div>' +
+              '' +
             '</div>' +
             '<div class="comment-card-foot">' +
               '<div class="comment-time">' + time + '</div>' +
@@ -4560,7 +5061,7 @@ function setDebugText(id, value){
   }
 
   async function pushToDiscord(payload) {
-    if (!COMMENT_PUSH_ENDPOINT) return { skipped: true };
+    if (!COMMENT_PUSH_ENDPOINT || !state.pushEnabled) return { skipped: true };
     const content = [
       "📢 網站新留言",
       "👤 暱稱：" + (payload.name || "訪客"),
@@ -4703,10 +5204,10 @@ function setDebugText(id, value){
       payload.discordMessageId = pushResult && pushResult.messageId ? pushResult.messageId : "";
       const savedMode = await saveComment(payload);
       saveName();
-      const msg = COMMENT_PUSH_ENDPOINT
-        ? (pushResult.ok || pushResult.skipped ? "留言已送出，DC 推送已處理。" : "留言已送出，但 DC 推送失敗。")
-        : "留言已送出。";
-      setStatus(msg, !!(COMMENT_PUSH_ENDPOINT && pushResult && pushResult.ok === false));
+      const msg = !COMMENT_PUSH_ENDPOINT
+        ? "留言已送出。"
+        : ((state.pushEnabled && pushResult && pushResult.ok === false) ? "留言已送出，但 DC 推送失敗。" : "留言已送出。");
+      setStatus(msg, !!(COMMENT_PUSH_ENDPOINT && state.pushEnabled && pushResult && pushResult.ok === false));
       byId("commentMessageInput").value = "";
       state.lastSubmitAt = Date.now();
       await fetchComments();
@@ -4732,15 +5233,32 @@ function setDebugText(id, value){
     byId("commentRefreshBtn")?.addEventListener("click", fetchComments);
     byId("commentNicknameInput")?.addEventListener("change", saveName);
     byId("commentNicknameInput")?.addEventListener("blur", saveName);
-    byId("commentAdminFab")?.addEventListener("click", function () {
+    byId("commentOpenFab")?.addEventListener("click", function () {
+      byId("commentDrawer")?.classList.add("open");
+    });
+    byId("commentCloseBtn")?.addEventListener("click", function () {
+      byId("commentDrawer")?.classList.remove("open");
+      autoLockAdmin("已關閉留言板，管理模式已自動鎖定。");
+    });
+    byId("commentAdminEntryBtn")?.addEventListener("click", function () {
       byId("commentAdminModal")?.classList.add("open");
     });
     byId("commentAdminCloseBtn")?.addEventListener("click", function () {
       byId("commentAdminModal")?.classList.remove("open");
+      autoLockAdmin("已關閉管理視窗，管理模式已自動鎖定。");
     });
     byId("commentAdminModal")?.addEventListener("click", function (event) {
       if (event.target === byId("commentAdminModal")) {
         byId("commentAdminModal")?.classList.remove("open");
+        autoLockAdmin("已離開管理視窗，管理模式已自動鎖定。");
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        byId("commentAdminModal")?.classList.remove("open");
+        byId("commentDrawer")?.classList.remove("open");
+        autoLockAdmin("已離開留言板，管理模式已自動鎖定。");
       }
     });
     byId("commentAdminUnlockBtn")?.addEventListener("click", function () {
@@ -4760,6 +5278,20 @@ function setDebugText(id, value){
       setAdminMode(false, "已鎖定管理模式。");
       byId("commentAdminModal")?.classList.remove("open");
     });
+    byId("commentPushToggleBtn")?.addEventListener("click", function () {
+      if (!COMMENT_PUSH_ENDPOINT) {
+        setAdminStatus("尚未設定 Discord webhook。", true);
+        return;
+      }
+      state.pushEnabled = !state.pushEnabled;
+      savePushEnabled();
+      setModes();
+      setAdminStatus(state.pushEnabled ? "已開啟 DC 即時推送。" : "已關閉 DC 即時推送。");
+    });
+    window.addEventListener("beforeunload", function () {
+      autoLockAdmin("頁面關閉，管理模式已自動鎖定。");
+    });
+
     byId("commentList")?.addEventListener("click", function (event) {
       const button = event.target.closest(".comment-delete-btn");
       if (!button) return;
@@ -4770,7 +5302,8 @@ function setDebugText(id, value){
       const commentId = button.getAttribute("data-comment-id") || "";
       if (commentId) deleteCommentById(commentId);
     });
-    byId("commentMessageInput")?.addEventListener("keydown", function (event) {
+    const commentMessageNode = byId("commentMessageInput");
+    commentMessageNode?.addEventListener("keydown", function (event) {
       if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
         event.preventDefault();
         submitComment();
@@ -4779,6 +5312,179 @@ function setDebugText(id, value){
   }
 
   window.addEventListener("DOMContentLoaded", initCommentBoard);
+})();
+</script>
+
+
+
+<script>
+(function(){
+  const MODE_KEY = 'dps_system_id_mode_v94';
+  const LEGACY_KEYS = ['dps_system_id_mode_v91'];
+  const DEBUG_DRAWER_ID = 'safeDebugDrawerV94';
+
+  function readMode(){
+    try {
+      const current = localStorage.getItem(MODE_KEY);
+      if (current === '1' || current === '0') return current === '1';
+      for (const key of LEGACY_KEYS) {
+        const value = localStorage.getItem(key);
+        if (value === '1' || value === '0') return value === '1';
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function writeMode(on){
+    try {
+      localStorage.setItem(MODE_KEY, on ? '1' : '0');
+      for (const key of LEGACY_KEYS) localStorage.setItem(key, on ? '1' : '0');
+    } catch (e) {}
+  }
+
+  function updateSystemIdUi(on){
+    document.body.classList.toggle('show-system-ids', !!on);
+    const btn = document.getElementById('commentSystemIdToggleBtn');
+    const desc = document.getElementById('commentSystemIdDesc');
+    if (btn) {
+      btn.textContent = on ? '目前：開啟，點此關閉' : '目前：關閉，點此開啟';
+      btn.className = on ? 'btn comment-toggle-btn' : 'btn secondary comment-toggle-btn';
+    }
+    if (desc) {
+      desc.textContent = on
+        ? '目前會顯示 UI / CALC 全系統與子模組編號；這個開關會永久記住。'
+        : '目前不顯示 UI / CALC 系統編號；這個開關會永久記住，不會因為離開頁面重設。';
+    }
+  }
+
+  function setMode(on){
+    writeMode(on);
+    updateSystemIdUi(on);
+  }
+
+  function bindSystemToggle(){
+    const btn = document.getElementById('commentSystemIdToggleBtn');
+    if (!btn || btn.dataset.systemBound === '1') return;
+    btn.dataset.systemBound = '1';
+    btn.addEventListener('click', function(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      setMode(!document.body.classList.contains('show-system-ids'));
+    }, true);
+  }
+
+  function ensureDebugDrawer(){
+    let drawer = document.getElementById(DEBUG_DRAWER_ID);
+    if (drawer) return drawer;
+    drawer = document.createElement('div');
+    drawer.id = DEBUG_DRAWER_ID;
+    drawer.style.cssText = 'position:fixed;right:18px;bottom:18px;z-index:100100;width:min(460px,calc(100vw - 24px));max-height:calc(100vh - 36px);overflow:auto;padding:16px;border-radius:18px;background:rgba(15,23,42,0.97);border:1px solid rgba(167,139,250,0.24);box-shadow:0 18px 50px rgba(0,0,0,0.35);display:none;';
+    drawer.innerHTML = '<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;"><strong id="safeDebugTitle" style="color:#f8fafc;font-size:16px;">Debug</strong><button id="safeDebugCloseBtn" class="btn secondary" type="button" style="padding:8px 12px;">關閉</button></div><div id="safeDebugBody" style="color:#cbd5e1;line-height:1.8;white-space:pre-wrap;font-size:14px;"></div>';
+    document.body.appendChild(drawer);
+    drawer.querySelector('#safeDebugCloseBtn').addEventListener('click', function(){
+      drawer.style.display = 'none';
+    });
+    return drawer;
+  }
+
+  function getText(id){
+    const el = document.getElementById(id);
+    return el ? (el.textContent || '').trim() : '-';
+  }
+
+  function openDebug(title, body){
+    const drawer = ensureDebugDrawer();
+    drawer.querySelector('#safeDebugTitle').textContent = title;
+    drawer.querySelector('#safeDebugBody').textContent = body;
+    drawer.style.display = 'block';
+  }
+
+  function renderedSelectedCharacter(){
+    return '目前選取角色：' + getText('selectedCharacterName') + '
+' +
+      '當前面板（Buff後）
+' +
+      'ATK：' + getText('effectiveAtk') + '
+' +
+      '暴擊率：' + getText('effectiveCrit') + '
+' +
+      '暴擊傷害：' + getText('effectiveCritDmg');
+  }
+
+  function renderedDpsSummary(){
+    return '目前 DPS：' + getText('dps') + '
+' +
+      '每秒攻擊次數：' + getText('effectiveAps') + '
+' +
+      '戰鬥總傷害：' + getText('fightDamage') + '
+
+' +
+      '這裡是目前畫面已算出的結果。';
+  }
+
+  function renderedPanelSummary(){
+    return 'ATK：' + getText('effectiveAtk') + '
+' +
+      '暴擊率：' + getText('effectiveCrit') + '
+' +
+      '暴擊傷害：' + getText('effectiveCritDmg') + '
+
+' +
+      'BUFF資訊
+' + getText('effectiveBuffInfo');
+  }
+
+  function renderedSkillSummary(){
+    return '技能摘要
+' + getText('effectiveStatInfo');
+  }
+
+  function renderedHealSummary(){
+    return '治療聯動
+' + getText('healSynergyInfo');
+  }
+
+  function bindClickableDebug(){
+    const mappings = [
+      { selector:'#selectedCharacterName', title:'UI-1-1 目前選取角色', body:renderedSelectedCharacter },
+      { selector:'#dps', title:'UI-1-2 目前 DPS', body:renderedDpsSummary },
+      { selector:'#effectiveAps', title:'UI-1-3 每秒攻擊次數', body:renderedDpsSummary },
+      { selector:'#fightDamage', title:'UI-1-4 戰鬥總傷害', body:renderedDpsSummary },
+      { selector:'#effectiveAtk', title:'UI-3-1 當前面板（Buff後）', body:renderedPanelSummary },
+      { selector:'#effectiveCrit', title:'UI-3-1 當前面板（Buff後）', body:renderedPanelSummary },
+      { selector:'#effectiveCritDmg', title:'UI-3-1 當前面板（Buff後）', body:renderedPanelSummary },
+      { selector:'#effectiveStatInfo', title:'UI-3-2 技能摘要', body:renderedSkillSummary },
+      { selector:'#healSynergyInfo', title:'UI-3-3 治療聯動', body:renderedHealSummary }
+    ];
+    mappings.forEach(function(item){
+      const el = document.querySelector(item.selector);
+      if (!el || el.dataset.debugBound === '1') return;
+      el.dataset.debugBound = '1';
+      el.style.cursor = 'pointer';
+      el.title = '點擊查看 Debug';
+      el.addEventListener('click', function(){
+        try {
+          openDebug(item.title, item.body());
+        } catch (e) {
+          openDebug(item.title, 'Debug 讀取失敗：' + e.message);
+        }
+      });
+    });
+  }
+
+  function boot(){
+    updateSystemIdUi(readMode());
+    bindSystemToggle();
+    bindClickableDebug();
+    setTimeout(bindClickableDebug, 1200);
+    setTimeout(bindSystemToggle, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 </script>
 
