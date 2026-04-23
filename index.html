@@ -1397,6 +1397,29 @@
     display:inline-flex !important;
   }
 
+
+/* cleanup v2 */
+#effectiveBuffInfo, #effectiveStatInfo, #healSynergyInfo { line-height: 1.9; }
+#effectiveBuffInfo .line, #effectiveStatInfo .line { display:block; }
+#dbgResearchAtkBox, #dbgBaseAtkBox, #dbgSkillMultiplierBox, #dbgNonCritBox, #dbgCritBox, #dbgAvgBox,
+#dbgDefenseMultiplierBox, #dbgRawCycleBox, #dbgEffectiveCycleBox { display:none !important; }
+
+
+/* polish patch */
+.note .line{display:block; line-height:1.85; margin-top:2px;}
+.info-row{display:block; line-height:1.85; margin-top:2px;}
+.info-chip-wrap{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+.info-chip{
+  display:inline-flex; align-items:center; gap:6px;
+  border-radius:999px; padding:4px 10px;
+  font-size:12px; background:rgba(148,163,184,0.12);
+  color:#e2e8f0; border:1px solid rgba(148,163,184,0.18);
+}
+.info-chip .label{opacity:.72; font-size:11px;}
+#dbgBaseAtkBox,#dbgResearchAtkBox,#dbgSkillMultiplierBox,#dbgDefenseMultiplierBox,#dbgNonCritBox,#dbgCritBox,#dbgAvgBox,#dbgRawCycleBox,#dbgEffectiveCycleBox{display:none !important;}
+
+
+    #dbgPassiveSummary { display:none !important; }
 </style>
 </head>
 <body>
@@ -1407,10 +1430,10 @@
 <div class="tag">主畫面核心結果｜最多 12 角色，4 隊</div>
 <button class="btn secondary" onclick="window.open('收益模擬器.html','_blank')"><span class="system-id-badge">UI-10</span>收益模擬器</button>
 <div class="fox-advisor-wrap"><div class="fox-advisor-content"><div class="fox-advisor-title"><span class="system-id-badge">UI-5</span>阿狐建議</div><div class="fox-advisor-text" id="advisorBox">尚未建立角色</div></div><img alt="阿狐" class="fox-advisor-image" src="data:image/png;base64,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"/></div>
-<div class="note" id="effectiveBuffInfo"><span class="system-sub-id">CALC-4-1</span>當前面板（Buff後）：-</div>
-<div class="note" id="effectiveStatInfo"><span class="system-sub-id">CALC-4-2</span>技能摘要：-</div>
+<div class="note" id="effectiveBuffInfo"><span class="system-sub-id">CALC-4-1</span>主要面板：-</div>
+<div class="note" id="effectiveStatInfo"><span class="system-sub-id">CALC-4-2</span>核心資訊：-</div>
 <div class="note" id="healSynergyInfo"><span class="system-sub-id">CALC-4-3</span>治療聯動：-</div>
-<div class="system-note-inline"><span class="system-sub-id">CALC-4-1</span><span class="muted">當前面板（Buff後）</span><span class="system-sub-id">CALC-4-2</span><span class="muted">技能 / 職業被動摘要</span><span class="system-sub-id">CALC-4-3</span><span class="muted">治療聯動</span></div>
+<div class="system-note-inline"><span class="system-sub-id">CALC-4-1</span><span class="muted">基礎攻擊 / 最終攻擊</span><span class="system-sub-id">CALC-4-2</span><span class="muted">穿透 / 防禦結果 / 稱號武器</span><span class="system-sub-id">CALC-4-3</span><span class="muted">治療聯動</span></div>
 </section>
 <div class="page-with-debug" id="pageWithDebug"><div class="main-content">
 <section class="card">
@@ -1471,25 +1494,26 @@
     </div>
     <div class="debug-grid">
       <div class="debug-box" id="dbgBaseAtkBox"><span><span class="system-sub-id">CALC-4-1-1</span>基礎攻擊</span><strong id="dbgBaseAtk">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-2</span>研究院攻擊</span><strong id="dbgResearchAtk">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-3</span>目前面板攻擊</span><strong id="dbgPanelAtk">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-4</span>Buff 後攻擊</span><strong id="dbgAtkAfterBuff">-</strong></div>
+      <div class="debug-box" id="dbgResearchAtkBox"><span><span class="system-sub-id">CALC-4-1-2</span>研究院攻擊</span><strong id="dbgResearchAtk">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-1</span>基礎攻擊</span><strong id="dbgPanelAtk">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-2</span>最終攻擊</span><strong id="dbgAtkAfterBuff">-</strong></div>
       <div class="debug-box" id="dbgSkillMultiplierBox"><span><span class="system-sub-id">CALC-4-2-1</span>技能總倍率</span><strong id="dbgSkillMultiplier">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-2-2</span>防禦修正</span><strong id="dbgDefenseMultiplier">-</strong></div>
+      <div class="debug-box" id="dbgDefenseMultiplierBox"><span><span class="system-sub-id">CALC-4-2-2</span>防禦修正</span><strong id="dbgDefenseMultiplier">-</strong></div>
       <div class="debug-box" id="dbgNonCritBox"><span><span class="system-sub-id">CALC-4-2-3</span>非暴擊單次</span><strong id="dbgNonCrit">-</strong></div>
       <div class="debug-box" id="dbgCritBox"><span><span class="system-sub-id">CALC-4-2-4</span>暴擊單次</span><strong id="dbgCrit">-</strong></div>
       <div class="debug-box" id="dbgAvgBox"><span><span class="system-sub-id">CALC-4-2-5</span>平均單次</span><strong id="dbgAvg">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-5</span>最終暴擊率</span><strong id="dbgCritRate">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-6</span>暴擊倍率</span><strong id="dbgCritMultiplier">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-7</span>原始攻擊週期</span><strong id="dbgRawCycle">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-8</span>有效攻擊週期</span><strong id="dbgEffectiveCycle">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-3-1</span>職業被動 DPS</span><strong id="dbgPassiveDps">-</strong></div>
-      <div class="debug-box"><span><span class="system-sub-id">CALC-4-4-1</span>最終 DPS</span><strong id="dbgFinalDps">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-3</span>暴擊率</span><strong id="dbgCritRate">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-4</span>暴擊傷害</span><strong id="dbgCritMultiplier">-</strong></div>
+      <div class="debug-box" id="dbgRawCycleBox"><span><span class="system-sub-id">CALC-4-1-7</span>原始攻擊週期</span><strong id="dbgRawCycle">-</strong></div>
+      <div class="debug-box" id="dbgEffectiveCycleBox"><span><span class="system-sub-id">CALC-4-1-8</span>有效攻擊週期</span><strong id="dbgEffectiveCycle">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-5</span>職業被動</span><strong id="dbgPassiveDps">-</strong></div>
+      <div class="debug-box"><span><span class="system-sub-id">CALC-4-1-6</span>最終DPS</span><strong id="dbgFinalDps">-</strong></div>
     </div>
     <div class="debug-list" id="dbgBuffSummary"><span class="system-sub-id">CALC-4-1</span>當前面板：-</div>
     <div class="debug-list" id="dbgSkillSummary"><span class="system-sub-id">CALC-4-2</span>技能：-</div>
     <div class="debug-list" id="dbgPassiveSummary"><span class="system-sub-id">CALC-4-3</span>職業被動：-</div>
     <div class="debug-list" id="dbgTitleSummary"><span class="system-sub-id">CALC-8</span>稱號：-</div>
+    <div class="debug-list" id="dbgWeaponSummary"><span class="system-sub-id">CALC-9</span>武器：-</div>
   </section></section></aside></div>
 <section class="card" id="debugCard" style="display:none;">
 <div class="section-head">
@@ -1579,6 +1603,7 @@
 </div>
 <input id="charLeader" type="hidden" value="0"/>
 </div>
+<p class="note" id="hoverPreviewHint">稱號 / 武器詞條選單內會直接顯示最終DPS 差異預覽，打開下拉就能先看差多少。</p>
 <div class="mode-note-badge" id="grade6Info">六星資料庫：未套用｜角色模板只保留六星 bytes 面板</div>
 </div>
 <div class="sub-card section-stack">
@@ -1593,7 +1618,7 @@
 </div>
 </div>
 <div class="grid" id="simpleStatsGrid">
-<div><label for="finalAtkInput">目前面板攻擊</label><input id="finalAtkInput" step="0.01" type="number" value="0"/></div>
+<div><label for="finalAtkInput">稱號前攻擊</label><input id="finalAtkInput" step="0.01" type="number" value="0"/></div>
 <div><label for="finalHpInput">目前面板生命</label><input id="finalHpInput" step="0.01" type="number" value="0"/></div>
 <div><label for="攻擊週期">攻擊週期（秒）</label><input id="攻擊週期" step="0.01" type="number" value="2"/></div>
 <div><label for="pdef">物理防禦</label><input id="pdef" step="0.01" type="number" value="0"/></div>
@@ -1621,11 +1646,11 @@
 <h3>武器系統</h3>
 </div>
 <div class="compact-grid">
-<div><label for="weaponBaseAtkDisplay">武器基礎攻擊</label><input id="weaponBaseAtkDisplay" readonly="" type="number" value="200"/></div>
+<div><label for="weaponBaseAtkDisplay">武器攻擊（可自行輸入）</label><input id="weaponBaseAtkDisplay" step="0.01" type="number" value="200"/></div>
 <div><label for="weaponAffix1">武器詞綴 A</label><select id="weaponAffix1"><option value="none">未選擇</option><option value="atk80">攻擊力 +80</option><option value="critDmg20">暴擊傷害 +20%</option><option value="crit20">暴擊率 +20%</option><option value="pPen15">物理貫通力 +15</option></select></div>
 <div><label for="weaponAffix2">武器詞綴 B</label><select id="weaponAffix2"><option value="none">未選擇</option><option value="atk80">攻擊力 +80</option><option value="critDmg20">暴擊傷害 +20%</option><option value="crit20">暴擊率 +20%</option><option value="pPen15">物理貫通力 +15</option></select></div>
 </div>
-<p class="note">武器基礎攻擊固定 +200，且可選 2 個詞綴。詞綴可重複，會直接套用到角色計算。</p>
+<p class="note">武器攻擊可自行輸入，方便處理沒武器、五星武器或不同武器數值；可再選 2 個詞綴，詞綴可重複，會直接套用到角色計算。</p>
 </div>
 <div class="sub-card section-stack">
 <div class="section-head">
@@ -1674,10 +1699,48 @@
 <div class="sub-card section-stack">
 <div class="section-head">
 <h3>技能</h3>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+<button class="btn secondary" id="buildFixedSkillSkeleton" type="button">固定型骨架</button>
+<button class="btn secondary" id="buildSelectableSkillSkeleton" type="button">可切換骨架</button>
 <button class="btn secondary" id="addSkill" type="button">新增技能</button>
 </div>
+</div>
+<div class="compact-grid">
+<div>
+<label for="skillMode">技能模式</label>
+<select id="skillMode">
+<option value="fixed">固定型（只吃一個主技能）</option>
+<option value="selectable">可切換（1C / 2C / 3C）</option>
+</select>
+</div>
+<div>
+<label for="mainSkillKey">主用技能</label>
+<select id="mainSkillKey">
+<option value="">未指定</option>
+<option value="1C">1C</option>
+<option value="2C">2C</option>
+<option value="3C">3C</option>
+</select>
+</div>
+<div>
+<label for="skillSummaryZh">技能摘要</label>
+<input id="skillSummaryZh" type="text" placeholder="例如：主打 3C 爆發 / 可切換 1C-3C" />
+</div>
+</div>
+<div class="mode-note-badge" id="skillModeInfo">技能模式：固定型｜主用技能：未指定</div>
 <div id="skillList"></div>
-<p class="note">週期公式固定：1C = 2 秒、2C = 4 秒、3C = 6 秒；六星資料庫匯入時會優先套用這個週期。</p>
+<p class="note">週期公式固定：1C = 2 秒、2C = 4 秒、3C = 6 秒；固定型只會計算主用技能，可切換型會依你選的 1C / 2C / 3C 去算。</p>
+</div>
+<div class="sub-card section-stack">
+<div class="section-head">
+<h3>額外事件</h3>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+<button class="btn secondary" id="addExtraEvent" type="button">新增額外事件</button>
+</div>
+</div>
+<div class="mode-note-badge" id="extraEventInfo">額外事件：未設定｜可用來填 3C×2 觸發、固定 CD 追加傷害這類規則</div>
+<div id="extraEventList"></div>
+<p class="note">這裡用來填「主技能以外」的平均追加傷害。例如：3C 施放 2 次後，觸發一次 1610% 魔法傷害，5 秒 CD。系統會依主用技能週期自動抓平均觸發頻率。</p>
 </div>
 <div class="modal-actions">
 <button class="btn secondary" id="cancelModal" type="button">取消</button>
@@ -2259,6 +2322,70 @@ const CHARACTER_TEMPLATES = {
       }).filter(Boolean).join('｜');
     }
 
+    function getPassiveShortLabelFromKey(key = '') {
+      const profile = JOB_PASSIVE_PROFILES[key || ''];
+      if (!profile) return '未啟用';
+      const label = profile.label || key || '未啟用';
+      return label.includes('｜') ? label.split('｜').pop().trim() : label.trim();
+    }
+
+    function getPassiveShortLabel(character = {}) {
+      const passiveKey = character.jobPassiveKey || inferPassiveKeyFromCharacter(character);
+      if (!passiveKey) return '未啟用';
+      if (character.jobPassiveEnabled === false) return `${getPassiveShortLabelFromKey(passiveKey)}（停用）`;
+      return getPassiveShortLabelFromKey(passiveKey);
+    }
+
+    function buildPreviewPartyCharacters(previewCharacter) {
+      const list = Array.isArray(state.characters) ? state.characters.slice() : [];
+      const targetId = state.editingId || previewCharacter?.id;
+      const index = list.findIndex((item) => item.id === targetId);
+      if (index >= 0) list[index] = previewCharacter;
+      else list.push(previewCharacter);
+      return list;
+    }
+
+    function formatPreviewDelta(diff, base) {
+      const safeBase = Number(base) || 0;
+      const pct = safeBase > 0 ? (diff / safeBase * 100) : 0;
+      const sign = diff > 0 ? '+' : '';
+      return `${sign}${formatValue(diff)} DPS (${sign}${pct.toFixed(1)}%)`;
+    }
+
+    function refreshOptionPreviewText(selectId, optionsBuilder) {
+      const node = el[selectId] || document.getElementById(selectId);
+      if (!node) return;
+      const currentValue = node.value || '';
+      const previewCharacter = buildCharacterFromForm();
+      const baseParty = buildPreviewPartyCharacters(previewCharacter);
+      const baseResult = computeCharacter(previewCharacter, MONSTERS[state.monsterKey], state.fightSeconds, baseParty);
+      Array.from(node.options).forEach((option) => {
+        const original = option.dataset.baseLabel || option.textContent;
+        option.dataset.baseLabel = original;
+        option.textContent = original;
+      });
+      Array.from(node.options).forEach((option) => {
+        const value = option.value || '';
+        if (typeof optionsBuilder !== 'function' || !value) return;
+        const testCharacter = optionsBuilder(previewCharacter, value);
+        const testParty = buildPreviewPartyCharacters(testCharacter);
+        const testResult = computeCharacter(testCharacter, MONSTERS[state.monsterKey], state.fightSeconds, testParty);
+        const diff = (testResult.totalDps || 0) - (baseResult.totalDps || 0);
+        const baseLabel = option.dataset.baseLabel || option.textContent;
+        const isCurrent = value === currentValue;
+        const suffix = isCurrent ? '｜目前' : `｜${formatPreviewDelta(diff, baseResult.totalDps || 0)}`;
+        option.textContent = `${baseLabel}${suffix}`;
+      });
+    }
+
+    function refreshHoverPreviewOptions() {
+      refreshOptionPreviewText('legendTitleKey', (character, value) => ({ ...character, legendTitleKeys: [value, el.legendTitleKey2?.value || '', el.legendTitleKey3?.value || ''].filter(Boolean), legendTitleKey: value }));
+      refreshOptionPreviewText('legendTitleKey2', (character, value) => ({ ...character, legendTitleKeys: [el.legendTitleKey?.value || '', value, el.legendTitleKey3?.value || ''].filter(Boolean), legendTitleKey: el.legendTitleKey?.value || '' }));
+      refreshOptionPreviewText('legendTitleKey3', (character, value) => ({ ...character, legendTitleKeys: [el.legendTitleKey?.value || '', el.legendTitleKey2?.value || '', value].filter(Boolean), legendTitleKey: el.legendTitleKey?.value || '' }));
+      refreshOptionPreviewText('weaponAffix1', (character, value) => ({ ...character, weaponAffix1: value }));
+      refreshOptionPreviewText('weaponAffix2', (character, value) => ({ ...character, weaponAffix2: value }));
+    }
+
     function populateLegendTitleSelect() {
       ['legendTitleKey','legendTitleKey2','legendTitleKey3'].forEach((id) => {
         const node = el[id];
@@ -2320,7 +2447,8 @@ const CHARACTER_TEMPLATES = {
         return;
       }
       const enabled = (el.jobPassiveEnabled?.value || '1') === '1' ? '已啟用' : '已停用';
-      el.jobPassiveInfo.textContent = `職業被動：${profile.label}｜${enabled}｜${profile.summary}`;
+      const shortLabel = getPassiveShortLabelFromKey(key);
+      el.jobPassiveInfo.textContent = `職業被動：${shortLabel}｜${enabled}`;
     }
 
     function autoAssignPassiveFromGrade6(key = '', force = false) {
@@ -2402,7 +2530,11 @@ const CHARACTER_TEMPLATES = {
       characters: [],
       selectedId: null,
       editingId: null,
-      skillDrafts: []
+      skillDrafts: [],
+      skillMode: 'fixed',
+      mainSkillKey: '',
+      skillSummaryZh: '',
+      extraEventDrafts: []
     };
 
     window.state = state;
@@ -2486,6 +2618,13 @@ const CHARACTER_TEMPLATES = {
       critDmg: document.getElementById('critDmg'),
       buffRows: document.getElementById('buffRows'),
       teamBuffRows: document.getElementById('teamBuffRows'),
+      skillMode: document.getElementById('skillMode'),
+      mainSkillKey: document.getElementById('mainSkillKey'),
+      skillSummaryZh: document.getElementById('skillSummaryZh'),
+      addExtraEvent: document.getElementById('addExtraEvent'),
+      extraEventInfo: document.getElementById('extraEventInfo'),
+      extraEventList: document.getElementById('extraEventList'),
+      skillModeInfo: document.getElementById('skillModeInfo'),
       skillList: document.getElementById('skillList')
     };
 
@@ -2722,6 +2861,7 @@ const CHARACTER_TEMPLATES = {
       fillEffectRows(el.teamBuffRows, cloneRows(template.teamBuffs || []));
       state.skillDrafts = (template.skills || []).map((skill) => createSkillDraft(skill));
       renderSkills();
+      renderExtraEvents();
       updateLivePreview();
     }
 
@@ -2814,13 +2954,67 @@ const CHARACTER_TEMPLATES = {
       };
     }
 
+    function inferSkillModeFromSkills(skills = []) {
+      const list = Array.isArray(skills) ? skills : [];
+      if (list.length >= 2) return 'selectable';
+      return 'fixed';
+    }
+
+    function getSkillKeyFromName(name = '') {
+      const normalized = String(name || '').trim().toUpperCase();
+      if (normalized === '1C' || normalized === '2C' || normalized === '3C') return normalized;
+      return normalized || '';
+    }
+
+    function ensureSkillSkeleton(mode = 'fixed') {
+      if (mode === 'selectable') {
+        state.skillDrafts = [
+          createSkillDraft({ name: '1C', damageType: 'physical', hits: 1, hitMultiplier: 0, cycle: 2 }),
+          createSkillDraft({ name: '2C', damageType: 'physical', hits: 1, hitMultiplier: 0, cycle: 4 }),
+          createSkillDraft({ name: '3C', damageType: 'physical', hits: 1, hitMultiplier: 0, cycle: 6 })
+        ];
+        state.mainSkillKey = '3C';
+      } else {
+        state.skillDrafts = [createSkillDraft({ name: '3C', damageType: 'physical', hits: 1, hitMultiplier: 0, cycle: 6 })];
+        state.mainSkillKey = '3C';
+      }
+      state.skillMode = mode;
+      syncSkillModeUI();
+      renderSkills();
+      updateLivePreview();
+    }
+
+    function getActiveSkills(character = {}) {
+      const list = Array.isArray(character.skills) ? character.skills.slice() : [];
+      if (!list.length) return [];
+      const mode = character.skillMode || inferSkillModeFromSkills(list);
+      const wanted = String(character.mainSkillKey || '').trim().toUpperCase();
+      if (mode === 'selectable' || mode === 'fixed') {
+        const matched = list.find((skill) => getSkillKeyFromName(skill.name) === wanted) || list[0];
+        return matched ? [matched] : [];
+      }
+      return [list[0]];
+    }
+
+    function syncSkillModeUI() {
+      if (el.skillMode) el.skillMode.value = state.skillMode || 'fixed';
+      if (el.mainSkillKey) el.mainSkillKey.value = state.mainSkillKey || '';
+      if (el.skillSummaryZh) el.skillSummaryZh.value = state.skillSummaryZh || '';
+      if (el.skillModeInfo) {
+        const modeLabel = (state.skillMode || 'fixed') === 'selectable' ? '可切換' : '固定型';
+        const mainLabel = state.mainSkillKey || '未指定';
+        el.skillModeInfo.textContent = `技能模式：${modeLabel}｜主用技能：${mainLabel}`;
+      }
+    }
+
     function renderSkills() {
       el.skillList.innerHTML = '';
+      syncSkillModeUI();
 
       if (!state.skillDrafts.length) {
         const empty = document.createElement('p');
         empty.className = 'empty';
-        empty.textContent = '目前沒有技能。';
+        empty.textContent = '目前沒有技能，可先按「固定型骨架」或「可切換骨架」。';
         el.skillList.appendChild(empty);
         return;
       }
@@ -2830,7 +3024,7 @@ const CHARACTER_TEMPLATES = {
         item.className = 'skill-item';
         item.innerHTML = `
           <div class="skill-top">
-            <strong>${skill.name || `技能 ${index + 1}`}</strong>
+            <strong>${skill.name || `技能 ${index + 1}`}${getSkillKeyFromName(skill.name) === String(state.mainSkillKey || '').trim().toUpperCase() ? '｜目前採用' : ''}</strong>
             <button class="icon-btn danger" type="button" data-remove-skill="${skill.id}">刪除</button>
           </div>
           <div class="skill-grid">
@@ -2862,6 +3056,153 @@ const CHARACTER_TEMPLATES = {
         el.skillList.appendChild(item);
       });
     }
+
+function createExtraEventDraft(event = {}) {
+  return {
+    id: event.id || uid('evt'),
+    name: event.name || '',
+    enabled: event.enabled !== false,
+    triggerType: event.triggerType || 'every_n_casts',
+    triggerSkill: String(event.triggerSkill || '3C').toUpperCase(),
+    triggerCount: Math.max(1, num(event.triggerCount) || 2),
+    multiplier: num(event.multiplier) || 0,
+    cooldown: Math.max(0, num(event.cooldown) || 0),
+    damageType: event.damageType || 'magic',
+    canCrit: event.canCrit !== false,
+    usePenetration: event.usePenetration !== false,
+    useBuff: event.useBuff !== false
+  };
+}
+
+function syncExtraEventInfo() {
+  if (!el.extraEventInfo) return;
+  if (!state.extraEventDrafts.length) {
+    el.extraEventInfo.textContent = '額外事件：未設定｜可用來填 3C×2 觸發、固定 CD 追加傷害這類規則';
+    return;
+  }
+  const enabledCount = state.extraEventDrafts.filter((item) => item.enabled !== false).length;
+  const names = state.extraEventDrafts
+    .filter((item) => item.enabled !== false)
+    .map((item) => item.name || '未命名事件')
+    .slice(0, 2)
+    .join('｜');
+  el.extraEventInfo.textContent = `額外事件：${enabledCount} 個啟用${names ? `｜${names}` : ''}`;
+}
+
+function renderExtraEvents() {
+  if (!el.extraEventList) return;
+  el.extraEventList.innerHTML = '';
+  syncExtraEventInfo();
+
+  if (!state.extraEventDrafts.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty';
+    empty.textContent = '目前沒有額外事件，可按「新增額外事件」。';
+    el.extraEventList.appendChild(empty);
+    return;
+  }
+
+  state.extraEventDrafts.forEach((eventItem, index) => {
+    const item = document.createElement('div');
+    item.className = 'skill-item';
+    item.innerHTML = `
+      <div class="skill-top">
+        <strong>${escapeHtml(eventItem.name || `事件 ${index + 1}`)}</strong>
+        <button class="icon-btn danger" type="button" data-remove-extra-event="${eventItem.id}">刪除</button>
+      </div>
+      <div class="skill-grid">
+        <div>
+          <label>事件名稱</label>
+          <input data-extra-event="name" data-id="${eventItem.id}" type="text" value="${escapeHtml(eventItem.name)}" />
+        </div>
+        <div>
+          <label>啟用狀態</label>
+          <select data-extra-event="enabled" data-id="${eventItem.id}">
+            <option value="1" ${eventItem.enabled ? 'selected' : ''}>啟用</option>
+            <option value="0" ${!eventItem.enabled ? 'selected' : ''}>停用</option>
+          </select>
+        </div>
+        <div>
+          <label>觸發類型</label>
+          <select data-extra-event="triggerType" data-id="${eventItem.id}">
+            <option value="every_n_casts" ${eventItem.triggerType === 'every_n_casts' ? 'selected' : ''}>每 N 次施放觸發</option>
+          </select>
+        </div>
+        <div>
+          <label>觸發技能</label>
+          <select data-extra-event="triggerSkill" data-id="${eventItem.id}">
+            <option value="1C" ${eventItem.triggerSkill === '1C' ? 'selected' : ''}>1C</option>
+            <option value="2C" ${eventItem.triggerSkill === '2C' ? 'selected' : ''}>2C</option>
+            <option value="3C" ${eventItem.triggerSkill === '3C' ? 'selected' : ''}>3C</option>
+          </select>
+        </div>
+        <div>
+          <label>幾次觸發一次</label>
+          <input data-extra-event="triggerCount" data-id="${eventItem.id}" type="number" step="1" min="1" value="${eventItem.triggerCount}" />
+        </div>
+        <div>
+          <label>額外倍率</label>
+          <input data-extra-event="multiplier" data-id="${eventItem.id}" type="number" step="0.01" value="${eventItem.multiplier}" />
+        </div>
+        <div>
+          <label>CD（秒）</label>
+          <input data-extra-event="cooldown" data-id="${eventItem.id}" type="number" step="0.01" min="0" value="${eventItem.cooldown}" />
+        </div>
+        <div>
+          <label>傷害類型</label>
+          <select data-extra-event="damageType" data-id="${eventItem.id}">
+            <option value="physical" ${eventItem.damageType === 'physical' ? 'selected' : ''}>物理</option>
+            <option value="magic" ${eventItem.damageType === 'magic' ? 'selected' : ''}>魔法</option>
+          </select>
+        </div>
+        <div>
+          <label>可暴擊</label>
+          <select data-extra-event="canCrit" data-id="${eventItem.id}">
+            <option value="1" ${eventItem.canCrit ? 'selected' : ''}>是</option>
+            <option value="0" ${!eventItem.canCrit ? 'selected' : ''}>否</option>
+          </select>
+        </div>
+        <div>
+          <label>吃破防</label>
+          <select data-extra-event="usePenetration" data-id="${eventItem.id}">
+            <option value="1" ${eventItem.usePenetration ? 'selected' : ''}>是</option>
+            <option value="0" ${!eventItem.usePenetration ? 'selected' : ''}>否</option>
+          </select>
+        </div>
+        <div>
+          <label>吃 Buff</label>
+          <select data-extra-event="useBuff" data-id="${eventItem.id}">
+            <option value="1" ${eventItem.useBuff ? 'selected' : ''}>是</option>
+            <option value="0" ${!eventItem.useBuff ? 'selected' : ''}>否</option>
+          </select>
+        </div>
+      </div>
+    `;
+    el.extraEventList.appendChild(item);
+  });
+}
+
+function readExtraEventDrafts() {
+  if (!el.extraEventList) return [];
+  return Array.from(el.extraEventList.querySelectorAll('.skill-item')).map((item) => {
+    const id = item.querySelector('[data-extra-event][data-id]')?.getAttribute('data-id') || uid('evt');
+    const getVal = (key) => item.querySelector(`[data-extra-event="${key}"][data-id="${id}"]`)?.value;
+    return createExtraEventDraft({
+      id,
+      name: getVal('name') || '',
+      enabled: getVal('enabled') !== '0',
+      triggerType: getVal('triggerType') || 'every_n_casts',
+      triggerSkill: (getVal('triggerSkill') || '3C').toUpperCase(),
+      triggerCount: num(getVal('triggerCount')) || 2,
+      multiplier: num(getVal('multiplier')) || 0,
+      cooldown: num(getVal('cooldown')) || 0,
+      damageType: getVal('damageType') || 'magic',
+      canCrit: getVal('canCrit') !== '0',
+      usePenetration: getVal('usePenetration') !== '0',
+      useBuff: getVal('useBuff') !== '0'
+    });
+  });
+}
 
     function escapeHtml(value = '') {
       return String(value)
@@ -3024,16 +3365,34 @@ const CHARACTER_TEMPLATES = {
     }
 
     function getDefenseContext(monster, damageType, totalPen) {
-      const resistance = damageType === 'magic' ? monster.mRes : monster.pRes;
-      const effectivePen = Math.max(totalPen - resistance, 0);
-      const penRate = effectivePen / (effectivePen + 100);
-      const effectiveDefense = (monster.def - totalPen) * (1 - penRate);
-      const damageMultiplier = 100 / (100 + effectiveDefense);
-      return { resistance, effectivePen, penRate, effectiveDefense, damageMultiplier };
+      const resistance = damageType === 'magic' ? num(monster.mRes) : num(monster.pRes);
+      const rawDefense = num(monster.def);
+      const effectiveDefense = rawDefense - totalPen;
+      let damageMultiplier = 1;
+      let penState = '破防';
+
+      if (effectiveDefense > 0) {
+        damageMultiplier = 100 / (effectiveDefense + 100);
+        penState = '未破防';
+      } else if (effectiveDefense < 0) {
+        damageMultiplier = 1 + 0.5 * (1 - 100 / (Math.abs(effectiveDefense) + 100));
+        penState = '破防';
+      }
+
+      return {
+        resistance,
+        rawDefense,
+        totalPen,
+        effectivePen: totalPen,
+        penRate: 0,
+        effectiveDefense,
+        damageMultiplier,
+        penState
+      };
     }
 
-    function computeCharacter(character, monster, fightSeconds) {
-      const effectInfo = aggregateEffects(character, state.characters);
+    function computeCharacter(character, monster, fightSeconds, partyCharacters = state.characters) {
+      const effectInfo = aggregateEffects(character, partyCharacters);
       const totals = effectInfo.totals;
       const derived = getDerivedStats(character);
       const leaderChanceFactor = character?.isLeader ? 1.1 : 1;
@@ -3051,7 +3410,7 @@ const CHARACTER_TEMPLATES = {
       const skillDamageFactor = 1 + totals.skillDamagePct / 100;
       const penFactor = 1 + totals.penPct / 100;
 
-      const skillList = Array.isArray(character.skills) ? character.skills : [];
+      const skillList = getActiveSkills(character);
       const skills = skillList.map((skill) => {
         const basePen = skill.damageType === 'magic' ? num(derived.mPen) + totals.mPenFlat : num(derived.pPen) + totals.pPenFlat;
         const totalPen = basePen * penFactor;
@@ -3087,8 +3446,52 @@ const CHARACTER_TEMPLATES = {
       const baseSkillDps = skills.length
         ? skills.reduce((sum, skill) => sum + skill.dps, 0)
         : avgHit / effectiveCycle;
+      function getExtraEventDps() {
+        const events = Array.isArray(character.extraEvents) ? character.extraEvents : [];
+        if (!events.length) return { dps: 0, text: '未設定' };
+        const detail = [];
+        let total = 0;
+
+        events.forEach((eventItem) => {
+          if (!eventItem || eventItem.enabled === false) return;
+          const triggerKey = String(eventItem.triggerSkill || '').trim().toUpperCase();
+          const triggerSkill = skills.find((skill) => getSkillKeyFromName(skill.name) === triggerKey);
+          if (!triggerSkill) return;
+
+          const castsPerSec = 1 / Math.max(0.01, num(triggerSkill.cycle) || effectiveCycle);
+          let triggerFreq = 0;
+          if ((eventItem.triggerType || 'every_n_casts') === 'every_n_casts') {
+            triggerFreq = castsPerSec / Math.max(1, num(eventItem.triggerCount) || 1);
+          }
+          const cooldown = Math.max(0, num(eventItem.cooldown) || 0);
+          if (cooldown > 0) {
+            triggerFreq = Math.min(triggerFreq, 1 / cooldown);
+          }
+
+          const useBuff = eventItem.useBuff !== false;
+          const usePenetration = eventItem.usePenetration !== false;
+          const useCrit = eventItem.canCrit !== false;
+          const eventDamageType = eventItem.damageType || triggerSkill.damageType || primaryDamageType;
+          const eventBasePen = eventDamageType === 'magic'
+            ? num(derived.mPen) + totals.mPenFlat
+            : num(derived.pPen) + totals.pPenFlat;
+          const eventTotalPen = eventBasePen * penFactor;
+          const eventDefense = usePenetration ? getDefenseContext(monster, eventDamageType, eventTotalPen) : { damageMultiplier: 1 };
+          const eventAtk = derived.finalAtk * (useBuff ? atkFactor : 1);
+          const eventNonCrit = eventAtk * Math.max(0, num(eventItem.multiplier) || 0) * eventDefense.damageMultiplier * (useBuff ? finalDamageFactor * skillDamageFactor : 1);
+          const eventCrit = useCrit ? eventNonCrit * critMultiplier : eventNonCrit;
+          const eventAvg = useCrit ? (eventNonCrit * (1 - critRate) + eventCrit * critRate) : eventNonCrit;
+          const eventDps = eventAvg * triggerFreq;
+          total += eventDps;
+          detail.push(`${eventItem.name || '額外事件'}｜觸發 ${formatValue(triggerFreq)}/秒｜倍率 ${formatValue(num(eventItem.multiplier) || 0)}｜DPS ${formatValue(eventDps)}`);
+        });
+
+        return { dps: total, text: detail.join('\n') || '未設定' };
+      }
+
+      const extraEvent = getExtraEventDps();
       const passive = computeJobPassive(character, derived, critRate, critMultiplier, fightSeconds);
-      const totalDps = baseSkillDps + (passive.dps || 0);
+      const totalDps = baseSkillDps + (passive.dps || 0) + (extraEvent.dps || 0);
 
       return {
         debug: {
@@ -3105,25 +3508,41 @@ const CHARACTER_TEMPLATES = {
           rawCycle: derived.攻擊週期,
           effectiveCycle,
           defenseMultiplier: defense.damageMultiplier,
+          effectiveDefense: defense.effectiveDefense,
+          penState: defense.penState,
+          totalPen,
           passiveDps: passive.dps || 0,
-          passiveText: passive.enabled ? `${JOB_PASSIVE_PROFILES[passive.key]?.label || passive.key}｜${passive.summary}${passive.kind === 'damage' ? `｜來源 ${passive.sourceStat === 'hp' ? '生命值' : '攻擊力'}｜基底 ${formatValue(passive.baseValue)}｜非暴 ${formatValue(passive.nonCrit)}｜平均 ${formatValue(passive.avg)}｜DPS ${formatValue(passive.dps)}` : ''}` : '未啟用',
+          extraEventDps: extraEvent.dps || 0,
+          passiveText: passive.enabled ? `${getPassiveShortLabelFromKey(passive.key)}` : '未啟用',
+          extraEventText: extraEvent.text || '未設定',
+          weaponSummaryText: (() => {
+            const parts = [`基礎攻擊 +${formatValue(derived.weaponBaseAtk || WEAPON_BASE_ATK)}`];
+            if (num(weaponAffix.flatAtk)) parts.push(`攻擊 +${formatValue(weaponAffix.flatAtk)}`);
+            if (num(weaponAffix.critPct)) parts.push(`暴擊率 +${formatValue(weaponAffix.critPct)}%`);
+            if (num(weaponAffix.critDmgPct)) parts.push(`暴擊傷害 +${formatValue(weaponAffix.critDmgPct)}%`);
+            if (num(weaponAffix.pPenFlat)) parts.push(`物理貫通 +${formatValue(weaponAffix.pPenFlat)}`);
+            if (Array.isArray(weaponAffix.labels) && weaponAffix.labels.length) parts.push(`詞綴：${weaponAffix.labels.join('｜')}`);
+            return parts.join('｜');
+          })(),
           buffText: [
             ...(character?.isLeader ? ['隊長：生成機率 +10%（已套用）'] : []),
             ...(titleApplied.profiles?.length ? [`稱號：${titleApplied.summary}`] : []),
-          ...(weaponAffix.labels?.length ? [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}｜${weaponAffix.labels.join('｜')}`] : [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}`]),
             ...(weaponAffix.labels?.length ? [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}｜${weaponAffix.labels.join('｜')}`] : [`武器：+${derived.weaponBaseAtk || WEAPON_BASE_ATK}`]),
             ...effectInfo.ownLabels,
             ...effectInfo.teamLabels,
             ...effectInfo.auraLabels
           ],
-          skillText: skills.length
-            ? skills.map((skill) => `${skill.name || '技能'}｜${formatValue(num(skill.hits) || 1)} × ${formatValue(num(skill.hitMultiplier) || 0)} = ${formatValue(skill.skillMultiplier)}｜週期 ${formatValue(skill.cycle)} 秒｜DPS ${formatValue(skill.dps)}`).join('\n')
-            : '未設定主技能，若有職業被動會只顯示被動 DPS',
+          skillText: [
+            ...(skills.length
+              ? skills.map((skill) => `${skill.name || '技能'}｜${formatValue(num(skill.hits) || 1)} × ${formatValue(num(skill.hitMultiplier) || 0)} = ${formatValue(skill.skillMultiplier)}｜週期 ${formatValue(skill.cycle)} 秒｜DPS ${formatValue(skill.dps)}`)
+              : ['未設定主技能，若有職業被動會只顯示被動 DPS']),
+            ...((extraEvent.text && extraEvent.text !== '未設定') ? [extraEvent.text] : [])
+          ].join('\n'),
           skillDetailText: skills.length
             ? skills.map((skill) => `${skill.name || '技能'}：${formatValue(num(skill.hits) || 1)} × ${formatValue(num(skill.hitMultiplier) || 0)} = ${formatValue(skill.skillMultiplier)}`).join('｜')
             : '未設定主技能',
           nonCritFormula: `公式：攻擊 ${formatValue(derived.finalAtk)} × 攻擊Buff ${formatValue(atkFactor)} × 技能總倍率 ${formatValue(totalSkillMultiplier)} × 防禦倍率 ${formatValue(defense.damageMultiplier)} × 最終傷 ${formatValue(finalDamageFactor)} × 技能傷 ${formatValue(skillDamageFactor)}` ,
-          critFormula: `公式：非暴 ${formatValue(nonCritHit)} × 暴擊倍率 ${formatValue(critMultiplier)}` ,
+          critFormula: `公式：非暴 ${formatValue(nonCritHit)} × 稱號後暴傷 ${formatValue(critMultiplier)}` ,
           avgFormula: `公式：非暴 ${formatValue(nonCritHit)} × ${(1-critRate).toFixed(2)} + 暴擊 ${formatValue(critHit)} × ${critRate.toFixed(2)}`
         },
         autoDps: skills.length ? 0 : baseSkillDps,
@@ -3151,9 +3570,12 @@ const CHARACTER_TEMPLATES = {
           titleSummary: titleApplied.summary,
           攻擊週期: effectiveCycle,
           原始攻擊週期: derived.攻擊週期,
-          totalSkillMultiplier
+          totalSkillMultiplier,
+          pPen: num(derived.pPen) + totals.pPenFlat,
+          mPen: num(derived.mPen) + totals.mPenFlat
         },
         passive,
+        extraEvent,
         skills
       };
     }
@@ -3233,7 +3655,7 @@ const CHARACTER_TEMPLATES = {
     }
 
     function getPrimarySkillMeta(character = {}) {
-      const skill = (character.skills || [])[0];
+      const skill = getActiveSkills(character)[0];
       if (!skill) {
         return { cycle: num(character['攻擊週期']) || 0, multiplier: 0 };
       }
@@ -3289,7 +3711,7 @@ const CHARACTER_TEMPLATES = {
                 ${getLegendTitleBadgesHtml(character)}
                 ${selfBuffCount > 0 ? `<span class="char-meta-pill">自身 Buff ${selfBuffCount}</span>` : ''}
                 ${teamBuffCount > 0 ? `<span class="char-meta-pill">團隊 Buff ${teamBuffCount}</span>` : ''}
-                <span class="char-meta-pill ${passiveClass}">被動 ${getPassiveDisplayLabel(character)}${passiveSuffix}</span>
+                <span class="char-meta-pill ${passiveClass}">${getPassiveShortLabel(character)}</span>
                 ${result.healSynergy?.applied ? '<span class="char-meta-pill passive-on">治療觸發</span>' : ''}
                 ${character.grade6Key ? '<span class="char-meta-pill">六星資料</span>' : ''}
                 ${character.isLeader ? '<span class="char-meta-pill passive-on">隊長</span>' : ''}
@@ -3322,11 +3744,11 @@ const CHARACTER_TEMPLATES = {
         if (el.dps) el.dps.textContent = '-';
         if (el.effectiveAps) el.effectiveAps.textContent = '-';
         if (el.fightDamage) el.fightDamage.textContent = '-';
-        if (el.effectiveBuffInfo) el.effectiveBuffInfo.innerHTML = '<span class="system-sub-id">CALC-4-1</span>當前面板（Buff後）：-';
-        if (el.effectiveStatInfo) el.effectiveStatInfo.innerHTML = '<span class="system-sub-id">CALC-4-2</span>技能摘要：-';
+        if (el.effectiveBuffInfo) el.effectiveBuffInfo.innerHTML = '<span class="system-sub-id">CALC-4-1</span>主要面板：-';
+        if (el.effectiveStatInfo) el.effectiveStatInfo.innerHTML = '<span class="system-sub-id">CALC-4-2</span>核心資訊：-';
         if (advisorBox) advisorBox.innerHTML = '尚未建立角色';
         syncDebugLayout();
-        ['dbgBaseAtk','dbgResearchAtk','dbgPanelAtk','dbgAtkAfterBuff','dbgSkillMultiplier','dbgNonCrit','dbgCrit','dbgAvg','dbgCritRate','dbgCritMultiplier','dbgRawCycle','dbgEffectiveCycle','dbgDefenseMultiplier','dbgFinalDps','dbgPassiveDps','dbgBuffSummary','dbgSkillSummary','dbgPassiveSummary','dbgTitleSummary'].forEach((id) => setDebugText(id, id.includes('Summary') ? '-' : '-'));
+        ['dbgBaseAtk','dbgResearchAtk','dbgPanelAtk','dbgAtkAfterBuff','dbgSkillMultiplier','dbgNonCrit','dbgCrit','dbgAvg','dbgCritRate','dbgCritMultiplier','dbgRawCycle','dbgEffectiveCycle','dbgDefenseMultiplier','dbgFinalDps','dbgPassiveDps','dbgBuffSummary','dbgSkillSummary','dbgPassiveSummary','dbgTitleSummary','dbgWeaponSummary'].forEach((id) => setDebugText(id, id.includes('Summary') ? '-' : '-'));
         return;
       }
 
@@ -3338,22 +3760,42 @@ const CHARACTER_TEMPLATES = {
       }
 
       const result = computeCharacter(character, MONSTERS[state.monsterKey], state.fightSeconds);
+      const stats = result.effectiveStats || {};
+      const dbg = result.debug || {};
+      const weaponAffix = getWeaponAffixEffects(character);
+      const baseAtk = num(dbg.panelAtk) || 0;
+      const finalAtk = num(stats.finalAtk) || num(dbg.atkAfterBuff) || 0;
+      const finalCritRate = ((dbg.critRate || result.effectiveCritRate || 0) * 100);
+      const finalCritDmg = num(stats.critDmgPct) || num(dbg.critDmgPct) || 0;
+      const pPen = num(stats.pPen ?? character.pPen) || 0;
+      const mPen = num(stats.mPen ?? character.mPen) || 0;
+      const monsterDef = num(MONSTERS[state.monsterKey]?.def) || 0;
+      const effectiveDef = num(dbg.effectiveDefense) || 0;
+      const penState = dbg.penState || '未破防';
+      const passiveName = (result.passive && result.passive.enabled) ? `${getPassiveShortLabelFromKey(result.passive.key)}` : '';
+      const titleText = dbg.titleText || '未裝備';
+      const weaponText = dbg.weaponSummaryText || `基礎攻擊 +${formatValue(weaponAffix.baseAtk || character.weaponBaseAtk || 200)}`;
+
       if (el.selectedCharacterName) el.selectedCharacterName.textContent = getCharacterDisplayName(character);
       if (el.effectiveAps) el.effectiveAps.textContent = formatValue(result.attackFrequency);
       if (el.dps) el.dps.textContent = formatValue(result.totalDps);
       if (el.fightDamage) el.fightDamage.textContent = Math.floor(result.fightDamage).toLocaleString();
+
       if (el.effectiveBuffInfo) {
-        const stats = result.effectiveStats || {};
-        const finalAtk = num(stats.finalAtk) || num((result.debug || {}).atkAfterBuff) || 0;
-        const critRate = (((result.debug || {}).critRate || result.effectiveCritRate || 0) * 100).toFixed(1);
-        const critDmg = num(stats.critDmgPct) || num((result.debug || {}).critDmgPct) || 0;
-        const atkCycle = num(stats['攻擊週期']) || 0;
-        el.effectiveBuffInfo.innerHTML = `<span class="system-sub-id">4-1</span>當前面板（Buff後）：攻擊 ${formatValue(finalAtk)}｜暴擊率 ${critRate}%｜暴擊傷害 ${formatValue(critDmg)}%｜有效攻擊週期 ${formatValue(atkCycle)} 秒`;
+        el.effectiveBuffInfo.innerHTML = `<span class="system-sub-id">CALC-4-1</span>` +
+          `<span class="line">主要面板：基礎攻擊 ${formatValue(baseAtk)}｜最終攻擊 ${formatValue(finalAtk)}</span>` +
+          `<span class="line">暴擊率 ${formatValue(finalCritRate)}%｜暴擊傷害 ${formatValue(finalCritDmg)}%</span>`;
       }
+
       if (el.effectiveStatInfo) {
-        const skillSummary = (result.debug || {}).skillText || '未設定主技能';
-        const passiveSummary = (result.passive && result.passive.enabled) ? `${result.passive.label || '職業被動'}｜${result.passive.summary || ''}` : '職業被動：未啟用';
-        el.effectiveStatInfo.innerHTML = `<span class="system-sub-id">4-2</span>${skillSummary}${passiveSummary ? `｜${passiveSummary}` : ''}`;
+        const modeLabel = (character.skillMode || inferSkillModeFromSkills(character.skills || [])) === 'selectable' ? '可切換' : '固定型';
+        const mainSkillLabel = character.mainSkillKey || getSkillKeyFromName(character.skills?.[0]?.name) || '未指定';
+        el.effectiveStatInfo.innerHTML = `<span class="system-sub-id">CALC-4-2</span>` +
+          `<span class="info-row">技能：${modeLabel}｜主用 ${mainSkillLabel}</span>` +
+          `<span class="info-row">穿透：物穿 ${formatValue(pPen)}｜魔穿 ${formatValue(mPen)}</span>` +
+          `<span class="info-row">防禦結果：怪防 ${formatValue(monsterDef)}｜有效防禦 ${formatValue(effectiveDef)}｜狀態：${penState}</span>` +
+          `<span class="info-row">最終DPS ${formatValue(result.totalDps || 0)}</span>` +
+          `<span class="info-chip-wrap"><span class="info-chip"><span class="label">稱號</span>${titleText}</span><span class="info-chip"><span class="label">武器</span>${weaponText}</span></span>`;
       }
 
       if (advisorBox) {
@@ -3362,34 +3804,28 @@ const CHARACTER_TEMPLATES = {
 
       syncDebugLayout();
       if (debugMode) {
-        const stats = result.effectiveStats || {};
-        const dbg = result.debug || {};
-        setDebugText('dbgBaseAtk', formatValue(dbg.estimatedBaseAtk || 0));
-        setDebugText('dbgResearchAtk', '+' + formatValue(dbg.researchAtk || RESEARCH_BONUS.atk));
-        setDebugText('dbgPanelAtk', formatValue(dbg.panelAtk || 0));
-        setDebugText('dbgAtkAfterBuff', formatValue(dbg.atkAfterBuff || 0));
-        setDebugText('dbgSkillMultiplier', formatValue(dbg.skillMultiplierTotal || stats.totalSkillMultiplier || 0));
-        setDebugText('dbgNonCrit', formatValue(result.nonCritHit || 0));
-        setDebugText('dbgCrit', formatValue(result.critHit || 0));
-        setDebugText('dbgAvg', formatValue(result.avgHit || 0));
-        setDebugText('dbgCritRate', `${((dbg.critRate || result.effectiveCritRate || 0) * 100).toFixed(1)}%`);
-        setDebugText('dbgCritMultiplier', `x${formatValue(dbg.critMultiplier || 0)}`);
-        setDebugText('dbgRawCycle', `${formatValue(dbg.rawCycle || stats['原始攻擊週期'] || 0)} 秒`);
-        setDebugText('dbgEffectiveCycle', `${formatValue(dbg.effectiveCycle || stats['攻擊週期'] || 0)} 秒`);
-        setDebugText('dbgDefenseMultiplier', `x${formatValue(dbg.defenseMultiplier || 0)}`);
+        setDebugText('dbgBaseAtk', '-');
+        setDebugText('dbgResearchAtk', '-');
+        setDebugText('dbgPanelAtk', formatValue(baseAtk));
+        setDebugText('dbgAtkAfterBuff', formatValue(finalAtk));
+        setDebugText('dbgSkillMultiplier', '-');
+        setDebugText('dbgNonCrit', '-');
+        setDebugText('dbgCrit', '-');
+        setDebugText('dbgAvg', '-');
+        setDebugText('dbgCritRate', `${formatValue(finalCritRate)}%`);
+        setDebugText('dbgCritMultiplier', `${formatValue(finalCritDmg)}%`);
+        setDebugText('dbgRawCycle', '-');
+        setDebugText('dbgEffectiveCycle', '-');
+        setDebugText('dbgDefenseMultiplier', '-');
         setDebugText('dbgFinalDps', formatValue(result.totalDps || 0));
-        setDebugText('dbgPassiveDps', formatValue(result.passive?.dps || 0));
-        const panelLine = `當前面板：攻擊 ${formatValue((result.effectiveStats || {}).finalAtk || 0)}｜暴擊率 ${(((result.debug || {}).critRate || result.effectiveCritRate || 0) * 100).toFixed(1)}%｜暴擊傷害 ${formatValue((result.effectiveStats || {}).critDmgPct || (result.debug || {}).critDmgPct || 0)}%｜有效攻擊週期 ${formatValue((result.effectiveStats || {})['攻擊週期'] || 0)} 秒`;
-        setDebugText('dbgBuffSummary', panelLine);
-        setDebugText('dbgSkillSummary', `技能：${dbg.skillText || '未設定技能'}`);
-        setDebugText('dbgPassiveSummary', `職業被動：${dbg.passiveText || '未啟用'}`);
-        setDebugText('dbgTitleSummary', `稱號：${dbg.titleText || '未裝備'}`);
+        setDebugText('dbgPassiveDps', passiveName);
+        setDebugText('dbgBuffSummary', `主要面板：基礎攻擊 ${formatValue(baseAtk)}｜最終攻擊 ${formatValue(finalAtk)}｜暴擊率 ${formatValue(finalCritRate)}%｜暴擊傷害 ${formatValue(finalCritDmg)}%`);
+        setDebugText('dbgSkillSummary', `核心資訊：物穿 ${formatValue(pPen)}｜魔穿 ${formatValue(mPen)}｜怪防 ${formatValue(monsterDef)}｜有效防禦 ${formatValue(effectiveDef)}｜狀態 ${penState}`);
+        setDebugText('dbgPassiveSummary', ``);
+        setDebugText('dbgTitleSummary', `稱號：${titleText}`);
+        setDebugText('dbgWeaponSummary', `武器：${weaponText}`);
         const setTip = (id, value) => { const node = document.getElementById(id); if (node) node.title = value; };
-        setTip('dbgBaseAtkBox', `公式：目前面板攻擊 ${formatValue(dbg.panelAtk || 0)} - 研究院攻擊 ${formatValue(dbg.researchAtk || RESEARCH_BONUS.atk)} = ${formatValue(dbg.estimatedBaseAtk || 0)}`);
-        setTip('dbgSkillMultiplierBox', dbg.skillDetailText || '未設定技能');
-        setTip('dbgNonCritBox', dbg.nonCritFormula || '');
-        setTip('dbgCritBox', dbg.critFormula || '');
-        setTip('dbgAvgBox', dbg.avgFormula || '');
+        setTip('dbgPanelAtkBox', `基礎攻擊（稱號前）：${formatValue(baseAtk)}`);
       }
     }
 
@@ -3423,7 +3859,7 @@ const CHARACTER_TEMPLATES = {
         initialHp: num(el.initialHp.value),
         growthHp: num(el.growthHp.value),
         weaponAtk: num(el.weaponAtk.value),
-        weaponBaseAtk: WEAPON_BASE_ATK,
+        weaponBaseAtk: num(el.weaponBaseAtkDisplay?.value) || 0,
         weaponAffix1: el.weaponAffix1?.value || 'none',
         weaponAffix2: el.weaponAffix2?.value || 'none',
         flatAttack: num(el.flatAttack.value),
@@ -3439,6 +3875,9 @@ const CHARACTER_TEMPLATES = {
         buffs: readEffectRows(el.buffRows),
         selfBuffs: readEffectRows(el.buffRows),
         teamBuffs: readEffectRows(el.teamBuffRows),
+        skillMode: el.skillMode?.value || state.skillMode || inferSkillModeFromSkills(state.skillDrafts),
+        mainSkillKey: (el.mainSkillKey?.value || state.mainSkillKey || '').toUpperCase(),
+        skillSummaryZh: (el.skillSummaryZh?.value || state.skillSummaryZh || '').trim(),
         skills: state.skillDrafts.map((skill) => ({
           id: skill.id,
           name: skill.name,
@@ -3446,7 +3885,8 @@ const CHARACTER_TEMPLATES = {
           hits: num(skill.hits),
           hitMultiplier: num(skill.hitMultiplier),
           cycle: getSkillCycleByName(skill.name, skill.cycle)
-        }))
+        })),
+        extraEvents: readExtraEventDrafts()
       };
     }
 
@@ -3468,6 +3908,7 @@ function buildCharacterFromForm() {
       setText('previewAps', formatValue(result.attackFrequency));
       setText('previewDps', formatValue(result.totalDps));
       setText('previewFightDamage', Math.floor(result.fightDamage).toLocaleString());
+      refreshHoverPreviewOptions();
     }
 
     function setPreviewButtonText() {
@@ -3480,6 +3921,12 @@ function buildCharacterFromForm() {
     function openModal(character = null) {
       state.editingId = character?.id || null;
       el.modalTitle.textContent = character ? '編輯角色' : '新增角色';
+      if (!character) {
+        state.skillMode = 'fixed';
+        state.mainSkillKey = '3C';
+        state.skillSummaryZh = '';
+        state.extraEventDrafts = [];
+      }
 
       el.charName.value = character?.name || '';
       el.charTeam.value = String(character?.team || 1);
@@ -3520,12 +3967,19 @@ function buildCharacterFromForm() {
       fillEffectRows(el.buffRows, character?.selfBuffs || character?.buffs || []);
       fillEffectRows(el.teamBuffRows, character?.teamBuffs || []);
       state.skillDrafts = (character?.skills || []).map((skill) => createSkillDraft(skill));
+      state.skillMode = character?.skillMode || inferSkillModeFromSkills(character?.skills || []);
+      state.mainSkillKey = (character?.mainSkillKey || getSkillKeyFromName(character?.skills?.[0]?.name) || '').toUpperCase();
+      state.skillSummaryZh = character?.skillSummaryZh || '';
+      state.extraEventDrafts = (character?.extraEvents || []).map((eventItem) => createExtraEventDraft(eventItem));
+      syncSkillModeUI();
       renderSkills();
+      renderExtraEvents();
       syncDerivedFormStats();
       updateCalcModeUI();
       const previewPanel = document.getElementById('livePreviewPanel');
       if (previewPanel) previewPanel.classList.remove('open');
       setPreviewButtonText();
+      refreshHoverPreviewOptions();
       el.modal.classList.add('open');
       el.modal.setAttribute('aria-hidden', 'false');
     }
@@ -3546,6 +4000,10 @@ function buildCharacterFromForm() {
       setPreviewButtonText();
       state.editingId = null;
       state.skillDrafts = [];
+      state.skillMode = 'fixed';
+      state.mainSkillKey = '';
+      state.skillSummaryZh = '';
+      state.extraEventDrafts = [];
     }
 
     function saveCharacter() {
@@ -3742,6 +4200,36 @@ function attachEvents() {
       document.getElementById('closeModal').addEventListener('click', closeModal);
       document.getElementById('cancelModal').addEventListener('click', closeModal);
       document.getElementById('saveCharacter').addEventListener('click', saveCharacter);
+      el.addExtraEvent?.addEventListener('click', () => {
+        state.extraEventDrafts = readExtraEventDrafts();
+        state.extraEventDrafts.push(createExtraEventDraft({
+          name: '',
+          triggerSkill: state.mainSkillKey || '3C',
+          triggerCount: 2,
+          multiplier: 0,
+          cooldown: 0,
+          damageType: 'magic'
+        }));
+        renderExtraEvents();
+        updateLivePreview();
+      });
+
+      el.extraEventList?.addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-remove-extra-event]');
+        if (!btn) return;
+        state.extraEventDrafts = readExtraEventDrafts().filter((item) => item.id !== btn.getAttribute('data-remove-extra-event'));
+        renderExtraEvents();
+        updateLivePreview();
+      });
+
+      ['input','change'].forEach((evtName) => {
+        el.extraEventList?.addEventListener(evtName, (event) => {
+          if (!event.target.closest('[data-extra-event]')) return;
+          state.extraEventDrafts = readExtraEventDrafts();
+          syncExtraEventInfo();
+          updateLivePreview();
+        });
+      });
 
       document.getElementById('addSelfBuff')?.addEventListener('click', () => {
         appendEffectRow(el.buffRows, '自身Buff', {});
@@ -3798,6 +4286,8 @@ function attachEvents() {
 
       ['legendTitleKey','legendTitleKey2','legendTitleKey3'].forEach((id) => {
         el[id]?.addEventListener('change', () => { updateLivePreview(); });
+        el[id]?.addEventListener('focus', () => { refreshHoverPreviewOptions(); });
+        el[id]?.addEventListener('mousedown', () => { refreshHoverPreviewOptions(); });
       });
 
       el.healTriggerEnabled?.addEventListener('change', () => {
@@ -3818,12 +4308,17 @@ function attachEvents() {
         });
       }
 
-      ['level','initialAttDmg','growthAttDmg','initialHp','growthHp','weaponAtk','flatAttack','攻擊週期','finalAtkInput','finalHpInput','weaponAffix1','weaponAffix2'].forEach((key) => {
+      ['level','initialAttDmg','growthAttDmg','initialHp','growthHp','weaponAtk','weaponBaseAtkDisplay','flatAttack','攻擊週期','finalAtkInput','finalHpInput','weaponAffix1','weaponAffix2'].forEach((key) => {
         if (!el[key]) return;
         el[key].addEventListener('input', () => {
           syncDerivedFormStats();
           updateLivePreview();
         });
+      });
+
+      ['weaponAffix1','weaponAffix2'].forEach((id) => {
+        el[id]?.addEventListener('focus', () => { refreshHoverPreviewOptions(); });
+        el[id]?.addEventListener('mousedown', () => { refreshHoverPreviewOptions(); });
       });
 
       el.monsterSelect.addEventListener('change', (event) => {
@@ -3932,10 +4427,43 @@ function attachEvents() {
         moveCharacterToTeam(draggingCharId, targetTeam);
       });
 
+      document.getElementById('buildFixedSkillSkeleton')?.addEventListener('click', () => {
+        ensureSkillSkeleton('fixed');
+      });
+
+      document.getElementById('buildSelectableSkillSkeleton')?.addEventListener('click', () => {
+        ensureSkillSkeleton('selectable');
+      });
+
       document.getElementById('addSkill').addEventListener('click', () => {
         state.skillDrafts.push(createSkillDraft());
+        if (!state.mainSkillKey) state.mainSkillKey = getSkillKeyFromName(state.skillDrafts[0]?.name || '') || '3C';
         renderSkills();
         updateLivePreview();
+      });
+
+      el.skillMode?.addEventListener('change', (event) => {
+        const nextMode = event.target.value || 'fixed';
+        state.skillMode = nextMode;
+        if (!state.skillDrafts.length || (nextMode === 'selectable' && state.skillDrafts.length < 2)) {
+          ensureSkillSkeleton(nextMode);
+          return;
+        }
+        if (!state.mainSkillKey) state.mainSkillKey = getSkillKeyFromName(state.skillDrafts[0]?.name || '') || '3C';
+        syncSkillModeUI();
+        renderSkills();
+        updateLivePreview();
+      });
+
+      el.mainSkillKey?.addEventListener('change', (event) => {
+        state.mainSkillKey = (event.target.value || '').toUpperCase();
+        syncSkillModeUI();
+        renderSkills();
+        updateLivePreview();
+      });
+
+      el.skillSummaryZh?.addEventListener('input', (event) => {
+        state.skillSummaryZh = event.target.value || '';
       });
 
       document.getElementById('forceSaveBtn')?.addEventListener('click', () => {
@@ -4071,7 +4599,7 @@ function attachEvents() {
         state.monsterKey = payload.monsterKey || state.monsterKey;
         state.fightSeconds = Number(payload.fightSeconds) || state.fightSeconds;
         state.characters = Array.isArray(payload.characters) ? payload.characters : [];
-        state.characters = state.characters.map((item) => { if (!Array.isArray(item.legendTitleKeys)) item.legendTitleKeys = [item.legendTitleKey || ''].filter(Boolean); if (!('weaponBaseAtk' in item)) item.weaponBaseAtk = WEAPON_BASE_ATK; if (!('weaponAffix1' in item)) item.weaponAffix1 = 'none'; if (!('weaponAffix2' in item)) item.weaponAffix2 = 'none'; return item; });
+        state.characters = state.characters.map((item) => { if (!Array.isArray(item.legendTitleKeys)) item.legendTitleKeys = [item.legendTitleKey || ''].filter(Boolean); if (!('weaponBaseAtk' in item)) item.weaponBaseAtk = WEAPON_BASE_ATK; if (!('weaponAffix1' in item)) item.weaponAffix1 = 'none'; if (!('weaponAffix2' in item)) item.weaponAffix2 = 'none'; if (!('skillMode' in item)) item.skillMode = inferSkillModeFromSkills(item.skills || []); if (!('mainSkillKey' in item)) item.mainSkillKey = getSkillKeyFromName(item.skills?.[0]?.name) || ''; if (!('skillSummaryZh' in item)) item.skillSummaryZh = ''; return item; });
         state.selectedId = payload.selectedId || (state.characters[0]?.id || null);
         if (state.selectedId && !state.characters.some((item) => item.id === state.selectedId)) {
           state.selectedId = state.characters[0]?.id || null;
@@ -5317,32 +5845,40 @@ window.addEventListener('load', function(){
 
 
 
+
 <script>
 (function(){
-  const MODE_KEY = 'dps_system_id_mode_v94';
-  const LEGACY_KEYS = ['dps_system_id_mode_v91'];
-  const DEBUG_DRAWER_ID = 'safeDebugDrawerV94';
+  const CONTROL = window.DPSControlCenter = window.DPSControlCenter || {};
+  CONTROL.keys = {
+    systemId: 'dps_system_id_mode_v96',
+    legacySystemIds: ['dps_system_id_mode_v94', 'dps_system_id_mode_v91', 'dps_system_id_mode_v95'],
+    debugDrawerId: 'globalDebugDrawerV96'
+  };
 
-  function readMode(){
-    try {
-      const current = localStorage.getItem(MODE_KEY);
-      if (current === '1' || current === '0') return current === '1';
-      for (const key of LEGACY_KEYS) {
-        const value = localStorage.getItem(key);
-        if (value === '1' || value === '0') return value === '1';
-      }
-    } catch (e) {}
+  CONTROL.safeRead = function(key){
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  };
+
+  CONTROL.safeWrite = function(key, value){
+    try { localStorage.setItem(key, value); } catch (e) {}
+  };
+
+  CONTROL.readSystemIdMode = function(){
+    const current = CONTROL.safeRead(CONTROL.keys.systemId);
+    if (current === '1' || current === '0') return current === '1';
+    for (const key of CONTROL.keys.legacySystemIds) {
+      const value = CONTROL.safeRead(key);
+      if (value === '1' || value === '0') return value === '1';
+    }
     return false;
-  }
+  };
 
-  function writeMode(on){
-    try {
-      localStorage.setItem(MODE_KEY, on ? '1' : '0');
-      for (const key of LEGACY_KEYS) localStorage.setItem(key, on ? '1' : '0');
-    } catch (e) {}
-  }
+  CONTROL.writeSystemIdMode = function(on){
+    CONTROL.safeWrite(CONTROL.keys.systemId, on ? '1' : '0');
+    for (const key of CONTROL.keys.legacySystemIds) CONTROL.safeWrite(key, on ? '1' : '0');
+  };
 
-  function updateSystemIdUi(on){
+  CONTROL.applySystemIdMode = function(on){
     document.body.classList.toggle('show-system-ids', !!on);
     const btn = document.getElementById('commentSystemIdToggleBtn');
     const desc = document.getElementById('commentSystemIdDesc');
@@ -5355,135 +5891,692 @@ window.addEventListener('load', function(){
         ? '目前會顯示 UI / CALC 全系統與子模組編號；這個開關會永久記住。'
         : '目前不顯示 UI / CALC 系統編號；這個開關會永久記住，不會因為離開頁面重設。';
     }
-  }
+  };
 
-  function setMode(on){
-    writeMode(on);
-    updateSystemIdUi(on);
-  }
+  CONTROL.setSystemIdMode = function(on){
+    CONTROL.writeSystemIdMode(!!on);
+    CONTROL.applySystemIdMode(!!on);
+  };
 
-  function bindSystemToggle(){
+  CONTROL.bindSystemToggle = function(){
     const btn = document.getElementById('commentSystemIdToggleBtn');
-    if (!btn || btn.dataset.systemBound === '1') return;
-    btn.dataset.systemBound = '1';
+    if (!btn || btn.dataset.globalSystemBound === '1') return;
+    btn.dataset.globalSystemBound = '1';
     btn.addEventListener('click', function(ev){
       ev.preventDefault();
       ev.stopPropagation();
-      setMode(!document.body.classList.contains('show-system-ids'));
+      ev.stopImmediatePropagation();
+      CONTROL.setSystemIdMode(!document.body.classList.contains('show-system-ids'));
     }, true);
-  }
+  };
 
-  function ensureDebugDrawer(){
-    let drawer = document.getElementById(DEBUG_DRAWER_ID);
+  CONTROL.ensureDebugDrawer = function(){
+    let drawer = document.getElementById(CONTROL.keys.debugDrawerId);
     if (drawer) return drawer;
     drawer = document.createElement('div');
-    drawer.id = DEBUG_DRAWER_ID;
-    drawer.style.cssText = 'position:fixed;right:18px;bottom:18px;z-index:100100;width:min(460px,calc(100vw - 24px));max-height:calc(100vh - 36px);overflow:auto;padding:16px;border-radius:18px;background:rgba(15,23,42,0.97);border:1px solid rgba(167,139,250,0.24);box-shadow:0 18px 50px rgba(0,0,0,0.35);display:none;';
-    drawer.innerHTML = '<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;"><strong id="safeDebugTitle" style="color:#f8fafc;font-size:16px;">Debug</strong><button id="safeDebugCloseBtn" class="btn secondary" type="button" style="padding:8px 12px;">關閉</button></div><div id="safeDebugBody" style="color:#cbd5e1;line-height:1.8;white-space:pre-wrap;font-size:14px;"></div>';
+    drawer.id = CONTROL.keys.debugDrawerId;
+    drawer.style.cssText = 'position:fixed;right:18px;bottom:18px;z-index:100100;width:min(520px,calc(100vw - 24px));max-height:calc(100vh - 36px);overflow:auto;padding:16px;border-radius:18px;background:rgba(15,23,42,0.97);border:1px solid rgba(167,139,250,0.24);box-shadow:0 18px 50px rgba(0,0,0,0.35);display:none;';
+    drawer.innerHTML = '<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;"><strong id="globalDebugTitle" style="color:#f8fafc;font-size:16px;">Debug</strong><button id="globalDebugCloseBtn" class="btn secondary" type="button" style="padding:8px 12px;">關閉</button></div><div id="globalDebugBody" style="color:#cbd5e1;line-height:1.8;white-space:pre-wrap;font-size:14px;"></div>';
     document.body.appendChild(drawer);
-    drawer.querySelector('#safeDebugCloseBtn').addEventListener('click', function(){
+    drawer.querySelector('#globalDebugCloseBtn').addEventListener('click', function(){
       drawer.style.display = 'none';
     });
     return drawer;
-  }
+  };
 
-  function getText(id){
-    const el = document.getElementById(id);
-    return el ? (el.textContent || '').trim() : '-';
-  }
+  CONTROL.getText = function(id){
+    const node = document.getElementById(id);
+    return node ? (node.textContent || '').trim() : '-';
+  };
 
-  function openDebug(title, body){
-    const drawer = ensureDebugDrawer();
-    drawer.querySelector('#safeDebugTitle').textContent = title;
-    drawer.querySelector('#safeDebugBody').textContent = body;
+  CONTROL.openDebug = function(title, body){
+    const drawer = CONTROL.ensureDebugDrawer();
+    drawer.querySelector('#globalDebugTitle').textContent = title;
+    drawer.querySelector('#globalDebugBody').textContent = body;
     drawer.style.display = 'block';
-  }
+  };
 
-  function renderedSelectedCharacter(){
-    return '目前選取角色：' + getText('selectedCharacterName') + '
-' +
-      '當前面板（Buff後）
-' +
-      'ATK：' + getText('effectiveAtk') + '
-' +
-      '暴擊率：' + getText('effectiveCrit') + '
-' +
-      '暴擊傷害：' + getText('effectiveCritDmg');
-  }
+  CONTROL.renderers = {
+    selectedCharacter: function(){
+      return [
+        '目前選取角色：' + CONTROL.getText('selectedCharacterName'),
+        '',
+        CONTROL.getText('dbgBuffSummary'),
+        CONTROL.getText('dbgSkillSummary'),
+        CONTROL.getText('dbgPassiveSummary'),
+        CONTROL.getText('dbgWeaponSummary')
+      ].join('\n');
+    },
+    dpsSummary: function(){
+      return [
+        '目前 DPS：' + CONTROL.getText('dps'),
+        '每秒攻擊次數：' + CONTROL.getText('effectiveAps'),
+        '戰鬥總傷害：' + CONTROL.getText('fightDamage'),
+        '',
+        CONTROL.getText('dbgSkillSummary'),
+        CONTROL.getText('dbgPassiveSummary'),
+        CONTROL.getText('dbgWeaponSummary')
+      ].join('\n');
+    },
+    panelSummary: function(){
+      return [
+        CONTROL.getText('dbgBuffSummary'),
+        CONTROL.getText('dbgTitleSummary'),
+        CONTROL.getText('dbgWeaponSummary')
+      ].join('\n');
+    },
+    skillSummary: function(){
+      return [
+        CONTROL.getText('dbgSkillSummary'),
+        '',
+        '技能總倍率：' + CONTROL.getText('dbgSkillMultiplier'),
+        '非暴單次：' + CONTROL.getText('dbgNonCrit'),
+        '暴擊單次：' + CONTROL.getText('dbgCrit'),
+        '平均單次：' + CONTROL.getText('dbgAvg')
+      ].join('\n');
+    },
+    healSummary: function(){
+      return [
+        CONTROL.getText('dbgPassiveSummary'),
+        '被動 DPS：' + CONTROL.getText('dbgPassiveDps'),
+        CONTROL.getText('dbgWeaponSummary')
+      ].join('\n');
+    }
+  };
 
-  function renderedDpsSummary(){
-    return '目前 DPS：' + getText('dps') + '
-' +
-      '每秒攻擊次數：' + getText('effectiveAps') + '
-' +
-      '戰鬥總傷害：' + getText('fightDamage') + '
-
-' +
-      '這裡是目前畫面已算出的結果。';
-  }
-
-  function renderedPanelSummary(){
-    return 'ATK：' + getText('effectiveAtk') + '
-' +
-      '暴擊率：' + getText('effectiveCrit') + '
-' +
-      '暴擊傷害：' + getText('effectiveCritDmg') + '
-
-' +
-      'BUFF資訊
-' + getText('effectiveBuffInfo');
-  }
-
-  function renderedSkillSummary(){
-    return '技能摘要
-' + getText('effectiveStatInfo');
-  }
-
-  function renderedHealSummary(){
-    return '治療聯動
-' + getText('healSynergyInfo');
-  }
-
-  function bindClickableDebug(){
+  CONTROL.bindClickableDebug = function(){
     const mappings = [
-      { selector:'#selectedCharacterName', title:'UI-1-1 目前選取角色', body:renderedSelectedCharacter },
-      { selector:'#dps', title:'UI-1-2 目前 DPS', body:renderedDpsSummary },
-      { selector:'#effectiveAps', title:'UI-1-3 每秒攻擊次數', body:renderedDpsSummary },
-      { selector:'#fightDamage', title:'UI-1-4 戰鬥總傷害', body:renderedDpsSummary },
-      { selector:'#effectiveAtk', title:'UI-3-1 當前面板（Buff後）', body:renderedPanelSummary },
-      { selector:'#effectiveCrit', title:'UI-3-1 當前面板（Buff後）', body:renderedPanelSummary },
-      { selector:'#effectiveCritDmg', title:'UI-3-1 當前面板（Buff後）', body:renderedPanelSummary },
-      { selector:'#effectiveStatInfo', title:'UI-3-2 技能摘要', body:renderedSkillSummary },
-      { selector:'#healSynergyInfo', title:'UI-3-3 治療聯動', body:renderedHealSummary }
+      { selector:'#selectedCharacterName', title:'UI-1-1 目前選取角色', body:'selectedCharacter' },
+      { selector:'#dps', title:'UI-1-2 目前 DPS', body:'dpsSummary' },
+      { selector:'#effectiveAps', title:'UI-1-3 每秒攻擊次數', body:'dpsSummary' },
+      { selector:'#fightDamage', title:'UI-1-4 戰鬥總傷害', body:'dpsSummary' },
+      { selector:'#effectiveBuffInfo', title:'UI-3-1 主要面板前後對照', body:'panelSummary' },
+      { selector:'#effectiveStatInfo', title:'UI-3-2 技能摘要', body:'skillSummary' },
+      { selector:'#healSynergyInfo', title:'UI-3-3 治療聯動', body:'healSummary' }
     ];
     mappings.forEach(function(item){
-      const el = document.querySelector(item.selector);
-      if (!el || el.dataset.debugBound === '1') return;
-      el.dataset.debugBound = '1';
-      el.style.cursor = 'pointer';
-      el.title = '點擊查看 Debug';
-      el.addEventListener('click', function(){
-        try {
-          openDebug(item.title, item.body());
-        } catch (e) {
-          openDebug(item.title, 'Debug 讀取失敗：' + e.message);
-        }
+      const node = document.querySelector(item.selector);
+      if (!node || node.dataset.globalDebugBound === '1') return;
+      node.dataset.globalDebugBound = '1';
+      node.style.cursor = 'pointer';
+      node.title = '點擊查看 Debug';
+      node.addEventListener('click', function(){
+        const fn = CONTROL.renderers[item.body];
+        CONTROL.openDebug(item.title, typeof fn === 'function' ? fn() : '尚未定義');
       });
+    });
+  };
+
+  CONTROL.boot = function(){
+    CONTROL.applySystemIdMode(CONTROL.readSystemIdMode());
+    CONTROL.bindSystemToggle();
+    CONTROL.bindClickableDebug();
+    setTimeout(CONTROL.bindClickableDebug, 500);
+    setTimeout(CONTROL.bindSystemToggle, 500);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', CONTROL.boot);
+  } else {
+    CONTROL.boot();
+  }
+})();
+</script>
+</script>
+
+<script>
+(function () {
+  if (window.__oaiUniversalCleanPanelPatchV1) return;
+  window.__oaiUniversalCleanPanelPatchV1 = true;
+
+  const CLEAN_PANEL_DEFAULTS = { crit: 30, critDmg: 100 };
+  const DOROTHY_TEMPLATE_NAME = '桃樂絲';
+
+  function num(v) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function deepClone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function toKey(name) {
+    return String(name || '').trim().toUpperCase();
+  }
+
+  function parseCCostFromSkillName(name, fallbackKey) {
+    const text = String(name || fallbackKey || '').toUpperCase();
+    const match = text.match(/([123])\s*C/);
+    if (match) return Number(match[1]);
+    return 3;
+  }
+
+  function isDorothyName(name) {
+    const text = String(name || '').trim().toUpperCase();
+    return text === '桃樂絲' || text === 'DOROTHY';
+  }
+
+  function getImportedEntryByGradeKey(key) {
+    try {
+      return window.GRADE6_DATABASE?.[key] || null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function currentFormLooksLikeDorothy() {
+    try {
+      if (isDorothyName(window.el?.charName?.value)) return true;
+      const gradeKey = window.el?.grade6Key?.value || '';
+      const entry = getImportedEntryByGradeKey(gradeKey);
+      if (entry && isDorothyName(entry.character || entry.displayName || '')) return true;
+      const templateKey = window.el?.charTemplate?.value || '';
+      if (isDorothyName(templateKey)) return true;
+    } catch (err) {}
+    return false;
+  }
+
+  function ensureDorothyTemplate() {
+    if (!window.CHARACTER_TEMPLATES) return;
+    const base = window.CHARACTER_TEMPLATES[DOROTHY_TEMPLATE_NAME] || {};
+    window.CHARACTER_TEMPLATES[DOROTHY_TEMPLATE_NAME] = Object.assign({}, base, {
+      atk: 1130,
+      finalAtkInput: 1130,
+      hp: base.hp || 0,
+      finalHpInput: base.finalHpInput || base.hp || 0,
+      pdef: base.pdef || 0,
+      mdef: base.mdef || 0,
+      pPen: base.pPen || 0,
+      mPen: base.mPen || 0,
+      crit: CLEAN_PANEL_DEFAULTS.crit,
+      critDmg: CLEAN_PANEL_DEFAULTS.critDmg,
+      weaponAtk: 200,
+      weaponBaseAtk: 200,
+      attackSpeed: 2.5,
+      jobPassiveKey: 'wizard',
+      jobPassiveEnabled: true,
+      selfBuffs: base.selfBuffs || [],
+      teamBuffs: base.teamBuffs || [],
+      buffs: base.buffs || [],
+      skills: [
+        { name: '3C', damageType: 'magic', hits: 1, hitMultiplier: 4.25, cycle: 6 }
+      ],
+      extraEvents: [
+        {
+          id: 'dorothy-magic-ray',
+          enabled: true,
+          name: '魔力光線',
+          triggerSkill: '3C',
+          triggerType: 'every_n_casts',
+          triggerCount: 2,
+          multiplier: 16.10,
+          cooldown: 12,
+          damageType: 'magic',
+          canCrit: true,
+          useBuff: true,
+          usePenetration: true
+        }
+      ],
+      skillMode: 'fixed',
+      mainSkillKey: '3C'
     });
   }
 
-  function boot(){
-    updateSystemIdUi(readMode());
-    bindSystemToggle();
-    bindClickableDebug();
-    setTimeout(bindClickableDebug, 1200);
-    setTimeout(bindSystemToggle, 500);
+  function applyCleanPanelDefaultsToForm() {
+    if (!window.el) return;
+    if (window.el.crit) window.el.crit.value = String(CLEAN_PANEL_DEFAULTS.crit);
+    if (window.el.critDmg) window.el.critDmg.value = String(CLEAN_PANEL_DEFAULTS.critDmg);
+  }
+
+  function applyDorothyDefaultsToForm() {
+    if (!window.el || !window.state) return;
+    if (window.el.charName && !window.el.charName.value.trim()) {
+      window.el.charName.value = DOROTHY_TEMPLATE_NAME;
+    }
+    if (window.el.weaponAtk && !num(window.el.weaponAtk.value)) {
+      window.el.weaponAtk.value = '200';
+    }
+    if (window.el.weaponBaseAtkDisplay) {
+      window.el.weaponBaseAtkDisplay.value = '200';
+    }
+    if (window.el.jobPassiveKey) window.el.jobPassiveKey.value = 'wizard';
+    if (window.el.jobPassiveEnabled) window.el.jobPassiveEnabled.value = '1';
+    if (window.el.攻擊週期) window.el.攻擊週期.value = '6';
+    if (typeof window.updateJobPassiveInfo === 'function') {
+      window.updateJobPassiveInfo('wizard');
+    }
+    window.state.skillMode = 'fixed';
+    window.state.mainSkillKey = '3C';
+    window.state.skillSummaryZh = window.state.skillSummaryZh || '';
+    if (typeof window.createSkillDraft === 'function') {
+      window.state.skillDrafts = [
+        window.createSkillDraft({ name: '3C', damageType: 'magic', hits: 1, hitMultiplier: 4.25, cycle: 6 })
+      ];
+    }
+    if (typeof window.createExtraEventDraft === 'function') {
+      window.state.extraEventDrafts = [
+        window.createExtraEventDraft({
+          name: '魔力光線',
+          triggerSkill: '3C',
+          triggerType: 'every_n_casts',
+          triggerCount: 2,
+          multiplier: 16.10,
+          cooldown: 12,
+          damageType: 'magic',
+          canCrit: true,
+          useBuff: true,
+          usePenetration: true,
+          enabled: true
+        })
+      ];
+    }
+    if (typeof window.syncSkillModeUI === 'function') window.syncSkillModeUI();
+    if (typeof window.renderSkills === 'function') window.renderSkills();
+    if (typeof window.renderExtraEvents === 'function') window.renderExtraEvents();
+  }
+
+  function applyUniversalCharacterDefaults(context) {
+    applyCleanPanelDefaultsToForm();
+    if (currentFormLooksLikeDorothy()) {
+      applyDorothyDefaultsToForm();
+    }
+    if (typeof window.syncDerivedFormStats === 'function') window.syncDerivedFormStats();
+    if (typeof window.updateLivePreview === 'function') window.updateLivePreview();
+  }
+
+  function wrapTemplateFunctions() {
+    if (typeof window.applyCharacterTemplate === 'function' && !window.__oaiWrappedTemplateApply) {
+      const original = window.applyCharacterTemplate;
+      window.applyCharacterTemplate = function () {
+        const result = original.apply(this, arguments);
+        applyUniversalCharacterDefaults('template');
+        return result;
+      };
+      window.__oaiWrappedTemplateApply = true;
+    }
+    if (typeof window.applyGrade6Data === 'function' && !window.__oaiWrappedGrade6Apply) {
+      const original = window.applyGrade6Data;
+      window.applyGrade6Data = function () {
+        const result = original.apply(this, arguments);
+        applyUniversalCharacterDefaults('grade6');
+        return result;
+      };
+      window.__oaiWrappedGrade6Apply = true;
+    }
+  }
+
+  function computeWizardAverageExtra(character, monster, fightSeconds, partyCharacters) {
+    const passiveKey = character?.jobPassiveKey || (typeof window.inferPassiveKeyFromCharacter === 'function' ? window.inferPassiveKeyFromCharacter(character) : '');
+    if (passiveKey !== 'wizard' || character?.jobPassiveEnabled === false) {
+      return { addedDps: 0, addedDamage: 0, text: '法師 +C：未啟用' };
+    }
+    const skillList = typeof window.getActiveSkills === 'function' ? window.getActiveSkills(character) : [];
+    const primarySkill = skillList && skillList.length ? skillList[0] : null;
+    if (!primarySkill) {
+      return { addedDps: 0, addedDamage: 0, text: '法師 +C：無主技能' };
+    }
+
+    const cCost = parseCCostFromSkillName(primarySkill.name, character?.mainSkillKey || '');
+    const extraC = Math.floor(Math.max(0, num(fightSeconds)) / 5);
+    const extraCasts = Math.floor(extraC / Math.max(1, cCost));
+    if (extraCasts <= 0) {
+      return { addedDps: 0, addedDamage: 0, text: `法師 +C：+${extraC}C，但不足以多放 ${primarySkill.name}` };
+    }
+
+    const effectInfo = typeof window.aggregateEffects === 'function'
+      ? window.aggregateEffects(character, partyCharacters)
+      : { totals: {} };
+    const totals = effectInfo.totals || {};
+    const derived = typeof window.getDerivedStats === 'function'
+      ? window.getDerivedStats(character)
+      : {};
+    const titleApplied = derived.titleApplied || (typeof window.applyLegendTitleBonuses === 'function' ? window.applyLegendTitleBonuses(character, derived) : { critBonusPct: 0, critDmgBonusPct: 0 });
+    const weaponAffix = derived.weaponAffix || (typeof window.getWeaponAffixEffects === 'function' ? window.getWeaponAffixEffects(character) : { critPct: 0, critDmgPct: 0, flatAtk: 0 });
+    const leaderChanceFactor = character?.isLeader ? 1.1 : 1;
+    const atkFactor = 1 + num(totals.atkPct) / 100;
+    const finalDamageFactor = 1 + num(totals.finalDamagePct) / 100;
+    const skillDamageFactor = 1 + num(totals.skillDamagePct) / 100;
+    const penFactor = 1 + num(totals.penPct) / 100;
+    const critRate = Math.min(Math.max(0, (num(character.crit) + num(titleApplied.critBonusPct) + num(weaponAffix.critPct)) / 100 + num(totals.critPct) / 100), 1);
+    const critDmgPct = Math.max(0, num(character.critDmg) + num(titleApplied.critDmgBonusPct) + num(weaponAffix.critDmgPct) + num(totals.critDmgPct));
+    const critMultiplier = 1 + critDmgPct / 100;
+
+    const basePen = primarySkill.damageType === 'magic'
+      ? num(derived.mPen) + num(totals.mPenFlat)
+      : num(derived.pPen) + num(totals.pPenFlat);
+    const totalPen = basePen * penFactor;
+    const defense = typeof window.getDefenseContext === 'function'
+      ? window.getDefenseContext(monster, primarySkill.damageType, totalPen)
+      : { damageMultiplier: 1 };
+    const skillMultiplier = Math.max(0, num(primarySkill.hits || 1) * num(primarySkill.hitMultiplier || 0));
+    const nonCritCast = num(derived.finalAtk) * atkFactor * skillMultiplier * num(defense.damageMultiplier || 1) * finalDamageFactor * skillDamageFactor;
+    const critCast = nonCritCast * critMultiplier;
+    const avgCast = nonCritCast * (1 - critRate) + critCast * critRate;
+    let addedDamage = avgCast * extraCasts;
+    const detail = [`法師 +C：${Math.floor(fightSeconds / 5)} 次觸發｜共 +${extraC}C｜多放 ${primarySkill.name} ${extraCasts} 次`];
+
+    const skills = skillList.map(function (skill) {
+      const rawCycle = Math.max(0.01, num(skill.cycle) || num(derived['攻擊週期']) || 2);
+      return Object.assign({}, skill, { cycle: rawCycle / leaderChanceFactor });
+    });
+
+    const events = Array.isArray(character.extraEvents) ? character.extraEvents : [];
+    events.forEach(function (eventItem) {
+      if (!eventItem || eventItem.enabled === false) return;
+      const triggerKey = toKey(eventItem.triggerSkill || '');
+      const triggerSkill = skills.find(function (skill) {
+        return typeof window.getSkillKeyFromName === 'function'
+          ? window.getSkillKeyFromName(skill.name) === triggerKey
+          : toKey(skill.name) === triggerKey;
+      });
+      if (!triggerSkill) return;
+
+      const baseCasts = Math.floor(Math.max(0, num(fightSeconds)) / Math.max(0.01, num(triggerSkill.cycle) || 1));
+      const totalCasts = baseCasts + extraCasts;
+      let baseTriggers = 0;
+      let totalTriggers = 0;
+      const triggerCount = Math.max(1, num(eventItem.triggerCount) || 1);
+
+      if ((eventItem.triggerType || 'every_n_casts') === 'every_n_casts') {
+        baseTriggers = Math.floor(baseCasts / triggerCount);
+        totalTriggers = Math.floor(totalCasts / triggerCount);
+      }
+
+      const cooldown = Math.max(0, num(eventItem.cooldown) || 0);
+      if (cooldown > 0) {
+        const cooldownCap = Math.floor(Math.max(0, num(fightSeconds)) / cooldown);
+        baseTriggers = Math.min(baseTriggers, cooldownCap);
+        totalTriggers = Math.min(totalTriggers, cooldownCap);
+      }
+
+      const extraTriggers = Math.max(0, totalTriggers - baseTriggers);
+      if (extraTriggers <= 0) return;
+
+      const useBuff = eventItem.useBuff !== false;
+      const usePenetration = eventItem.usePenetration !== false;
+      const useCrit = eventItem.canCrit !== false;
+      const eventDamageType = eventItem.damageType || triggerSkill.damageType || primarySkill.damageType || 'physical';
+      const eventBasePen = eventDamageType === 'magic'
+        ? num(derived.mPen) + num(totals.mPenFlat)
+        : num(derived.pPen) + num(totals.pPenFlat);
+      const eventTotalPen = eventBasePen * penFactor;
+      const eventDefense = usePenetration && typeof window.getDefenseContext === 'function'
+        ? window.getDefenseContext(monster, eventDamageType, eventTotalPen)
+        : { damageMultiplier: 1 };
+      const eventAtk = num(derived.finalAtk) * (useBuff ? atkFactor : 1);
+      const eventNonCrit = eventAtk * Math.max(0, num(eventItem.multiplier) || 0) * num(eventDefense.damageMultiplier || 1) * (useBuff ? finalDamageFactor * skillDamageFactor : 1);
+      const eventCrit = useCrit ? eventNonCrit * critMultiplier : eventNonCrit;
+      const eventAvg = useCrit ? (eventNonCrit * (1 - critRate) + eventCrit * critRate) : eventNonCrit;
+      const eventAdded = eventAvg * extraTriggers;
+      addedDamage += eventAdded;
+      detail.push(`${eventItem.name || '額外事件'}：額外觸發 ${extraTriggers} 次`);
+    });
+
+    return {
+      addedDamage,
+      addedDps: num(fightSeconds) > 0 ? addedDamage / num(fightSeconds) : 0,
+      text: detail.join('｜')
+    };
+  }
+
+  function wrapComputeCharacter() {
+    if (typeof window.computeCharacter !== 'function' || window.__oaiWrappedComputeCharacter) return;
+    const original = window.computeCharacter;
+    window.computeCharacter = function (character, monster, fightSeconds, partyCharacters) {
+      const result = original.apply(this, arguments);
+      try {
+        const wizardExtra = computeWizardAverageExtra(character, monster, fightSeconds, partyCharacters || window.state?.characters || []);
+        if (wizardExtra.addedDps > 0) {
+          result.totalDps += wizardExtra.addedDps;
+          result.fightDamage += wizardExtra.addedDamage;
+          result.debug = result.debug || {};
+          result.debug.passiveText = (result.debug.passiveText && result.debug.passiveText !== '未啟用')
+            ? `${result.debug.passiveText}｜${wizardExtra.text}`
+            : wizardExtra.text;
+          result.debug.wizardCubeText = wizardExtra.text;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      return result;
+    };
+    window.__oaiWrappedComputeCharacter = true;
+  }
+
+  function patchImportedTemplatesCleanPanel() {
+    try {
+      if (!window.IMPORTED_CHARACTER_TEMPLATES) return;
+      Object.keys(window.IMPORTED_CHARACTER_TEMPLATES).forEach(function (key) {
+        const item = window.IMPORTED_CHARACTER_TEMPLATES[key];
+        if (!item) return;
+        item.crit = CLEAN_PANEL_DEFAULTS.crit;
+        item.critDmg = CLEAN_PANEL_DEFAULTS.critDmg;
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function boot() {
+    ensureDorothyTemplate();
+    patchImportedTemplatesCleanPanel();
+    wrapTemplateFunctions();
+    wrapComputeCharacter();
+    if (typeof window.populateCharacterTemplateSelect === 'function') window.populateCharacterTemplateSelect();
+    if (typeof window.populateGrade6Select === 'function') window.populateGrade6Select();
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
     boot();
+  }
+})();
+</script>
+
+<script id="research-block-cycle-universal-patch">
+(function () {
+  if (window.__researchBlockCycleUniversalPatchApplied) return;
+  window.__researchBlockCycleUniversalPatchApplied = true;
+
+  function patchNum(v) {
+    var n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function getMainSkillCost(character) {
+    var key = String((character && character.mainSkillKey) || '').trim().toUpperCase();
+    if (key === '1C' || key === '2C' || key === '3C') return Number(key.charAt(0));
+    try {
+      var skills = typeof getActiveSkills === 'function' ? (getActiveSkills(character) || []) : [];
+      if (skills.length) {
+        var firstKey = typeof getSkillKeyFromName === 'function'
+          ? String(getSkillKeyFromName(skills[0].name) || '').trim().toUpperCase()
+          : '';
+        if (firstKey === '1C' || firstKey === '2C' || firstKey === '3C') return Number(firstKey.charAt(0));
+      }
+    } catch (err) {}
+    return 0;
+  }
+
+  function getMainSkill(character) {
+    try {
+      var skills = typeof getActiveSkills === 'function' ? (getActiveSkills(character) || []) : [];
+      var wanted = String((character && character.mainSkillKey) || '').trim().toUpperCase();
+      if (wanted) {
+        var found = skills.find(function (skill) {
+          var key = typeof getSkillKeyFromName === 'function'
+            ? String(getSkillKeyFromName(skill.name) || '').trim().toUpperCase()
+            : '';
+          return key === wanted;
+        });
+        if (found) return found;
+      }
+      return skills[0] || null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function getBlockModel(character, fightSeconds) {
+    var skillCost = getMainSkillCost(character);
+    if (!skillCost) return null;
+
+    var reduction = patchNum(window.RESEARCH_BONUS && RESEARCH_BONUS.attackCycleReduction);
+    var baseBlockCycle = Math.max(0.1, 2 - reduction);
+    var baseBlocks = fightSeconds / baseBlockCycle;
+
+    var passiveKey = '';
+    try {
+      passiveKey = String((character && character.jobPassiveKey) || (typeof inferPassiveKeyFromCharacter === 'function' ? inferPassiveKeyFromCharacter(character) : '') || '');
+    } catch (err) {}
+    var passiveEnabled = !character || character.jobPassiveEnabled !== false;
+
+    var extraBlocks = 0;
+    var wizardBlocks = 0;
+    if (passiveEnabled && passiveKey === 'wizard') {
+      wizardBlocks = Math.floor(fightSeconds / 5);
+      extraBlocks += wizardBlocks;
+    }
+
+    // Average-model utilization: prevents tail-end waste and perfect-conversion overestimation.
+    var utilization = 0.9;
+
+    var totalBlocks = (baseBlocks + extraBlocks) * utilization;
+    var modeledCasts = totalBlocks / skillCost;
+
+    return {
+      skillCost: skillCost,
+      baseBlockCycle: baseBlockCycle,
+      baseBlocks: baseBlocks,
+      extraBlocks: extraBlocks,
+      wizardBlocks: wizardBlocks,
+      utilization: utilization,
+      totalBlocks: totalBlocks,
+      modeledCasts: modeledCasts
+    };
+  }
+
+  function recomputeExtraEventDps(character, monster, mainSkill, castRatePerSec, result) {
+    var events = Array.isArray(character && character.extraEvents) ? character.extraEvents : [];
+    if (!events.length || !mainSkill) return 0;
+
+    var derived = typeof getDerivedStats === 'function' ? getDerivedStats(character) : null;
+    var effectInfo = typeof aggregateEffects === 'function'
+      ? aggregateEffects(character, (window.state && Array.isArray(window.state.characters)) ? window.state.characters : [])
+      : { totals: {} };
+    var totals = effectInfo.totals || {};
+    var titleApplied = derived && (derived.titleApplied || (typeof applyLegendTitleBonuses === 'function' ? applyLegendTitleBonuses(character, derived) : null)) || {};
+    var weaponAffix = derived && (derived.weaponAffix || (typeof getWeaponAffixEffects === 'function' ? getWeaponAffixEffects(character) : null)) || {};
+    var critRate = Math.min(Math.max(
+      0,
+      (patchNum(character && character.crit) + patchNum(titleApplied.critBonusPct) + patchNum(weaponAffix.critPct)) / 100 + patchNum(totals.critPct) / 100
+    ), 1);
+    var critDmgPct = Math.max(
+      0,
+      patchNum(character && character.critDmg) + patchNum(titleApplied.critDmgBonusPct) + patchNum(weaponAffix.critDmgPct) + patchNum(totals.critDmgPct)
+    );
+    var critMultiplier = 1 + (critDmgPct / 100);
+    var atkFactor = 1 + patchNum(totals.atkPct) / 100;
+    var finalDamageFactor = 1 + patchNum(totals.finalDamagePct) / 100;
+    var skillDamageFactor = 1 + patchNum(totals.skillDamagePct) / 100;
+    var penFactor = 1 + patchNum(totals.penPct) / 100;
+
+    var total = 0;
+    events.forEach(function (eventItem) {
+      if (!eventItem || eventItem.enabled === false) return;
+      var triggerKey = String(eventItem.triggerSkill || '').trim().toUpperCase();
+      var mainKey = typeof getSkillKeyFromName === 'function'
+        ? String(getSkillKeyFromName(mainSkill.name) || '').trim().toUpperCase()
+        : '';
+      if (triggerKey && mainKey && triggerKey !== mainKey) return;
+
+      var triggerFreq = 0;
+      if ((eventItem.triggerType || 'every_n_casts') === 'every_n_casts') {
+        triggerFreq = castRatePerSec / Math.max(1, patchNum(eventItem.triggerCount) || 1);
+      }
+      var cooldown = Math.max(0, patchNum(eventItem.cooldown) || 0);
+      if (cooldown > 0) triggerFreq = Math.min(triggerFreq, 1 / cooldown);
+
+      var useBuff = eventItem.useBuff !== false;
+      var usePenetration = eventItem.usePenetration !== false;
+      var useCrit = eventItem.canCrit !== false;
+      var eventDamageType = eventItem.damageType || mainSkill.damageType || 'physical';
+      var eventBasePen = eventDamageType === 'magic'
+        ? patchNum(derived && derived.mPen) + patchNum(totals.mPenFlat)
+        : patchNum(derived && derived.pPen) + patchNum(totals.pPenFlat);
+      var eventTotalPen = eventBasePen * penFactor;
+      var eventDefense = (usePenetration && typeof getDefenseContext === 'function')
+        ? getDefenseContext(monster, eventDamageType, eventTotalPen)
+        : { damageMultiplier: 1 };
+      var eventAtk = patchNum(derived && derived.finalAtk) * (useBuff ? atkFactor : 1);
+      var eventNonCrit = eventAtk
+        * Math.max(0, patchNum(eventItem.multiplier) || 0)
+        * patchNum(eventDefense.damageMultiplier || 1)
+        * (useBuff ? finalDamageFactor * skillDamageFactor : 1);
+      var eventCrit = useCrit ? eventNonCrit * critMultiplier : eventNonCrit;
+      var eventAvg = useCrit ? (eventNonCrit * (1 - critRate) + eventCrit * critRate) : eventNonCrit;
+      total += eventAvg * triggerFreq;
+    });
+    return total;
+  }
+
+  if (typeof computeCharacter === 'function' && !window.__researchBlockPrevComputeCharacter) {
+    window.__researchBlockPrevComputeCharacter = computeCharacter;
+
+    computeCharacter = function (character, monster, fightSeconds) {
+      var base = window.__researchBlockPrevComputeCharacter(character, monster, fightSeconds);
+      if (!character || !monster || !fightSeconds) return base;
+      if (base && base.healSynergy && base.healSynergy.applied) return base;
+
+      var mainSkill = getMainSkill(character);
+      var model = getBlockModel(character, fightSeconds);
+      if (!mainSkill || !model) return base;
+
+      var modeledCasts = Math.max(0, model.modeledCasts);
+      var originalSkillCycle = Math.max(0.01, patchNum(mainSkill.cycle) || (model.skillCost * 2));
+      var baselineCasts = fightSeconds / originalSkillCycle;
+      if (!(baselineCasts > 0) || !(modeledCasts > 0)) return base;
+
+      var castScale = modeledCasts / baselineCasts;
+      var oldPassiveDps = patchNum(base && base.debug && base.debug.passiveDps);
+      var oldExtraEventDps = patchNum(base && base.debug && base.debug.extraEventDps);
+      var oldSkillDps = Math.max(0, patchNum(base.totalDps) - oldPassiveDps - oldExtraEventDps);
+      var newSkillDps = oldSkillDps * castScale;
+
+      var castRatePerSec = modeledCasts / fightSeconds;
+      var newExtraEventDps = recomputeExtraEventDps(character, monster, mainSkill, castRatePerSec, base);
+      var newTotalDps = newSkillDps + oldPassiveDps + newExtraEventDps;
+
+      var merged = Object.assign({}, base);
+      merged.totalDps = newTotalDps;
+      merged.fightDamage = newTotalDps * fightSeconds;
+      merged.attackFrequency = castRatePerSec;
+      merged.effectiveStats = Object.assign({}, base.effectiveStats || {});
+      merged.effectiveStats.攻擊週期 = fightSeconds / Math.max(0.01, modeledCasts);
+
+      merged.debug = Object.assign({}, base.debug || {});
+      merged.debug.extraEventDps = newExtraEventDps;
+      merged.debug.rawCycle = originalSkillCycle;
+      merged.debug.effectiveCycle = fightSeconds / Math.max(0.01, modeledCasts);
+      merged.debug.skillText = (base.debug && base.debug.skillText ? base.debug.skillText + '\n' : '') +
+        '通用 C 模型｜研究院方塊週期 ' + model.baseBlockCycle.toFixed(2) + ' 秒｜基礎方塊 ' + model.baseBlocks.toFixed(2) +
+        '｜法師額外方塊 ' + model.extraBlocks.toFixed(2) +
+        '｜利用率 ' + model.utilization.toFixed(2) +
+        '｜估算 ' + mainSkill.name + ' 次數 ' + modeledCasts.toFixed(2);
+      merged.debug.extraEventText = (base.debug && base.debug.extraEventText ? base.debug.extraEventText + '\n' : '') +
+        '通用 C 模型｜依估算施放次數重算額外事件｜DPS ' + newExtraEventDps.toFixed(2);
+      merged.debug.buffText = (Array.isArray(base.debug && base.debug.buffText) ? base.debug.buffText.slice() : []);
+      merged.debug.buffText.push(
+        '研究院：方塊週期 -0.5 秒（已套用）',
+        '通用 C 模型：基礎方塊 ' + model.baseBlocks.toFixed(2),
+        '通用 C 模型：法師額外方塊 ' + model.extraBlocks.toFixed(2),
+        '通用 C 模型：估算施放 ' + modeledCasts.toFixed(2) + ' 次'
+      );
+
+      return merged;
+    };
   }
 })();
 </script>
